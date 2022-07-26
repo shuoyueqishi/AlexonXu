@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.PermissionMapper">
+    <resultMap id="ResultMap" type="com.xlt.model.po.PermissionPo">
+        <result column="permission_id" jdbcType="BIGINT" property="permissionId" />
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+        <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
+        <result column="operate_desc" jdbcType="VARCHAR" property="operateDesc" />
+        <result column="tenant" jdbcType="VARCHAR" property="tenant" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+        <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
+        <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    </resultMap>
+
+    <insert id="batchInsert">
+        <if test="list!=null and list.size()>0">
+            insert into permission_t (resource_name,
+                                      operate_code,
+                                      operate_desc,
+                                      tenant,
+                                      create_by,
+                                      creation_date,
+                                      last_update_by,
+                                      last_update_date) values
+            <foreach collection="list" index="index" item="item" separator=",">
+                (
+                #{item.resourceName},
+                #{item.operateCode},
+                #{item.operateDesc},
+                #{item.tenant},
+                #{item.createBy},
+                #{item.creationDate},
+                #{item.lastUpdateBy},
+                #{item.lastUpdateDate}
+                )
+            </foreach>
+            ON DUPLICATE KEY UPDATE
+                resource_name = VALUES(resource_name),
+                operate_code = VALUES(operate_code),
+                operate_desc = VALUES(operate_desc),
+                tenant = VALUES(tenant),
+                last_update_by = VALUES(last_update_by),
+                last_update_date = VALUES(last_update_date)
+        </if>
+    </insert>
+
+
+</mapper>

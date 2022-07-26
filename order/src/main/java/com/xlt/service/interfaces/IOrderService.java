@@ -1,0 +1,18 @@
+package com.xlt.service.interfaces;
+
+import com.xlt.model.response.BasicResponse;
+import com.xlt.model.response.DataResponse;
+import com.xlt.model.vo.OrderVo;
+
+import java.util.List;
+
+public interface IOrderService {
+
+    BasicResponse createOrder(OrderVo orderVo);
+
+    BasicResponse deleteOrder(Long id);
+
+    BasicResponse updateOrder(OrderVo orderVo);
+
+    DataResponse<List<OrderVo>> queryOrderList(OrderVo orderVo);
+}
