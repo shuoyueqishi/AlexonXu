@@ -8,6 +8,7 @@ com\xlt\controller\UserController.class
 com\xlt\model\vo\UserVo$UserVoBuilder.class
 com\xlt\config\swagger\Swagger2Conf.class
 com\xlt\service\impl\UserService.class
+com\xlt\model\vo\OrderProductDeliveryVo$OrderProductDeliveryVoBuilder.class
 com\xlt\model\po\DeliveryPo.class
 com\xlt\model\po\ProductPo$ProductPoBuilder.class
 com\xlt\model\po\OrderPo.class
@@ -23,6 +24,7 @@ com\xlt\service\interfaces\IUserService.class
 com\xlt\config\redis\LettuceConfig.class
 com\xlt\model\po\OrderPo$OrderPoBuilder.class
 com\xlt\config\http\RestTemplateConfig.class
+com\xlt\model\vo\OrderProductDeliveryVo.class
 com\xlt\model\po\DeliveryPo$DeliveryPoBuilder.class
 com\xlt\model\vo\OrderVo.class
 com\xlt\mapper\IProductMapper.class

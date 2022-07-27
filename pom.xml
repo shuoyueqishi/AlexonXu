@@ -18,8 +18,8 @@
     <modules>
         <module>common</module>
         <module>order</module>
-        <module>auth</module>
-        <module>product</module>
+        <module>user</module>
+        <module>commodity</module>
     </modules>
 
     <properties>

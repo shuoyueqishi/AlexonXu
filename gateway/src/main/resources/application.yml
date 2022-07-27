@@ -1,0 +1,81 @@
+server:
+  port: 8093
+#  contextPath: /gateway
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: 网关微服务
+  author: Alexon
+
+#jwt
+jwt:
+  # 令牌过期时间 此处单位/毫秒
+  expiration: 1800
+
+
+spring:
+  #项目名字
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          #开启小写验证，默认feign根据服务名查找都是用的全大写
+          lowerCaseServiceId: true
+      routes:
+        - id: user-mgt
+          uri: lb://user-mgt
+          predicates:
+            - Path=/user-mgt/**
+          filters:
+            - StripPrefix=1
+  # redis
+  redis: # redis配置
+    host: 127.0.0.1
+    port: 6379
+#    password: xlt
+    database: 0
+    lettuce:
+      pool:
+        # 连接池最大连接数 默认8 ，负数表示没有限制
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
+        max-wait: -1
+        # 连接池中的最大空闲连接 默认8
+        max-idle: 8
+        # 连接池中的最小空闲连接 默认0
+        min-idle: 0
+
+
+# eureka client配置
+eureka:
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://localhost:8098/eureka/  #eureka服务端提供的注册地址 参考服务端配置的这个路径
+  instance:
+    hostname: gateway #此实例注册到eureka服务端的唯一的实例ID
+    prefer-ip-address: true #是否显示IP地址
+    leaseRenewalIntervalInSeconds: 10 #eureka客户需要多长时间发送心跳给eureka服务器，表明它仍然活着,默认为30 秒 (与下面配置的单位都是秒)
+    leaseExpirationDurationInSeconds: 30 #Eureka服务器在接收到实例的最后一次发出的心跳后，需要等待多久才可以将此实例删除，默认为90秒
+    health-check-url-path: /actuator/health
+
+# Springboot Admin监控暴露信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+### log4j2配置
+logging:
+  config: classpath:log/log4j2.xml
+
+
+
