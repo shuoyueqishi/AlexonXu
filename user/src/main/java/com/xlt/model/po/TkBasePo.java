@@ -22,7 +22,7 @@ public class TkBasePo {
      * 创建人
      */
     @Column(name = "create_by")
-    protected String createBy;
+    protected Long createBy;
 
     /**
      * 最近更新时间
@@ -36,7 +36,7 @@ public class TkBasePo {
      * 更新人
      */
     @Column(name = "last_update_by")
-    protected String lastUpdateBy;
+    protected Long lastUpdateBy;
 
     /**
      * 设置创建人和创建时间

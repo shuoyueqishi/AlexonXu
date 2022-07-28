@@ -1,6 +1,7 @@
 server:
-  port: 8093
-#  contextPath: /gateway
+  port: 8090
+#  servlet:
+#    context-path: /gateway
 
 info:
   app:
@@ -26,10 +27,22 @@ spring:
           #开启小写验证，默认feign根据服务名查找都是用的全大写
           lowerCaseServiceId: true
       routes:
-        - id: user-mgt
-          uri: lb://user-mgt
+        - id: user
+          uri: lb://user
           predicates:
-            - Path=/user-mgt/**
+            - Path=/user-gw/**
+          filters:
+            - StripPrefix=1
+        - id: order
+          uri: lb://order
+          predicates:
+            - Path=/order-gw/**
+          filters:
+            - StripPrefix=1
+        - id: commodity
+          uri: lb://commodity
+          predicates:
+            - Path=/commodity-gw/**
           filters:
             - StripPrefix=1
   # redis

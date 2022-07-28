@@ -13,7 +13,6 @@ import com.xlt.service.api.IPermissionService;
 import com.xlt.utils.TkPoUtil;
 import com.xlt.utils.common.AnnotationUtil;
 import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.PoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,7 +186,7 @@ public class PermissionService implements IPermissionService {
     @Override
     public DataResponse<Object> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo) {
         log.info("queryPermissionPageList input params:{}",permissionVo);
-        PageHelper.startPage(pageVo.getCurrentPage(), pageVo.getPageSize());
+        PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
         List<PermissionPo> rolePos = fetchPermissionPos(permissionVo);
         PageInfo<PermissionPo> pageInfo = new PageInfo<>(rolePos);
         return DataResponse.builder().data(pageInfo).build();

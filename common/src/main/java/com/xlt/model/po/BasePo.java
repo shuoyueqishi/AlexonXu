@@ -24,7 +24,7 @@ public class BasePo implements Serializable {
      * 创建人
      */
     @TableField("create_by")
-    protected String createBy;
+    protected Long createBy;
 
     /**
      * 最近更新时间
@@ -38,7 +38,7 @@ public class BasePo implements Serializable {
      * 更新人
      */
     @TableField("last_update_by")
-    protected String lastUpdateBy;
+    protected Long lastUpdateBy;
 
     /**
      * 设置创建人和创建时间

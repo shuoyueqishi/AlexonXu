@@ -116,7 +116,7 @@ public class RoleService implements IRoleService {
     @Override
     public DataResponse<Object> queryRolePageList(RoleVo roleVo, PageVo pageVo) {
         log.info("queryRolePageList params:{}",roleVo);
-        PageHelper.startPage(pageVo.getCurrentPage(), pageVo.getPageSize());
+        PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
         List<RolePo> rolePos = queryRolePos(roleVo);
         PageInfo<RolePo> pageInfo = new PageInfo<>(rolePos);
         return DataResponse.builder().data(pageInfo).build();

@@ -36,9 +36,7 @@ com\xlt\model\vo\RoleVo.class
 com\xlt\constant\Constant$Status.class
 com\xlt\model\vo\UserRoleVo.class
 com\xlt\controller\RoleController.class
-com\xlt\model\vo\PageVo.class
 com\xlt\controller\PermissionController.class
-com\xlt\model\vo\PageVo$PageVoBuilder.class
 com\xlt\model\po\UserPo.class
 com\xlt\model\response\DataResponse$DataResponseBuilder.class
 com\xlt\model\po\UserRolePo.class

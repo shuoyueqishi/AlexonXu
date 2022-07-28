@@ -159,7 +159,7 @@ public class UserService implements IUserService {
      */
     @Override
     public DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo) {
-        PageHelper.startPage(pageVo.getCurrentPage(), pageVo.getPageSize());
+        PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
         List<UserPo> userPos = queryUserPos(userVo);
         PageInfo<UserPo> pageInfo = new PageInfo<>(userPos);
         return DataResponse.builder().data(pageInfo).build();
@@ -207,7 +207,7 @@ public class UserService implements IUserService {
         Asserts.notNull(userVo.getUserId(), "userId can't be empty");
         UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
         userPo.setLastUpdateDate(new Date());
-        userPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getName());
+        userPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getUserId());
         userMapper.updateByPrimaryKeySelective(userPo);
         return new BasicResponse();
     }
@@ -240,7 +240,7 @@ public class UserService implements IUserService {
                 .password(encryptedPwd)
                 .build();
         updateUserPo.setLastUpdateDate(new Date());
-        updateUserPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getName());
+        updateUserPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getUserId());
         userMapper.updateByPrimaryKeySelective(updateUserPo);
         return new BasicResponse();
     }

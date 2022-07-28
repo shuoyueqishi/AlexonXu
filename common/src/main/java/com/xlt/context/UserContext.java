@@ -24,6 +24,8 @@ public class UserContext {
             synchronized (UserContext.class) {
                 if (instance == null) {
                     instance = new UserContext();
+                    UserInfoVo userInfoVo = UserInfoVo.builder().userId(-1L).currentRole("Guest").name("Sys").build();
+                    instance.setUserContext(userInfoVo);
                 }
             }
         }

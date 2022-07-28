@@ -26,7 +26,6 @@ CREATE TABLE `brand_t`
     `name`             varchar(64)  NOT NULL COMMENT '品牌名称',
     `image`            varchar(256) NULL DEFAULT '' COMMENT '品牌图片地址',
     `initial`          varchar(1)        DEFAULT '' COMMENT '品牌的首字母',
-    `sort`             int(8)       NULL DEFAULT NULL COMMENT '排序',
     `create_by`        bigint(10)        DEFAULT NULL COMMENT '创建人',
     `creation_date`    datetime          DEFAULT NULL COMMENT '创建时间',
     `last_update_by`   bigint(10)        DEFAULT NULL COMMENT '修改人',

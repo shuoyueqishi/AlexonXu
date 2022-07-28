@@ -1,1 +1,12 @@
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\config\http\HttpParamConfig.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\config\http\RestTemplateConfig.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\model\vo\BrandVo.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\config\redis\RedissonConfig.java
 D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\CommodityApplication.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\service\IBrandService.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\service\impl\BrandService.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\mapper\IBrandMapper.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\controller\BrandController.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\model\po\BrandPo.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\config\swagger\Swagger2Conf.java
+D:\MyProjects\AlexonXu\code\AlexonXu-0726\commodity\src\main\java\com\xlt\config\redis\LettuceConfig.java

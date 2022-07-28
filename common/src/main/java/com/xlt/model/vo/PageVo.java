@@ -17,27 +17,27 @@ import java.io.Serializable;
 public class PageVo implements Serializable {
     private static final long serialVersionUID = 8798896750104833391L;
     @ApiModelProperty("当前页")
-    private int currentPage=1;
+    private long currentPage=1;
     @ApiModelProperty("每页数量")
-    private int pageSize=10;
+    private long pageSize=10;
     @ApiModelProperty("总数量")
-    private int total;
+    private long total;
     @ApiModelProperty("总页数")
-    private int totalPages;
+    private long totalPages;
 
-    public PageVo(int pageSize, int currentPage) {
+    public PageVo(long pageSize, long currentPage) {
         this.setCurrentPage(currentPage);
         this.pageSize=pageSize;
     }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(long currentPage) {
         if(currentPage<=0){
             currentPage=1;
         }
         this.currentPage = currentPage;
     }
 
-    public int getTotalPages() {
+    public long getTotalPages() {
         totalPages = (total%pageSize==0)?total/pageSize:(total/pageSize+1);
         return totalPages;
     }
