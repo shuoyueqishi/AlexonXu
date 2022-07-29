@@ -1,7 +1,7 @@
 package com.xlt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.mapper.IBrandMapper;
 import com.xlt.model.po.BrandPo;
@@ -70,16 +70,15 @@ public class BrandService implements IBrandService {
         log.info("update info:{}", brandVo);
         AssertUtil.isNull(brandVo.getBrandId(), "brandId can't be empty");
         BrandPo existBrandPo = brandMapper.selectById(brandVo.getBrandId());
-        BrandPo brandPo = ObjectUtil.convertObjs(brandVo, BrandPo.class);
-        UpdateWrapper<BrandPo> updateWrapper = new UpdateWrapper<>();
+        AssertUtil.isNull(existBrandPo, "brandId " + brandVo.getBrandId() + " not exist");
+        LambdaUpdateWrapper<BrandPo> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(BrandPo::getBrandId, brandVo.getBrandId());
         if (StringUtils.isNotEmpty(brandVo.getName()) && !brandVo.getName().equals(existBrandPo.getName())) {
-            updateWrapper.set("name", brandVo.getName());
-            updateWrapper.set("initial", brandVo.getName().substring(0, 1));
-            brandPo.setInitial(brandVo.getName().substring(0, 1));
+            updateWrapper.set(BrandPo::getName, brandVo.getName());
+            updateWrapper.set(BrandPo::getInitial, brandVo.getName().substring(0, 1));
         }
-        updateWrapper.set(StringUtils.isNotEmpty(brandVo.getImage()), "image", brandVo.getImage());
-        PoUtil.buildUpdateUserInfo(brandPo);
-        brandMapper.update(brandPo, updateWrapper);
+        updateWrapper.set(StringUtils.isNotEmpty(brandVo.getImage()), BrandPo::getImage, brandVo.getImage());
+        brandMapper.update(null, updateWrapper);
         return new BasicResponse();
     }
 

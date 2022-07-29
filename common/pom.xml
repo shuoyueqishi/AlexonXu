@@ -17,6 +17,12 @@
     </properties>
 
     <dependencies>
+        <!--  用户上下文使用-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
         <!-- 邮件模块依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

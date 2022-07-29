@@ -7,16 +7,14 @@ import java.util.Date;
 
 public class PoUtil {
     public static <T extends BasePo> void buildCreateUserInfo(T po) {
-        UserContext userContext = UserContext.getInstance();
-        po.setCreateBy(userContext.getUserId());
-        po.setLastUpdateBy(userContext.getUserId());
+        po.setCreateBy(UserContext.getUserId());
+        po.setLastUpdateBy(UserContext.getUserId());
         po.setCreationDate(new Date());
         po.setLastUpdateDate(new Date());
     }
 
     public static <T extends BasePo> void buildUpdateUserInfo(T po) {
-        UserContext userContext = UserContext.getInstance();
-        po.setLastUpdateBy(userContext.getUserId());
+        po.setLastUpdateBy(UserContext.getUserId());
         po.setLastUpdateDate(new Date());
     }
 }

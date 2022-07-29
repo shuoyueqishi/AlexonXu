@@ -44,6 +44,7 @@ spring:
           predicates:
             - Path=/commodity-gw/**
           filters:
+            - SomeGatewayFilter
             - StripPrefix=1
   # redis
   redis: # redis配置

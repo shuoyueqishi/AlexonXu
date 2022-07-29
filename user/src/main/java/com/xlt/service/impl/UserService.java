@@ -92,7 +92,7 @@ public class UserService implements IUserService {
             log.info("token cache key={},user info cache key={}", tokenKey, userInfoKey);
             RedisUtil.set(tokenKey, token, 30, TimeUnit.MINUTES);
             RedisUtil.set(userInfoKey, userInfoVo, 30, TimeUnit.MINUTES);
-            UserContext.getInstance().setUserContext(userInfoVo);
+            UserContext.setUserInfo(userInfoVo);
             response.setData(userInfoVo);
             response.setMessage("Login successfully for user " + userVo.getName());
         } else {
@@ -207,7 +207,7 @@ public class UserService implements IUserService {
         Asserts.notNull(userVo.getUserId(), "userId can't be empty");
         UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
         userPo.setLastUpdateDate(new Date());
-        userPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getUserId());
+        userPo.setLastUpdateBy(UserContext.getUserId());
         userMapper.updateByPrimaryKeySelective(userPo);
         return new BasicResponse();
     }
@@ -240,7 +240,7 @@ public class UserService implements IUserService {
                 .password(encryptedPwd)
                 .build();
         updateUserPo.setLastUpdateDate(new Date());
-        updateUserPo.setLastUpdateBy(UserContext.getInstance().getUserContext().getUserId());
+        updateUserPo.setLastUpdateBy(UserContext.getUserId());
         userMapper.updateByPrimaryKeySelective(updateUserPo);
         return new BasicResponse();
     }

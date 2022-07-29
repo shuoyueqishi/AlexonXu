@@ -1,59 +1,35 @@
 package com.xlt.context;
 
 import com.xlt.model.vo.UserInfoVo;
+import io.netty.util.concurrent.FastThreadLocal;
+import io.netty.util.concurrent.FastThreadLocalThread;
 
 public class UserContext {
 
     /**
      * 存储用户信息
      */
-    private ThreadLocal<UserInfoVo> userVoThreadLocal;
+    private static FastThreadLocal<UserInfoVo> userInfoHolder = new FastThreadLocal();
 
-    /**
-     * 保证单例（内存可见，禁止指令重排）
-     */
-    volatile private static UserContext instance;
+   public static void setUserInfo(UserInfoVo userInfoVo) {
+       userInfoHolder.set(userInfoVo);
+   }
 
-    /**
-     * 单例获取实例
-     *
-     * @return 返回用户上下文实例
-     */
-    public static UserContext getInstance() {
-        if (instance == null) {
-            synchronized (UserContext.class) {
-                if (instance == null) {
-                    instance = new UserContext();
-                    UserInfoVo userInfoVo = UserInfoVo.builder().userId(-1L).currentRole("Guest").name("Sys").build();
-                    instance.setUserContext(userInfoVo);
-                }
-            }
-        }
-        return instance;
-    }
+   public static UserInfoVo getUserInfo() {
+       return userInfoHolder.get();
+   }
 
-    public UserContext() {
-        userVoThreadLocal = new ThreadLocal<>();
-    }
+   public static void remove(){
+       userInfoHolder.remove();
+   }
 
-    public void setUserContext(UserInfoVo userInfoVo) {
-        userVoThreadLocal.set(userInfoVo);
-    }
+   public static String getUserName() {
+       UserInfoVo userInfoVo = userInfoHolder.get();
+       return userInfoVo==null?"DefaultUser":userInfoVo.getName();
+   }
 
-    public UserInfoVo getUserContext() {
-        return userVoThreadLocal.get();
-    }
-
-    public void removeUserContext() {
-        userVoThreadLocal.remove();
-    }
-
-    public String getUserName() {
-        return userVoThreadLocal.get().getName();
-    }
-
-    public Long getUserId(){
-        return userVoThreadLocal.get().getUserId();
-    }
-
+   public static Long getUserId() {
+       UserInfoVo userInfoVo = userInfoHolder.get();
+       return userInfoVo==null?-1L:userInfoVo.getUserId();
+   }
 }
