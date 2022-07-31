@@ -20,14 +20,11 @@ public class PermissionPo extends TkBasePo implements Serializable {
     @Column(name = "permission_id")
     private Long permissionId;
 
-    @Column(name = "resource_name")
-    private String resourceName;
+    @Column(name = "api_operation")
+    private String apiOperation;
 
-    @Column(name = "operate_code")
-    private String operateCode;
-
-    @Column(name = "operate_desc")
-    private String operateDesc;
+    @Column(name = "path")
+    private String path;
 
     @Column(name = "tenant")
     private String tenant;

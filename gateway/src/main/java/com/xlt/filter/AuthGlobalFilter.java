@@ -10,14 +10,14 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
 @Slf4j
 public class AuthGlobalFilter implements GlobalFilter {
 
-    private static List<String> whitePathList = new ArrayList<>() {
+    private static List<String> whitePathList = new ArrayList<String>() {
+        private static final long serialVersionUID = -2860067364426320457L;
         {
             add("/login");
             add("/logout");

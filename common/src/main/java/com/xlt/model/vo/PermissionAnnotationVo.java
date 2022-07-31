@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @ApiModel("权限信息")
 public class PermissionAnnotationVo {
-    private String resourceName;
-    private String operateCode;
-    private String operateDesc;
+    private String apiOperation;
+    private String path;
 }

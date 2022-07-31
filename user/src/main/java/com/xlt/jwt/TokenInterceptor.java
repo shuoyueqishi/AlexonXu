@@ -61,7 +61,7 @@ public class TokenInterceptor implements HandlerInterceptor{
                 UserInfoVo cacheUserInfo = (UserInfoVo) RedisUtil.get(CommConstant.USER_INFO_PREFIX + userId);
                 if (StringUtils.isNotEmpty(cacheToken)&&cacheToken.equals(token)) {
                     checkPermissionPoint(perPoint,cacheUserInfo);
-                    UserContext.getInstance().setUserContext(cacheUserInfo);
+                    UserContext.setUserInfo(cacheUserInfo);
                     return true;
                 }
                 UserService userService = AppContextUtil.getBean(UserService.class);
@@ -74,7 +74,7 @@ public class TokenInterceptor implements HandlerInterceptor{
                 try {
                     jwtVerifier.verify(token);
                     checkPermissionPoint(perPoint,cacheUserInfo);
-                    UserContext.getInstance().setUserContext(cacheUserInfo);
+                    UserContext.setUserInfo(cacheUserInfo);
                 } catch (JWTVerificationException e) {
                     throw new CommonException("user token is invalid");
                 }

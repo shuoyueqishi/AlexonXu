@@ -8,16 +8,14 @@ import java.util.Date;
 
 public class TkPoUtil {
     public static <T extends TkBasePo> void buildCreateUserInfo(T po) {
-        UserContext userContext = UserContext.getInstance();
-        po.setCreateBy(userContext.getUserId());
-        po.setLastUpdateBy(userContext.getUserId());
+        po.setCreateBy(UserContext.getUserId());
+        po.setLastUpdateBy(UserContext.getUserId());
         po.setCreationDate(new Date());
         po.setLastUpdateDate(new Date());
     }
 
     public static <T extends TkBasePo> void buildUpdateUserInfo(T po) {
-        UserContext userContext = UserContext.getInstance();
-        po.setLastUpdateBy(userContext.getUserId());
+        po.setLastUpdateBy(UserContext.getUserId());
         po.setLastUpdateDate(new Date());
     }
 }

@@ -75,7 +75,7 @@ public class UserService implements IUserService {
             List<PermissionVo> permissionVoList = rolePermissionMapper.queryPermissionByRoleId(userPo.getDefaultRole());
             Set<String> permissionSet = new HashSet<>();
             permissionVoList.forEach(perm->{
-                permissionSet.add(perm.getResourceName()+"#"+perm.getOperateCode());
+                permissionSet.add(perm.getTenant()+"#"+perm.getPath());
             });
             userInfoVo.setCurPermissionSet(permissionSet);
 

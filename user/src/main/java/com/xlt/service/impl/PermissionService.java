@@ -11,7 +11,7 @@ import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.*;
 import com.xlt.service.api.IPermissionService;
 import com.xlt.utils.TkPoUtil;
-import com.xlt.utils.common.AnnotationUtil;
+import com.xlt.utils.common.PermissionSyncUtil;
 import com.xlt.utils.common.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +32,7 @@ public class PermissionService implements IPermissionService {
     private String tenant;
 
     @Autowired
-    private AnnotationUtil annotationUtil;
+    private PermissionSyncUtil annotationUtil;
 
     @Autowired(required = false)
     private PermissionMapper permissionMapper;
@@ -61,9 +61,8 @@ public class PermissionService implements IPermissionService {
         List<PermissionPo> permissionPoList = new ArrayList<>();
         perAnnotationVoList.forEach(perAnnotationVo->{
             PermissionPo permissionPo = new PermissionPo();
-            permissionPo.setResourceName(perAnnotationVo.getResourceName());
-            permissionPo.setOperateCode(perAnnotationVo.getOperateCode());
-            permissionPo.setOperateDesc(perAnnotationVo.getOperateDesc());
+            permissionPo.setApiOperation(perAnnotationVo.getApiOperation());
+            permissionPo.setPath(perAnnotationVo.getPath());
             permissionPo.setTenant(tenant);
             TkPoUtil.buildCreateUserInfo(permissionPo);
             permissionPoList.add(permissionPo);
@@ -197,11 +196,11 @@ public class PermissionService implements IPermissionService {
         if (Objects.nonNull(permissionVo)) {
             Example example = new Example(PermissionPo.class);
             Example.Criteria criteria = example.createCriteria();
-            if (StringUtils.isNotEmpty(permissionVo.getResourceName())) {
-                criteria.andLike("resourceName",permissionVo.getResourceName()+ CommConstant.PERCENTAGE);
+            if (StringUtils.isNotEmpty(permissionVo.getApiOperation())) {
+                criteria.andLike("apiOperation",permissionVo.getApiOperation()+ CommConstant.PERCENTAGE);
             }
-            if (StringUtils.isNotEmpty(permissionVo.getOperateCode())) {
-                criteria.andLike("operateCode",permissionVo.getOperateCode()+ CommConstant.PERCENTAGE);
+            if (StringUtils.isNotEmpty(permissionVo.getPath())) {
+                criteria.andLike("path",permissionVo.getPath()+ CommConstant.PERCENTAGE);
             }
             if(StringUtils.isNotEmpty(permissionVo.getTenant())) {
                 criteria.andEqualTo("tenant",permissionVo.getTenant());

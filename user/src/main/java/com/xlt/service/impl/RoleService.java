@@ -191,7 +191,7 @@ public class RoleService implements IRoleService {
         if (Objects.isNull(userInfo)) {
             throw new CommonException("user info cached not exist");
         }
-        UserContext.getInstance().setUserContext(userInfo);
+        UserContext.setUserInfo(userInfo);
 
         UserPo userPo = userMapper.selectByPrimaryKey(userId);
         if (Objects.isNull(userPo)) {
@@ -217,7 +217,7 @@ public class RoleService implements IRoleService {
         List<PermissionVo> permissionVoList = rolePermMapper.queryPermissionByRoleId(rolePo.getRoleId());
         Set<String> permissionSet = new HashSet<>();
         permissionVoList.forEach(perm->{
-            permissionSet.add(perm.getResourceName()+"#"+perm.getOperateCode());
+            permissionSet.add(perm.getTenant()+"#"+perm.getPath());
         });
         userInfo.setCurPermissionSet(permissionSet);
 
@@ -230,7 +230,7 @@ public class RoleService implements IRoleService {
         RedisUtil.set(CommConstant.USER_INFO_PREFIX + userId, userInfo, 30, TimeUnit.MINUTES);
 
         // 更新上下文
-        UserContext.getInstance().setUserContext(userInfo);
+        UserContext.setUserInfo(userInfo);
         return new DataResponse<>(userInfo);
     }
 }

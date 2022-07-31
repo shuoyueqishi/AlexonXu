@@ -16,11 +16,9 @@ public class PermissionVo extends BaseVo implements Serializable {
     private static final long serialVersionUID = 5478647065231146043L;
     private Long permissionId;
 
-    private String resourceName;
+    private String apiOperation;
 
-    private String operateCode;
-
-    private String operateDesc;
+    private String path;
 
     private String tenant;
 }
