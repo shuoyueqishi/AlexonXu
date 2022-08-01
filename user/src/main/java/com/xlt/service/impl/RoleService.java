@@ -18,7 +18,6 @@ import com.xlt.model.vo.UserInfoVo;
 import com.xlt.service.api.IRoleService;
 import com.xlt.utils.TkPoUtil;
 import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.PoUtil;
 import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

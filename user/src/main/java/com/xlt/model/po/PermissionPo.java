@@ -26,6 +26,12 @@ public class PermissionPo extends TkBasePo implements Serializable {
     @Column(name = "path")
     private String path;
 
+    @Column(name = "http_method")
+    private String httpMethod;
+
+    @Column(name = "method_name")
+    private String methodName;
+
     @Column(name = "tenant")
     private String tenant;
 }

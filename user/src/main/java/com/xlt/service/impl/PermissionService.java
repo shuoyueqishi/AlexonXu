@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.*;
+import com.xlt.model.vo.PermissionVo;
 import com.xlt.model.po.*;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
@@ -32,7 +33,7 @@ public class PermissionService implements IPermissionService {
     private String tenant;
 
     @Autowired
-    private PermissionSyncUtil annotationUtil;
+    private PermissionSyncUtil permissionSyncUtil;
 
     @Autowired(required = false)
     private PermissionMapper permissionMapper;
@@ -57,13 +58,16 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public BasicResponse synchronizePermission() {
-        List<PermissionAnnotationVo> perAnnotationVoList = annotationUtil.getOperationPermissions();
+        List<PermissionVo> perAnnotationVoList = PermissionSyncUtil.getOperationPermissions();
         List<PermissionPo> permissionPoList = new ArrayList<>();
-        perAnnotationVoList.forEach(perAnnotationVo->{
-            PermissionPo permissionPo = new PermissionPo();
-            permissionPo.setApiOperation(perAnnotationVo.getApiOperation());
-            permissionPo.setPath(perAnnotationVo.getPath());
-            permissionPo.setTenant(tenant);
+        perAnnotationVoList.forEach(permissionVo -> {
+            PermissionPo permissionPo = PermissionPo.builder()
+                    .apiOperation(permissionVo.getApiOperation())
+                    .path(permissionVo.getPath())
+                    .tenant(permissionVo.getTenant())
+                    .httpMethod(permissionVo.getHttpMethod())
+                    .methodName(permissionVo.getMethodName())
+                    .build();
             TkPoUtil.buildCreateUserInfo(permissionPo);
             permissionPoList.add(permissionPo);
         });
@@ -80,7 +84,7 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public BasicResponse grantRoles2User(List<UserRoleVo> userRoleVoList) {
-        log.info("grant roles info:{}",userRoleVoList);
+        log.info("grant roles info:{}", userRoleVoList);
         if (CollectionUtils.isEmpty(userRoleVoList)) {
             return new BasicResponse();
         }
@@ -88,19 +92,19 @@ public class PermissionService implements IPermissionService {
         Set<Long> userIds = userRoleVoList.stream().map(UserRoleVo::getUserId).collect(Collectors.toSet());
         Example userExample = new Example(UserPo.class);
         Example.Criteria userCriteria = userExample.createCriteria();
-        userCriteria.andIn("userId",userIds);
+        userCriteria.andIn("userId", userIds);
         List<UserPo> userPoList = userMapper.selectByExample(userExample);
-        if (CollectionUtils.isEmpty(userPoList)||userPoList.size()!=userIds.size()) {
+        if (CollectionUtils.isEmpty(userPoList) || userPoList.size() != userIds.size()) {
             throw new CommonException("User maybe not exist in system, so it can't grant roles.");
         }
 
         // 校验角色是否存在
         Set<Long> roleIds = userRoleVoList.stream().map(UserRoleVo::getRoleId).collect(Collectors.toSet());
-        Example roleExample =new Example(RolePo.class);
-        Example.Criteria roleCriteria  = roleExample.createCriteria();
-        roleCriteria.andIn("roleId",roleIds);
+        Example roleExample = new Example(RolePo.class);
+        Example.Criteria roleCriteria = roleExample.createCriteria();
+        roleCriteria.andIn("roleId", roleIds);
         List<RolePo> rolePoList = roleMapper.selectByExample(roleExample);
-        if (CollectionUtils.isEmpty(rolePoList)||rolePoList.size()!=roleIds.size()) {
+        if (CollectionUtils.isEmpty(rolePoList) || rolePoList.size() != roleIds.size()) {
             throw new CommonException("Role may not exist in system, so it can't grant roles.");
         }
 
@@ -143,7 +147,7 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public BasicResponse grantPermissions2Role(RolePermissionVo rolePermissionVo) {
-        log.info("grantPermissions2Role input params:{}",rolePermissionVo);
+        log.info("grantPermissions2Role input params:{}", rolePermissionVo);
         if (Objects.isNull(rolePermissionVo.getRoleId())) {
             throw new CommonException("roleId can't be empty");
         }
@@ -152,19 +156,19 @@ public class PermissionService implements IPermissionService {
         }
         RolePo rolePo = roleMapper.selectByPrimaryKey(rolePermissionVo.getRoleId());
         if (Objects.isNull(rolePo)) {
-            throw new CommonException("roleId="+rolePermissionVo.getRoleId()+" not exists in system");
+            throw new CommonException("roleId=" + rolePermissionVo.getRoleId() + " not exists in system");
         }
         Example permExample = new Example(PermissionPo.class);
         Example.Criteria permCriteria = permExample.createCriteria();
         Set<Long> permSet = new HashSet<>(rolePermissionVo.getPermissionList());
-        permCriteria.andIn("permissionId",permSet);
+        permCriteria.andIn("permissionId", permSet);
         List<PermissionPo> existPermPoList = permissionMapper.selectByExample(permExample);
         Set<Long> existPermSet = existPermPoList.stream().map(PermissionPo::getPermissionId).collect(Collectors.toSet());
-        if (permSet.size()!=existPermSet.size()) {
+        if (permSet.size() != existPermSet.size()) {
             throw new CommonException("permissionId not exist in system");
         }
         List<RolePermissionPo> rolePermList = new ArrayList<>();
-        for (int i=0;i<rolePermissionVo.getPermissionList().size();i++) {
+        for (int i = 0; i < rolePermissionVo.getPermissionList().size(); i++) {
             RolePermissionPo rolePermissionPo = new RolePermissionPo();
             rolePermissionPo.setRoleId(rolePermissionVo.getRoleId());
             rolePermissionPo.setPermissionId(rolePermissionVo.getPermissionList().get(i));
@@ -184,8 +188,8 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public DataResponse<Object> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo) {
-        log.info("queryPermissionPageList input params:{}",permissionVo);
-        PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
+        log.info("queryPermissionPageList input params:{}", permissionVo);
+        PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<PermissionPo> rolePos = fetchPermissionPos(permissionVo);
         PageInfo<PermissionPo> pageInfo = new PageInfo<>(rolePos);
         return DataResponse.builder().data(pageInfo).build();
@@ -197,13 +201,13 @@ public class PermissionService implements IPermissionService {
             Example example = new Example(PermissionPo.class);
             Example.Criteria criteria = example.createCriteria();
             if (StringUtils.isNotEmpty(permissionVo.getApiOperation())) {
-                criteria.andLike("apiOperation",permissionVo.getApiOperation()+ CommConstant.PERCENTAGE);
+                criteria.andLike("apiOperation", permissionVo.getApiOperation() + CommConstant.PERCENTAGE);
             }
             if (StringUtils.isNotEmpty(permissionVo.getPath())) {
-                criteria.andLike("path",permissionVo.getPath()+ CommConstant.PERCENTAGE);
+                criteria.andLike("path", permissionVo.getPath() + CommConstant.PERCENTAGE);
             }
-            if(StringUtils.isNotEmpty(permissionVo.getTenant())) {
-                criteria.andEqualTo("tenant",permissionVo.getTenant());
+            if (StringUtils.isNotEmpty(permissionVo.getTenant())) {
+                criteria.andEqualTo("tenant", permissionVo.getTenant());
             }
             permissionPoList = permissionMapper.selectByExample(example);
         }
@@ -218,8 +222,8 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public DataResponse<Object> queryRolePermissionList(Long roleId) {
-        log.info("queryRolePermissionList roleId={}",roleId);
-        if(Objects.isNull(roleId)) {
+        log.info("queryRolePermissionList roleId={}", roleId);
+        if (Objects.isNull(roleId)) {
             throw new CommonException("roleId can't be empty.");
         }
         List<PermissionVo> permissionVoList = rolePermissionMapper.queryPermissionByRoleId(roleId);
@@ -234,7 +238,7 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public DataResponse<Object> queryUserRoleList(Long userId) {
-        log.info("queryUserRoleList userId={}",userId);
+        log.info("queryUserRoleList userId={}", userId);
         if (Objects.isNull(userId)) {
             throw new CommonException("userId can't be empty");
         }

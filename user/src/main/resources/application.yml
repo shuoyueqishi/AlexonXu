@@ -14,9 +14,9 @@ info:
 
 #jwt
 jwt:
-  # 令牌过期时间 此处单位/毫秒
-  expiration: 1800
-
+  expiration: 1800 # 令牌过期时间 此处单位/毫秒
+  skip:
+    permission: true # 权限检查跳过
 
 spring:
   #项目名字

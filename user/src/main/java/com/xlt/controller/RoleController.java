@@ -2,7 +2,7 @@ package com.xlt.controller;
 
 import com.xlt.annotation.OperatePermission;
 import com.xlt.constant.OperateConstant;
-import com.xlt.jwt.LoginToken;
+import com.xlt.config.jwt.LoginToken;
 import com.xlt.logs.OperationLog;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.PageVo;

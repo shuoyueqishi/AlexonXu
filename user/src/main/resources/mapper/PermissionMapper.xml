@@ -4,9 +4,10 @@
 <mapper namespace="com.xlt.mapper.PermissionMapper">
     <resultMap id="ResultMap" type="com.xlt.model.po.PermissionPo">
         <result column="permission_id" jdbcType="BIGINT" property="permissionId" />
-        <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
-        <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
-        <result column="operate_desc" jdbcType="VARCHAR" property="operateDesc" />
+        <result column="api_operation" jdbcType="VARCHAR" property="apiOperation" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="http_method" jdbcType="VARCHAR" property="httpMethod" />
+        <result column="method_name" jdbcType="VARCHAR" property="methodName" />
         <result column="tenant" jdbcType="VARCHAR" property="tenant" />
         <result column="create_by" jdbcType="VARCHAR" property="createBy" />
         <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
@@ -16,19 +17,22 @@
 
     <insert id="batchInsert">
         <if test="list!=null and list.size()>0">
-            insert into permission_t (resource_name,
-                                      operate_code,
-                                      operate_desc,
-                                      tenant,
-                                      create_by,
-                                      creation_date,
-                                      last_update_by,
-                                      last_update_date) values
+            insert into permission_t (
+            api_operation,
+            path,
+            http_method,
+            method_name,
+            tenant,
+            create_by,
+            creation_date,
+            last_update_by,
+            last_update_date) values
             <foreach collection="list" index="index" item="item" separator=",">
                 (
-                #{item.resourceName},
-                #{item.operateCode},
-                #{item.operateDesc},
+                #{item.apiOperation},
+                #{item.path},
+                #{item.httpMethod},
+                #{item.methodName},
                 #{item.tenant},
                 #{item.createBy},
                 #{item.creationDate},
@@ -37,12 +41,11 @@
                 )
             </foreach>
             ON DUPLICATE KEY UPDATE
-                resource_name = VALUES(resource_name),
-                operate_code = VALUES(operate_code),
-                operate_desc = VALUES(operate_desc),
-                tenant = VALUES(tenant),
-                last_update_by = VALUES(last_update_by),
-                last_update_date = VALUES(last_update_date)
+            api_operation = VALUES(api_operation),
+            method_name = VALUES(method_name),
+            tenant = VALUES(tenant),
+            last_update_by = VALUES(last_update_by),
+            last_update_date = VALUES(last_update_date)
         </if>
     </insert>
 

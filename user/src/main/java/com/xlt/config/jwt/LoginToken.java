@@ -1,4 +1,4 @@
-package com.xlt.jwt;
+package com.xlt.config.jwt;
 
 
 import java.lang.annotation.ElementType;

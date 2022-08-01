@@ -1,4 +1,4 @@
-package com.xlt.jwt;
+package com.xlt.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,6 +16,7 @@ import com.xlt.utils.common.AppContextUtil;
 import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,6 +32,9 @@ import java.util.Set;
 @Component
 public class TokenInterceptor implements HandlerInterceptor{
 
+    @Value("${jwt.skip.permission:false}")
+    private boolean skipPermissionCheck;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 
@@ -38,6 +42,10 @@ public class TokenInterceptor implements HandlerInterceptor{
         if (!(object instanceof HandlerMethod)) {
             return true;
         }
+        if(skipPermissionCheck) {
+            return true;
+        }
+
         HandlerMethod handlerMethod = (HandlerMethod) object;
         Method method = handlerMethod.getMethod();
         //检查有没有需要用户权限的注解
