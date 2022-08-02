@@ -1,5 +1,5 @@
 server:
-  port: 8190
+  port: 8390
   servlet:
     context-path: /order
 
@@ -21,7 +21,7 @@ jwt:
 spring:
   #项目名字
   application:
-    name: oredr
+    name: order
   # 数据源
   datasource:
     name: oredr-ds

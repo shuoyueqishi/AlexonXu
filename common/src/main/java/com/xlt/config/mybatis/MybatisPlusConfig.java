@@ -1,4 +1,4 @@
-package com.xlt.config;
+package com.xlt.config.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

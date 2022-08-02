@@ -36,14 +36,15 @@
     </insert>
     <select id="queryPermissionByRoleId" resultType="com.xlt.model.vo.PermissionVo">
         select  p.permission_id as permissionId,
-                p.resource_name as resourceName,
-                p.operate_code as operateCode,
-                p.operate_desc as operateDesc,
+                p.api_operation as apiOperation,
+                p.path as path,
+                p.http_method as httpMethod,
+                p.method_name as methodName,
                 p.tenant as tenant,
-               p.last_update_by as lastUpdateBy,
-               p.last_update_date as lastUpdateDate,
-               p.create_by as createBy,
-               p.creation_date as creationDate
+                p.last_update_by as lastUpdateBy,
+                p.last_update_date as lastUpdateDate,
+                p.create_by as createBy,
+                p.creation_date as creationDate
         from permission_t p
         left join role_permission_t r on r.permission_id=p.permission_id
         where 1=1

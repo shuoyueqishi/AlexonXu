@@ -2,6 +2,7 @@ package com.xlt.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xlt.ISyncPermissionService;
 import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.*;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class PermissionService implements IPermissionService {
+public class PermissionService implements IPermissionService, ISyncPermissionService {
 
     @Value("${spring.application.name}")
     private String tenant;
@@ -58,9 +59,17 @@ public class PermissionService implements IPermissionService {
      */
     @Override
     public BasicResponse synchronizePermission() {
-        List<PermissionVo> perAnnotationVoList = PermissionSyncUtil.getOperationPermissions();
+        List<PermissionVo> permissionVoList = PermissionSyncUtil.getOperationPermissions();
+        addPermissions(permissionVoList);
+        return new BasicResponse();
+    }
+
+    private void addPermissions(List<PermissionVo> permissionVoList) {
+        if(CollectionUtils.isEmpty(permissionVoList)) {
+            return;
+        }
         List<PermissionPo> permissionPoList = new ArrayList<>();
-        perAnnotationVoList.forEach(permissionVo -> {
+        permissionVoList.forEach(permissionVo -> {
             PermissionPo permissionPo = PermissionPo.builder()
                     .apiOperation(permissionVo.getApiOperation())
                     .path(permissionVo.getPath())
@@ -73,6 +82,11 @@ public class PermissionService implements IPermissionService {
         });
         permissionMapper.batchInsert(permissionPoList);
         log.info("synchronize permission successfully.");
+    }
+
+    @Override
+    public BasicResponse syncPermissionList(List<PermissionVo> permVoList) {
+        addPermissions(permVoList);
         return new BasicResponse();
     }
 

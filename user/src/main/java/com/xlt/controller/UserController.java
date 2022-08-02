@@ -20,7 +20,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")
 @Api("user management")
 public class UserController {
     @Autowired

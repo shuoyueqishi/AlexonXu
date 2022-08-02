@@ -67,7 +67,7 @@ public class UserService implements IUserService {
         }
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
             // 查询用户的当前角色
-            UserInfoVo userInfoVo = ObjectUtil.convertObjs(userPo,UserInfoVo.class);
+            UserInfoVo userInfoVo = ObjectUtil.convertObjs(userPo, UserInfoVo.class);
             RolePo curRolePo = roleMapper.selectByPrimaryKey(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
@@ -75,8 +75,8 @@ public class UserService implements IUserService {
             // 查询当前角色的权限列表
             List<PermissionVo> permissionVoList = rolePermissionMapper.queryPermissionByRoleId(userPo.getDefaultRole());
             Set<String> permissionSet = new HashSet<>();
-            permissionVoList.forEach(perm->{
-                permissionSet.add(perm.getTenant()+"#"+perm.getPath());
+            permissionVoList.forEach(perm -> {
+                permissionSet.add(perm.getTenant() + "#" + perm.getHttpMethod() + "#" + perm.getPath());
             });
             userInfoVo.setCurPermissionSet(permissionSet);
 
@@ -160,7 +160,7 @@ public class UserService implements IUserService {
      */
     @Override
     public DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo) {
-        PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
+        PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<UserPo> userPos = queryUserPos(userVo);
         PageInfo<UserPo> pageInfo = new PageInfo<>(userPos);
         return DataResponse.builder().data(pageInfo).build();

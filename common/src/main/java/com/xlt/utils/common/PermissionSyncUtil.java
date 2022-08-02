@@ -7,6 +7,7 @@ import com.xlt.model.vo.PermissionAnnotationVo;
 import com.xlt.model.vo.PermissionVo;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,6 +69,9 @@ public class PermissionSyncUtil implements ApplicationContextAware {
             RequestMethodsRequestCondition methodsCondition = info.getMethodsCondition();
             for (RequestMethod requestMethod : methodsCondition.getMethods()) {
                permVo.setHttpMethod(requestMethod.toString());
+            }
+            if(StringUtils.isEmpty(permVo.getHttpMethod())||StringUtils.isEmpty(permVo.getTenant())||StringUtils.isEmpty(permVo.getPath())) {
+                continue;
             }
             permVoList.add(permVo);
         }

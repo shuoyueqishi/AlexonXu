@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -16,15 +17,11 @@ public class BaseVo implements Serializable {
 
     private String createByStr;
 
-    private Long creationDate;
-
-    private String creationDateStr;
+    private Date creationDate;
 
     private Long lastUpdateBy;
 
     private String lastUpdateByStr;
 
-    private Long LastUpdateDate;
-
-    private String LastUpdateDateStr;
+    private Date LastUpdateDate;
 }
