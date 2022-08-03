@@ -6,6 +6,8 @@ import com.xlt.model.vo.PermissionVo;
 import com.xlt.utils.common.AppContextUtil;
 import com.xlt.utils.common.PermissionSyncUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @EnableScheduling
@@ -27,26 +30,46 @@ public class SyncPermissionScheduler {
     private String appName;
 
     @Autowired
+    private RedissonClient redissonClient;
+
+    @Autowired
     private RestTemplate restTemplate;
 
-    @Scheduled(cron = "*/30 * * * * ?")
-    public void syncPermissions(){
-        List<PermissionVo> permissionVoList = PermissionSyncUtil.getOperationPermissions();
-        log.info("appName={},permissionVoList.size={}",appName,permissionVoList.size());
-        if("user".equals(appName)) {
-            ISyncPermissionService syncPermissionService = AppContextUtil.getBean(ISyncPermissionService.class);
-            syncPermissionService.syncPermissionList(permissionVoList);
-        } else {
-            HttpEntity<List<PermissionVo>> httpEntity = new HttpEntity<>(permissionVoList);
-            ResponseEntity<BasicResponse> responseEntity = restTemplate.postForEntity("http://user/user/permission/synchronize/list", httpEntity, BasicResponse.class);
-            if(HttpStatus.OK.equals(responseEntity.getStatusCode())) {
-                BasicResponse basicRes = responseEntity.getBody();
-                log.info("invoke result = {}",basicRes);
-            } else {
-                log.error("invoke error: http://user/user/permission/synchronize/list");
+    private static final String PERMISSION_SYNC_LOCK = "permission_sync_lock";
+
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void syncPermissions() {
+        RLock fairLock = redissonClient.getFairLock(PERMISSION_SYNC_LOCK);
+        try {
+            if (!fairLock.tryLock(30, 20, TimeUnit.SECONDS)) {
+                log.error("get redisson lock failed");
+                return;
             }
-            log.info("success to synchronize permission");
+            List<PermissionVo> permissionVoList = PermissionSyncUtil.getOperationPermissions();
+            log.info("appName={},permissionVoList.size={}", appName, permissionVoList.size());
+            if ("user".equals(appName)) {
+                ISyncPermissionService syncPermissionService = AppContextUtil.getBean(ISyncPermissionService.class);
+                syncPermissionService.syncPermissionList(permissionVoList);
+            } else {
+                HttpEntity<List<PermissionVo>> httpEntity = new HttpEntity<>(permissionVoList);
+                ResponseEntity<BasicResponse> responseEntity = restTemplate.postForEntity("http://user/user/permission/synchronize/list", httpEntity, BasicResponse.class);
+                if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+                    BasicResponse basicRes = responseEntity.getBody();
+                    log.info("invoke result = {}", basicRes);
+                } else {
+                    log.error("invoke error: http://user/user/permission/synchronize/list");
+                }
+                log.info("success to synchronize permission");
+            }
+        } catch (InterruptedException e) {
+            log.error("get redisson InterruptedException:", e);
+        } finally {
+            if (fairLock.isHeldByCurrentThread()) {
+                fairLock.unlock();
+                log.info("unlock redisson lock success for:" + PERMISSION_SYNC_LOCK);
+            }
         }
+
     }
 
 

@@ -20,8 +20,14 @@ public class PermissionVo extends BaseVo implements Serializable {
     @ApiModelProperty("permissionId")
     private Long permissionId;
 
-    @ApiModelProperty("swagger ApiOperation注解内容")
-    private String apiOperation;
+    @ApiModelProperty("资源名称")
+    private String resourceName;
+
+    @ApiModelProperty("操作码")
+    private String operateCode;
+
+    @ApiModelProperty("操作描述")
+    private String operateDesc;
 
     @ApiModelProperty("接口路径")
     private String path;

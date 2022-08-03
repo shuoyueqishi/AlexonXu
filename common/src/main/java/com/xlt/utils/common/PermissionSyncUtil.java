@@ -3,6 +3,7 @@ package com.xlt.utils.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.xlt.annotation.OperatePermission;
 import com.xlt.model.vo.PermissionAnnotationVo;
 import com.xlt.model.vo.PermissionVo;
 import io.swagger.annotations.ApiOperation;
@@ -56,9 +57,11 @@ public class PermissionSyncUtil implements ApplicationContextAware {
             HandlerMethod method = entry.getValue();
             PermissionVo permVo = new PermissionVo();
             permVo.setTenant(appName);
-            ApiOperation apiOperation = method.getMethodAnnotation(ApiOperation.class);
-            if(Objects.nonNull(apiOperation)) {
-                permVo.setApiOperation(apiOperation.value());
+            OperatePermission operatePermission = method.getMethodAnnotation(OperatePermission.class);
+            if(Objects.nonNull(operatePermission)) {
+                permVo.setResourceName(operatePermission.resourceName());
+                permVo.setOperateCode(operatePermission.operateCode());
+                permVo.setOperateDesc(operatePermission.operateDesc());
             }
             PatternsRequestCondition patternsCondition = info.getPatternsCondition();
             permVo.setMethodName(method.getMethod().getDeclaringClass().getName()+"#"+method.getMethod().getName());

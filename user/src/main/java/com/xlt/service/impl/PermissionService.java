@@ -65,13 +65,15 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
     }
 
     private void addPermissions(List<PermissionVo> permissionVoList) {
-        if(CollectionUtils.isEmpty(permissionVoList)) {
+        if (CollectionUtils.isEmpty(permissionVoList)) {
             return;
         }
         List<PermissionPo> permissionPoList = new ArrayList<>();
         permissionVoList.forEach(permissionVo -> {
             PermissionPo permissionPo = PermissionPo.builder()
-                    .apiOperation(permissionVo.getApiOperation())
+                    .resourceName(permissionVo.getResourceName())
+                    .operateCode(permissionVo.getOperateCode())
+                    .operateDesc(permissionVo.getOperateDesc())
                     .path(permissionVo.getPath())
                     .tenant(permissionVo.getTenant())
                     .httpMethod(permissionVo.getHttpMethod())
@@ -214,8 +216,14 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         if (Objects.nonNull(permissionVo)) {
             Example example = new Example(PermissionPo.class);
             Example.Criteria criteria = example.createCriteria();
-            if (StringUtils.isNotEmpty(permissionVo.getApiOperation())) {
-                criteria.andLike("apiOperation", permissionVo.getApiOperation() + CommConstant.PERCENTAGE);
+            if (StringUtils.isNotEmpty(permissionVo.getOperateDesc())) {
+                criteria.andLike("operateDesc", CommConstant.PERCENTAGE + permissionVo.getOperateDesc() + CommConstant.PERCENTAGE);
+            }
+            if (StringUtils.isNotEmpty(permissionVo.getOperateCode())) {
+                criteria.andLike("operateCode", permissionVo.getOperateCode() + CommConstant.PERCENTAGE);
+            }
+            if (StringUtils.isNotEmpty(permissionVo.getResourceName())) {
+                criteria.andLike("resourceName", permissionVo.getResourceName() + CommConstant.PERCENTAGE);
             }
             if (StringUtils.isNotEmpty(permissionVo.getPath())) {
                 criteria.andLike("path", permissionVo.getPath() + CommConstant.PERCENTAGE);
