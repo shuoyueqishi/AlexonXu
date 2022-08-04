@@ -1,4 +1,4 @@
-package com.xlt.utils;
+package com.xlt.utils.common;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.JWT;
@@ -7,9 +7,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.xlt.exception.CommonException;
+import com.xlt.config.auth.JwtConfig;
 import com.xlt.model.vo.UserInfoVo;
-import com.xlt.utils.common.AppContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -45,8 +44,8 @@ public class JwtUtil implements ApplicationRunner {
         String token = JWT.create()
                 .withHeader(map)// 添加头部
                 //可以将基本信息放到claims中
-                .withClaim("userId", userInfoVo.getUserId())//userId
-                .withClaim("userName", userInfoVo.getName())//userName
+                .withClaim("userId", userInfoVo.getCurUser().getUserId())//userId
+                .withClaim("userName", userInfoVo.getCurUser().getName())//userName
                 .withClaim("curRole", JSON.toJSONString(userInfoVo.getCurRole())) //curRole
                 .withClaim("validRoleList", JSON.toJSONString(userInfoVo.getValidRoleList()))
                 .withExpiresAt(expireDate) //超时设置,设置过期的日期

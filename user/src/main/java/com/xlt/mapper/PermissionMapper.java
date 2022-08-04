@@ -10,5 +10,8 @@ import java.util.List;
 
 @Component
 public interface PermissionMapper extends Mapper<PermissionPo> {
+
     int batchInsert(@Param("list") List<PermissionPo> list);
+
+    List<PermissionPo> queryPermissionsByPoint(@Param("list") List<String> list);
 }

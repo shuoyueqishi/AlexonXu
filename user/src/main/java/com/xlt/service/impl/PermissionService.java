@@ -13,6 +13,7 @@ import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.*;
 import com.xlt.service.api.IPermissionService;
 import com.xlt.utils.TkPoUtil;
+import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.PermissionSyncUtil;
 import com.xlt.utils.common.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -30,13 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PermissionService implements IPermissionService, ISyncPermissionService {
 
-    @Value("${spring.application.name}")
-    private String tenant;
-
     @Autowired
-    private PermissionSyncUtil permissionSyncUtil;
-
-    @Autowired(required = false)
     private PermissionMapper permissionMapper;
 
     @Autowired
@@ -58,6 +54,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
      * @return 返回值
      */
     @Override
+    @Transactional
     public BasicResponse synchronizePermission() {
         List<PermissionVo> permissionVoList = PermissionSyncUtil.getOperationPermissions();
         addPermissions(permissionVoList);
@@ -83,6 +80,31 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
             permissionPoList.add(permissionPo);
         });
         permissionMapper.batchInsert(permissionPoList);
+
+        RolePo sysAdminPo = roleMapper.selectOne(RolePo.builder().roleCode("SystemAdmin").build());
+        AssertUtil.isNull(sysAdminPo,"role code: SystemAdmin not exist in system");
+
+        List<PermissionVo> ownedPermList = rolePermissionMapper.queryPermissionByRoleId(sysAdminPo.getRoleId());
+        Set<String> ownedPermSet = new HashSet<>();
+        ownedPermList.forEach(perm->{
+            ownedPermSet.add(perm.getTenant()+"#"+perm.getResourceName()+"#"+perm.getOperateCode());
+        });
+        List<String> notOwnedList = new ArrayList<>();
+        for(PermissionVo perm: permissionVoList) {
+            String permPoint = perm.getTenant() + "#" + perm.getResourceName() + "#" + perm.getOperateCode();
+            if(!ownedPermSet.contains(permPoint)) {
+                notOwnedList.add(permPoint);
+            }
+        }
+
+        if(!CollectionUtils.isEmpty(notOwnedList)) {
+            List<PermissionPo> permissionPos = permissionMapper.queryPermissionsByPoint(notOwnedList);
+            List<Long> permIdList = permissionPos.stream().map(PermissionPo::getPermissionId).collect(Collectors.toList());
+            RolePermissionVo  rolePermissionVo = new RolePermissionVo();
+            rolePermissionVo.setRoleId(sysAdminPo.getRoleId());
+            rolePermissionVo.setPermissionList(permIdList);
+            grantPermissions2Role(rolePermissionVo);
+        }
         log.info("synchronize permission successfully.");
     }
 

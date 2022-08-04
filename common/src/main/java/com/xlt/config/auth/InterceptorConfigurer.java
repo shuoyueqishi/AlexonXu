@@ -1,4 +1,4 @@
-package com.xlt.config.jwt;
+package com.xlt.config.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

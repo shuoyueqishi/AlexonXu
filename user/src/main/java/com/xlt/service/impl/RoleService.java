@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -209,7 +206,6 @@ public class RoleService implements IRoleService {
         RolePo rolePo = roleMapper.selectOne(RolePo.builder().roleCode(roleCode).build());
         RoleVo changedRole = ObjectUtil.convertObjs(rolePo, RoleVo.class);
         userInfo.setCurRole(changedRole);
-        userInfo.setDefaultRole(rolePo.getRoleId());
 
         // 更新权限点
         // 查询当前角色的权限列表
@@ -218,10 +214,10 @@ public class RoleService implements IRoleService {
         permissionVoList.forEach(perm->{
             permissionSet.add(perm.getTenant()+"#"+perm.getPath());
         });
-        userInfo.setCurPermissionSet(permissionSet);
+        userInfo.setCurPermissionList(new ArrayList<>(permissionSet));
 
         // 设置默认角色
-        UserPo updUserPo = UserPo.builder().userId(userInfo.getUserId()).defaultRole(rolePo.getRoleId()).build();
+        UserPo updUserPo = UserPo.builder().userId(userInfo.getCurUser().getUserId()).defaultRole(rolePo.getRoleId()).build();
         TkPoUtil.buildUpdateUserInfo(updUserPo);
         userMapper.updateByPrimaryKeySelective(updUserPo);
 

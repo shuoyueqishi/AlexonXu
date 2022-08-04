@@ -25,11 +25,11 @@ public class UserContext {
 
    public static String getUserName() {
        UserInfoVo userInfoVo = userInfoHolder.get();
-       return userInfoVo==null?"DefaultUser":userInfoVo.getName();
+       return userInfoVo==null?"DefaultUser":userInfoVo.getCurUser().getName();
    }
 
    public static Long getUserId() {
        UserInfoVo userInfoVo = userInfoHolder.get();
-       return userInfoVo==null?-1L:userInfoVo.getUserId();
+       return userInfoVo==null?-1L:userInfoVo.getCurUser().getUserId();
    }
 }

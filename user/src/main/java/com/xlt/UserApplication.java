@@ -9,10 +9,10 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan(value = "com.xlt.mapper")
-public class AuthApplication {
+public class UserApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
+        SpringApplication.run(UserApplication.class, args);
     }
 
 }

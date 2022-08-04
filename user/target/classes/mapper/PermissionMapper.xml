@@ -4,7 +4,9 @@
 <mapper namespace="com.xlt.mapper.PermissionMapper">
     <resultMap id="ResultMap" type="com.xlt.model.po.PermissionPo">
         <result column="permission_id" jdbcType="BIGINT" property="permissionId" />
-        <result column="api_operation" jdbcType="VARCHAR" property="apiOperation" />
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+        <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
+        <result column="operate_desc" jdbcType="VARCHAR" property="operateDesc" />
         <result column="path" jdbcType="VARCHAR" property="path" />
         <result column="http_method" jdbcType="VARCHAR" property="httpMethod" />
         <result column="method_name" jdbcType="VARCHAR" property="methodName" />
@@ -18,7 +20,9 @@
     <insert id="batchInsert">
         <if test="list!=null and list.size()>0">
             insert into permission_t (
-            api_operation,
+            resource_name,
+            operate_code,
+            operate_desc,
             path,
             http_method,
             method_name,
@@ -29,7 +33,9 @@
             last_update_date) values
             <foreach collection="list" index="index" item="item" separator=",">
                 (
-                #{item.apiOperation},
+                #{item.resourceName},
+                #{item.operateCode},
+                #{item.operateDesc},
                 #{item.path},
                 #{item.httpMethod},
                 #{item.methodName},
@@ -41,13 +47,34 @@
                 )
             </foreach>
             ON DUPLICATE KEY UPDATE
-            api_operation = VALUES(api_operation),
+            operate_desc = VALUES(operate_desc),
+            http_method = VALUES(http_method),
+            path = VALUES(path),
             method_name = VALUES(method_name),
-            tenant = VALUES(tenant),
             last_update_by = VALUES(last_update_by),
             last_update_date = VALUES(last_update_date)
         </if>
     </insert>
+
+    <select id="queryPermissionsByPoint" resultMap="ResultMap">
+        select permission_id,
+               resource_name,
+               operate_code,
+               operate_desc,
+               path,
+               http_method,
+               method_name,
+               tenant,
+               create_by,
+               creation_date,
+               last_update_by,
+               last_update_date
+        from permission_t t
+        where CONCAT(t.tenant,'#',t.resource_name,'#',t.operate_code) in
+             <foreach collection="list" item="permPoint" index="idx" open="(" separator="," close=")">
+                 #{permPoint}
+             </foreach>
+    </select>
 
 
 </mapper>

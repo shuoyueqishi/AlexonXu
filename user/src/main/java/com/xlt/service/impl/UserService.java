@@ -6,7 +6,7 @@ import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
-import com.xlt.utils.JwtUtil;
+import com.xlt.utils.common.JwtUtil;
 import com.xlt.utils.MD5Util;
 import com.xlt.logs.OperationLog;
 import com.xlt.mapper.RoleMapper;
@@ -65,9 +65,11 @@ public class UserService implements IUserService {
         if (Objects.isNull(userPo)) {
             throw new CommonException("User [" + userVo.getName() + "] not exists in system.");
         }
+        UserInfoVo userInfoVo = new UserInfoVo();
+        UserVo curUser = ObjectUtil.convertObjs(userPo, UserVo.class);
+        userInfoVo.setCurUser(curUser);
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
             // 查询用户的当前角色
-            UserInfoVo userInfoVo = ObjectUtil.convertObjs(userPo, UserInfoVo.class);
             RolePo curRolePo = roleMapper.selectByPrimaryKey(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
@@ -78,7 +80,7 @@ public class UserService implements IUserService {
             permissionVoList.forEach(perm -> {
                 permissionSet.add(perm.getTenant() + "#" + perm.getHttpMethod() + "#" + perm.getPath());
             });
-            userInfoVo.setCurPermissionSet(permissionSet);
+            userInfoVo.setCurPermissionList(new ArrayList<>(permissionSet));
 
             // 查询用户的角色列表
             List<UserRoleVo> validRoleList = rolePermissionMapper.queryRoleListByUserId(userPo.getUserId());
@@ -87,12 +89,10 @@ public class UserService implements IUserService {
             // 生产token
             String token = JwtUtil.createToken(userInfoVo);
             userInfoVo.setToken(token);
-            userInfoVo.setPassword(null);
-            String tokenKey = CommConstant.TOKEN_PREFIX + userPo.getUserId();
             String userInfoKey = CommConstant.USER_INFO_PREFIX + userPo.getUserId();
-            log.info("token cache key={},user info cache key={}", tokenKey, userInfoKey);
-            RedisUtil.set(tokenKey, token, 30, TimeUnit.MINUTES);
-            RedisUtil.set(userInfoKey, userInfoVo, 30, TimeUnit.MINUTES);
+            log.info("user info cache key={}",  userInfoKey);
+            Map<String, Object> userInfoMap = ObjectUtil.getNonNullFields(userInfoVo);
+            RedisUtil.hmset(userInfoKey, userInfoMap, 1800);
             UserContext.setUserInfo(userInfoVo);
             response.setData(userInfoVo);
             response.setMessage("Login successfully for user " + userVo.getName());

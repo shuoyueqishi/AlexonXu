@@ -90,8 +90,10 @@ DROP TABLE IF EXISTS `permission_t`;
 CREATE TABLE `permission_t`
 (
     `permission_id`    bigint(10)   NOT NULL AUTO_INCREMENT COMMENT '权限id',
-    `api_operation`    varchar(256) DEFAULT NULL COMMENT 'swagger ApiOperation注解内容',
-    `path`             varchar(512) NOT NULL COMMENT '接口路径',
+    `resource_name`    varchar(64) NOT NULL COMMENT '资源名称',
+    `operate_code`    varchar(128) NOT NULL COMMENT '操作码',
+    `operate_desc`    varchar(256) DEFAULT NULL COMMENT '操作描述',
+    `path`             varchar(512) DEFAULT NULL COMMENT '接口路径',
     `http_method`      varchar(16)  DEFAULT NULL COMMENT 'HTTP请求方式',
     `method_name`      varchar(256) DEFAULT NULL COMMENT '方法全路径名',
     `tenant`           varchar(32) DEFAULT NULL COMMENT '租户',
@@ -100,7 +102,6 @@ CREATE TABLE `permission_t`
     `last_update_by`   varchar(50) DEFAULT NULL COMMENT '修改人',
     `last_update_date` datetime    DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`permission_id`),
-    KEY `idx_apiOperation` (`api_operation`),
-    UNIQUE KEY `uk_tenantMethodPath` (`tenant`, `http_method`, `path`)
+    UNIQUE KEY `uk_tenantResourceOpeCode` (`tenant`, `resource_name`,`operate_code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='权限表';

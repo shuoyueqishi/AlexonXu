@@ -11,6 +11,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -51,7 +52,10 @@ public class SyncPermissionScheduler {
                 ISyncPermissionService syncPermissionService = AppContextUtil.getBean(ISyncPermissionService.class);
                 syncPermissionService.syncPermissionList(permissionVoList);
             } else {
-                HttpEntity<List<PermissionVo>> httpEntity = new HttpEntity<>(permissionVoList);
+                // internal用于内部鉴权
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("internal",appName);
+                HttpEntity<List<PermissionVo>> httpEntity = new HttpEntity<>(permissionVoList,headers);
                 ResponseEntity<BasicResponse> responseEntity = restTemplate.postForEntity("http://user/user/permission/synchronize/list", httpEntity, BasicResponse.class);
                 if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
                     BasicResponse basicRes = responseEntity.getBody();

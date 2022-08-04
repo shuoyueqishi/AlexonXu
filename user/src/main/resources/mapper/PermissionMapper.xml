@@ -4,7 +4,9 @@
 <mapper namespace="com.xlt.mapper.PermissionMapper">
     <resultMap id="ResultMap" type="com.xlt.model.po.PermissionPo">
         <result column="permission_id" jdbcType="BIGINT" property="permissionId" />
-        <result column="api_operation" jdbcType="VARCHAR" property="apiOperation" />
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+        <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
+        <result column="operate_desc" jdbcType="VARCHAR" property="operateDesc" />
         <result column="path" jdbcType="VARCHAR" property="path" />
         <result column="http_method" jdbcType="VARCHAR" property="httpMethod" />
         <result column="method_name" jdbcType="VARCHAR" property="methodName" />
@@ -53,6 +55,26 @@
             last_update_date = VALUES(last_update_date)
         </if>
     </insert>
+
+    <select id="queryPermissionsByPoint" resultMap="ResultMap">
+        select permission_id,
+               resource_name,
+               operate_code,
+               operate_desc,
+               path,
+               http_method,
+               method_name,
+               tenant,
+               create_by,
+               creation_date,
+               last_update_by,
+               last_update_date
+        from permission_t t
+        where CONCAT(t.tenant,'#',t.resource_name,'#',t.operate_code) in
+             <foreach collection="list" item="permPoint" index="idx" open="(" separator="," close=")">
+                 #{permPoint}
+             </foreach>
+    </select>
 
 
 </mapper>
