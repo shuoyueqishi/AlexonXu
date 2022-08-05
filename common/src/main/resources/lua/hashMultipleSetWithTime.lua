@@ -9,4 +9,4 @@ for i=1, fieldCount, 1 do
     fieldKeyIdx = fieldKeyIdx + 1
     fieldValIdx = fieldValIdx + 1
 end
-redis.pcall('EXPIER',key,expireTimeSec)
+redis.pcall('EXPIRE',key,expireTimeSec)

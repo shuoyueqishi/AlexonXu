@@ -36,7 +36,9 @@
     </insert>
     <select id="queryPermissionByRoleId" resultType="com.xlt.model.vo.PermissionVo">
         select  p.permission_id as permissionId,
-                p.api_operation as apiOperation,
+                p.resource_name as resourceName,
+                p.operate_code as operateCode,
+                p.operate_desc as operateDesc,
                 p.path as path,
                 p.http_method as httpMethod,
                 p.method_name as methodName,

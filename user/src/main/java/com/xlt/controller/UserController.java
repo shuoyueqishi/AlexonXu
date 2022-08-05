@@ -27,30 +27,30 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ApiOperation("login")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.UPDATE, operateDesc = "User login")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "User login")
     public DataResponse<Object> userLogin(@RequestBody UserVo userVo)  throws NoSuchAlgorithmException {
         return iUserService.userLogin(userVo);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("logout")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.UPDATE, operateDesc = "User logout")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "User logout")
     public BasicResponse userLogout(@RequestBody UserVo userVo) {
         return iUserService.userLogout(userVo);
     }
 
     @RequestMapping(value = "/query/list", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation("query user list")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query user list")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query user list")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user list")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
     public DataResponse<List<UserVo>> queryUserList(@QueryParam("") UserVo userVo) {
         return iUserService.queryUserList(userVo);
     }
 
     @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation("query user list")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query user paged list")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query user list")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user paged list")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
     public DataResponse<Object> queryUserPageList(@QueryParam("") UserVo userVo,
                                                    @PathVariable("pageSize") int pageSize,
                                                    @PathVariable("curPage") int curPage) {
@@ -63,32 +63,32 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ApiOperation("add user")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.CREATE, operateDesc = "add new user")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.CREATE, operateDesc = "add new user")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.CREATE, operateDesc = "add new user")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.CREATE, operateDesc = "add new user")
     public BasicResponse addUser(@RequestBody UserVo userVo) {
         return iUserService.addUser(userVo);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("update user")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.UPDATE, operateDesc = "update user info")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.UPDATE, operateDesc = "update user info")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "update user info")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.UPDATE, operateDesc = "update user info")
     public BasicResponse updateUser(@RequestBody UserVo userVo) {
         return iUserService.updateUser(userVo);
     }
 
     @RequestMapping(value = "/update/pwd", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("update user password")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.UPDATE, operateDesc = "update user password")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.UPDATE, operateDesc = "update user password")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "update user password")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.UPDATE, operateDesc = "update user password")
     public BasicResponse updateUserPassword(@RequestBody UpdatePwdUserVo updatePwdUserVo) {
         return iUserService.updateUserPwd(updatePwdUserVo);
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, produces = "application/json")
     @ApiOperation("delete user")
-    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.DELETE, operateDesc = "delete a user")
-    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.DELETE, operateDesc = "delete a user")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.DELETE, operateDesc = "delete a user")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.DELETE, operateDesc = "delete a user")
     public BasicResponse deleteUser(@PathVariable("userId") Long userId) {
         return iUserService.deleteUserById(userId);
     }

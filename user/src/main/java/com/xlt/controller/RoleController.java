@@ -26,7 +26,7 @@ public class RoleController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ApiOperation("add role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.CREATE, operateDesc = "Role add")
-    @OperatePermission(resourceName = "RoleService",operateCode =OperateConstant.CREATE, operateDesc = "Role add")
+    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.CREATE, operateDesc = "Role add")
     public DataResponse<Object> roleAdd(@RequestBody RoleVo roleVo) {
         return roleService.roleAdd(roleVo);
     }
@@ -34,7 +34,7 @@ public class RoleController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("update role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.UPDATE, operateDesc = "Role update")
-    @OperatePermission(resourceName = "RoleService",operateCode =OperateConstant.UPDATE, operateDesc = "Role update")
+    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "Role update")
     public DataResponse<Object> roleUpdate(@RequestBody RoleVo roleVo) {
         return roleService.roleUpdate(roleVo);
     }
@@ -42,7 +42,7 @@ public class RoleController {
     @RequestMapping(value = "/page/list/{pageSize}/{currentPage}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation("query role paged list")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.READ, operateDesc = "query role paged list")
-    @OperatePermission(resourceName = "RoleService",operateCode =OperateConstant.READ, operateDesc = "query role paged list")
+    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.READ, operateDesc = "query role paged list")
     public DataResponse<Object> queryRolePageList(@QueryParam("") RoleVo roleVo,
                                                   @PathVariable("pageSize") int pageSize,
                                                   @PathVariable("currentPage") int currentPage) {
@@ -53,7 +53,7 @@ public class RoleController {
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation("query role list")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.READ, operateDesc = "query role list")
-    @OperatePermission(resourceName = "RoleService", operateCode = OperateConstant.READ, operateDesc = "query role list")
+    @OperatePermission(resourceName = "RoleController", operateCode = OperateConstant.READ, operateDesc = "query role list")
     public DataResponse<Object> queryRoleList(@QueryParam("") RoleVo roleVo) {
         return roleService.queryRoleList(roleVo);
     }
@@ -61,7 +61,7 @@ public class RoleController {
     @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE, produces = "application/json")
     @ApiOperation("delete role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.DELETE, operateDesc = "delete role")
-    @OperatePermission(resourceName = "RoleService",operateCode =OperateConstant.DELETE, operateDesc = "delete role")
+    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.DELETE, operateDesc = "delete role")
     public DataResponse<Object> deleteRoleById(@PathVariable("roleId") Long roleId) {
         return roleService.deleteRoleById(roleId);
     }
@@ -69,7 +69,7 @@ public class RoleController {
     @RequestMapping(value = "/change/{roleCode}/{userId}", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("change role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.UPDATE, operateDesc = "change role")
-    @OperatePermission(resourceName = "RoleService",operateCode =OperateConstant.UPDATE, operateDesc = "change role")
+    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "change role")
     public DataResponse<Object> changeRole(@PathVariable("roleCode") String roleCode,@PathVariable("userId")String userId) {
         return roleService.changeRole(roleCode,userId);
     }

@@ -61,11 +61,10 @@ public class TokenInterceptor implements HandlerInterceptor {
                 AssertUtil.isTrue(StringUtils.isEmpty(token) && StringUtils.isEmpty(userId),
                         "Can't invoke API as token and useId both not exist in http header");
                 UserInfoVo userInfoVo = new UserInfoVo();
-                Map<Object, Object> userInfoMap = new HashMap<>();
                 if (StringUtils.isEmpty(userId) && StringUtils.isNotEmpty(token)) {
                     userId = JwtUtil.verifyToken(token).get("userId").asString();
                 }
-                userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
+                Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
                 convertMap2UserInfoVo(userInfoMap, userInfoVo);
                 List<String> permissionList = userInfoVo.getCurPermissionList();
                 AssertUtil.isTrue(CollectionUtils.isEmpty(permissionList) || !permissionList.contains(perPoint),

@@ -1,5 +1,7 @@
 package com.xlt.controller;
 
+import com.xlt.annotation.OperatePermission;
+import com.xlt.constant.OperateConstant;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.vo.BrandVo;
 import com.xlt.model.vo.PageVo;
@@ -17,21 +19,25 @@ public class BrandController {
     private IBrandService brandService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+    @OperatePermission(resourceName = "BrandController",operateCode = OperateConstant.CREATE, operateDesc = "create brand")
     BasicResponse addBrand(@RequestBody BrandVo brandVo) {
         return brandService.createBrand(brandVo);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    @OperatePermission(resourceName = "BrandController",operateCode =OperateConstant.DELETE, operateDesc = "delete brand")
     BasicResponse deleteBrand(@PathVariable("id") Long id) {
         return brandService.deleteBrand(id);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
+    @OperatePermission(resourceName = "BrandController",operateCode =OperateConstant.UPDATE, operateDesc = "update brand")
     BasicResponse updateBrand(@RequestBody BrandVo brandVo) {
         return brandService.updateBrand(brandVo);
     }
 
     @RequestMapping(value = "/query/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
+    @OperatePermission(resourceName = "BrandController",operateCode =OperateConstant.READ, operateDesc = "query brand paged list")
     BasicResponse queryBrandList(@QueryParam("brandVo") BrandVo brandVo, @PathVariable("pageSize") int pageSize,
                                  @PathVariable("curPage") int curPage) {
         return brandService.queryBrandPageList(brandVo, PageVo.builder().pageSize(pageSize).currentPage(curPage).build());

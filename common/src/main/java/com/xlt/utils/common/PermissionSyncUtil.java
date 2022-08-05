@@ -56,6 +56,8 @@ public class PermissionSyncUtil implements ApplicationContextAware {
                 permVo.setResourceName(operatePermission.resourceName());
                 permVo.setOperateCode(operatePermission.operateCode());
                 permVo.setOperateDesc(operatePermission.operateDesc());
+            } else {
+                continue;
             }
             PatternsRequestCondition patternsCondition = info.getPatternsCondition();
             permVo.setMethodName(method.getMethod().getDeclaringClass().getName()+"#"+method.getMethod().getName());
@@ -67,7 +69,7 @@ public class PermissionSyncUtil implements ApplicationContextAware {
             for (RequestMethod requestMethod : methodsCondition.getMethods()) {
                permVo.setHttpMethod(requestMethod.toString());
             }
-            if(StringUtils.isEmpty(permVo.getHttpMethod())||StringUtils.isEmpty(permVo.getTenant())||StringUtils.isEmpty(permVo.getPath())) {
+            if(StringUtils.isEmpty(permVo.getResourceName())||StringUtils.isEmpty(permVo.getTenant())||StringUtils.isEmpty(permVo.getOperateCode())) {
                 continue;
             }
             permVoList.add(permVo);

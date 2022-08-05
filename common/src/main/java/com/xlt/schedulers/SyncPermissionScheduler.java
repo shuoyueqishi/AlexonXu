@@ -38,7 +38,7 @@ public class SyncPermissionScheduler {
 
     private static final String PERMISSION_SYNC_LOCK = "permission_sync_lock";
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void syncPermissions() {
         RLock fairLock = redissonClient.getFairLock(PERMISSION_SYNC_LOCK);
         try {
