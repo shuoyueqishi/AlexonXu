@@ -66,6 +66,7 @@ public class UserService implements IUserService {
             throw new CommonException("User [" + userVo.getName() + "] not exists in system.");
         }
         UserInfoVo userInfoVo = new UserInfoVo();
+
         UserVo curUser = ObjectUtil.convertObjs(userPo, UserVo.class);
         userInfoVo.setCurUser(curUser);
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
