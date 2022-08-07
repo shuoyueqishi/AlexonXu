@@ -2,7 +2,7 @@ package com.xlt.controller;
 
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.vo.UserVo;
-import com.xlt.service.interfaces.IUserService;
+import com.xlt.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

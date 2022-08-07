@@ -6,7 +6,7 @@ import com.xlt.model.po.UserPo;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.UserVo;
-import com.xlt.service.interfaces.IUserService;
+import com.xlt.service.IUserService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;

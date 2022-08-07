@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderVo extends BaseVo implements Serializable {
     private static final long serialVersionUID = 1906603758352569839L;
+
     private Long orderId;
 
     private String orderNo;
@@ -23,16 +24,22 @@ public class OrderVo extends BaseVo implements Serializable {
 
     private String userStr;
 
-    private Long receiveAddressId;
+    private BigDecimal orderAmount;
 
-    private BigDecimal amount;
+    private BigDecimal deliveryAmount;
+
+    private BigDecimal totalAmount;
+
+    private Long receiverId;
+
+    private String receiverStr;
 
     private Integer status;
 
-    private String statusDesc;
+    private String statusStr;
 
     private Integer deleted;
 
-    private List<OrderProductDeliveryVo> productList;
+    private List<OrderCommodityVo> commodityList;
 
 }

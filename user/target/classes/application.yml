@@ -9,7 +9,7 @@ info:
     description: 用户权限管理微服务
   author: Alexon
   build:
-    artifactId: auth
+    artifactId: user
     version: 1.0-SNAPSHOT
 
 #jwt

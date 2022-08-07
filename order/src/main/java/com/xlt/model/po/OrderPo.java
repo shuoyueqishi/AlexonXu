@@ -1,5 +1,6 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 public class OrderPo extends BasePo implements Serializable {
     private static final long serialVersionUID = 1337475900522675773L;
 
-    @TableId("order_id")
+    @TableId(value = "order_id",type = IdType.AUTO)
     private Long orderId;
 
     @TableField("order_no")
@@ -26,8 +27,14 @@ public class OrderPo extends BasePo implements Serializable {
     @TableField("user_id")
     private Long userId;
 
-    @TableField("amount")
-    private BigDecimal amount;
+    @TableField("order_amount")
+    private BigDecimal orderAmount;
+
+    @TableField("delivery_amount")
+    private BigDecimal deliveryAmount;
+
+    @TableField("total_amount")
+    private BigDecimal totalAmount;
 
     @TableField("status")
     private Integer status;

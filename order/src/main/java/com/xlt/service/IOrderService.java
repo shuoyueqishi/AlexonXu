@@ -1,4 +1,4 @@
-package com.xlt.service.interfaces;
+package com.xlt.service;
 
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;

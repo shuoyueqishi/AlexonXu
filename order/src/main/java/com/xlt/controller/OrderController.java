@@ -5,9 +5,7 @@ import com.xlt.constant.OperateConstant;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.OrderVo;
-import com.xlt.model.vo.UserVo;
-import com.xlt.service.interfaces.IOrderService;
-import com.xlt.service.interfaces.IUserService;
+import com.xlt.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
