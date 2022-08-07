@@ -36,6 +36,8 @@ public class OrderService implements IOrderService {
         AssertUtil.isNull(orderVo, "orderVo can't be empty");
         AssertUtil.isNull(orderVo.getUserId(), "userId can't by empty");
         AssertUtil.isNull(orderVo.getReceiverId(), "receiverId can't empty");
+        // TODO：校验receiver在不在系统中
+
         AssertUtil.isNull(orderVo.getOrderAmount(), "orderAmount can't be empty");
         AssertUtil.isNull(orderVo.getDeliveryAmount(), "deliveryAmount can't be empty");
         AssertUtil.isNull(orderVo.getTotalAmount(), "totalAmount can't be empty");
