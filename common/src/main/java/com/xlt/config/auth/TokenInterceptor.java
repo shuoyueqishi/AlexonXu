@@ -65,6 +65,7 @@ public class TokenInterceptor implements HandlerInterceptor {
                     userId = JwtUtil.verifyToken(token).get("userId").asString();
                 }
                 Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
+                RedisUtil.expire(CommConstant.USER_INFO_PREFIX + userId, jwtConfig.getJwtExpireTime());
                 convertMap2UserInfoVo(userInfoMap, userInfoVo);
                 List<String> permissionList = userInfoVo.getCurPermissionList();
                 AssertUtil.isTrue(CollectionUtils.isEmpty(permissionList) || !permissionList.contains(perPoint),

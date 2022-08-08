@@ -16,6 +16,8 @@ public interface IStockService {
 
     BasicResponse updateStock(StockVo stockVo);
 
+    BasicResponse updateStockList(List<StockVo> stockVoList);
+
     BasicResponse deleteStock(Long id);
 
 }

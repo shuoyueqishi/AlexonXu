@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.IOrderCommodityMapper">
+
+    <insert id="batchInsert">
+        <if test="list != null and list.size()>0">
+            insert into order_commodity_rel_t (
+                order_id,
+                sku_id,
+                quantity,
+                create_by,
+                creation_date,
+                last_update_by,
+                last_update_date
+            ) values
+            <foreach collection="list" item="item" separator=",">
+                (#{item.orderId},
+                 #{item.skuId},
+                 #{item.quantity},
+                 #{item.createBy},
+                 #{item.creationDate},
+                 #{item.lastUpdateBy},
+                 #{item.lastUpdateDate}
+            </foreach>
+        </if>
+    </insert>
+</mapper>

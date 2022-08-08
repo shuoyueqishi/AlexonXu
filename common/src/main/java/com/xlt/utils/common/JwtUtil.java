@@ -48,7 +48,7 @@ public class JwtUtil implements ApplicationRunner {
                 .withClaim("userName", userInfoVo.getCurUser().getName())//userName
                 .withClaim("curRole", JSON.toJSONString(userInfoVo.getCurRole())) //curRole
                 .withClaim("validRoleList", JSON.toJSONString(userInfoVo.getValidRoleList()))
-                .withExpiresAt(expireDate) //超时设置,设置过期的日期
+//                .withExpiresAt(expireDate) //超时设置,设置过期的日期
                 .withIssuedAt(new Date()) //签发时间
                 .sign(Algorithm.HMAC256(JwtUtil.jwtConfig.getTokenSecret())); //SECRET加密
         return token;

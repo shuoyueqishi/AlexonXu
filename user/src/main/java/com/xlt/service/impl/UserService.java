@@ -71,6 +71,7 @@ public class UserService implements IUserService {
         userInfoVo.setCurUser(curUser);
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
             // 查询用户的当前角色
+            curUser.setPassword(null);
             RolePo curRolePo = roleMapper.selectByPrimaryKey(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
@@ -79,7 +80,7 @@ public class UserService implements IUserService {
             List<PermissionVo> permissionVoList = rolePermissionMapper.queryPermissionByRoleId(userPo.getDefaultRole());
             Set<String> permissionSet = new HashSet<>();
             permissionVoList.forEach(perm -> {
-                permissionSet.add(perm.getTenant() + "#" + perm.getHttpMethod() + "#" + perm.getPath());
+                permissionSet.add(perm.getTenant() + "#" + perm.getResourceName() + "#" + perm.getOperateCode());
             });
             userInfoVo.setCurPermissionList(new ArrayList<>(permissionSet));
 
@@ -91,7 +92,7 @@ public class UserService implements IUserService {
             String token = JwtUtil.createToken(userInfoVo);
             userInfoVo.setToken(token);
             String userInfoKey = CommConstant.USER_INFO_PREFIX + userPo.getUserId();
-            log.info("user info cache key={}",  userInfoKey);
+            log.info("user info cache key={}", userInfoKey);
             Map<String, Object> userInfoMap = ObjectUtil.getNonNullFields(userInfoVo);
             RedisUtil.hmset(userInfoKey, userInfoMap, 1800);
             UserContext.setUserInfo(userInfoVo);
