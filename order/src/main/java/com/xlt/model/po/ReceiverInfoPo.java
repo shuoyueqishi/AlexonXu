@@ -30,6 +30,9 @@ public class ReceiverInfoPo extends BasePo implements Serializable {
     @TableField("receiver_telephone")
     private String receiverTelephone;
 
+    @TableField("receiver_address")
+    private String receiverAddress;
+
     @TableField("default_flag")
     private Integer defaultFlag;
 }

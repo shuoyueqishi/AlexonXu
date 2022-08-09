@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("order_t")
+@TableName("order_commodity_rel_t")
 public class OrderCommodityPo extends BasePo implements Serializable {
 
     private static final long serialVersionUID = 9124349053924342474L;

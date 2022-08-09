@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class RedisUtil {
-    private static RedisTemplate<String, Object> redisTemplate;
+    public static RedisTemplate<String, Object> redisTemplate;
 
     @PostConstruct
     public void setStaticParam() {

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.constant.RedisConstant;
+import com.xlt.exception.CommonException;
 import com.xlt.mapper.IStockMapper;
 import com.xlt.model.po.StockPo;
 import com.xlt.model.response.BasicResponse;
@@ -16,11 +17,15 @@ import com.xlt.utils.common.ObjectUtil;
 import com.xlt.utils.common.PoUtil;
 import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -28,6 +33,9 @@ public class StockService implements IStockService {
 
     @Autowired
     private IStockMapper stockMapper;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public PagedResponse<List<StockVo>> queryStockPageList(StockVo stockVo, PageVo pageVo) {
@@ -73,18 +81,31 @@ public class StockService implements IStockService {
         AssertUtil.isNull(stockPo, "skuId:" + stockVo.getSkuId() + " not exists");
         AssertUtil.isTrue(stockPo.getQuantity() < stockVo.getQuantity(),
                 "stock not enough,current stock is:" + stockPo.getQuantity());
-        RedisUtil.delete(RedisConstant.SKI_ID + stockPo.getSkuId());
-        StockPo udpStockPo = StockPo.builder().skuId(stockVo.getSkuId()).build();
-        PoUtil.buildUpdateUserInfo(stockPo);
-        UpdateWrapper<StockPo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("quantity", stockPo.getQuantity() - stockVo.getQuantity());
-        stockMapper.update(udpStockPo, queryWrapper);
-        RedisUtil.delete(RedisConstant.SKI_ID + stockPo.getSkuId());
-        RedisUtil.set(RedisConstant.SKI_ID + stockPo.getSkuId(), stockPo.getQuantity());
+        RLock fairLock = redissonClient.getFairLock(stockVo.getSkuId() + "");
+        try {
+            if (fairLock.tryLock(1000, 800, TimeUnit.MILLISECONDS)) {
+                StockPo udpStockPo = StockPo.builder().quantity(stockPo.getQuantity() - stockVo.getQuantity()).build();
+                PoUtil.buildUpdateUserInfo(stockPo);
+                UpdateWrapper<StockPo> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("sku_id", stockVo.getSkuId());
+                stockMapper.update(udpStockPo, queryWrapper);
+                log.info("update stock success for skuId:" + stockVo.getSkuId());
+            } else {
+                log.info("get redisson lock failed");
+            }
+        } catch (InterruptedException e) {
+            log.error("update stock error:", e);
+            throw new CommonException("update stock error:" + e.getMessage());
+        } finally {
+            if (fairLock.isHeldByCurrentThread()) {
+                fairLock.unlock();
+            }
+        }
         return new BasicResponse();
     }
 
     @Override
+    @Transactional
     public BasicResponse updateStockList(List<StockVo> stockVoList) {
         log.info("stockVoList.size={}", stockVoList.size());
         for (StockVo stockVo : stockVoList) {

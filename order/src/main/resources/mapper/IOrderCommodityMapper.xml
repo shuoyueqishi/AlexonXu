@@ -21,7 +21,7 @@
                  #{item.createBy},
                  #{item.creationDate},
                  #{item.lastUpdateBy},
-                 #{item.lastUpdateDate}
+                 #{item.lastUpdateDate})
             </foreach>
         </if>
     </insert>

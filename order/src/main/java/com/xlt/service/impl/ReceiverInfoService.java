@@ -2,6 +2,7 @@ package com.xlt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xlt.constant.RedisConstant;
 import com.xlt.mapper.IReceiverInfoMapper;
 import com.xlt.model.po.ReceiverInfoPo;
 import com.xlt.model.response.BasicResponse;
@@ -11,6 +12,8 @@ import com.xlt.model.vo.ReceiverInfoVo;
 import com.xlt.service.IReceiverInfoService;
 import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.ObjectUtil;
+import com.xlt.utils.common.PoUtil;
+import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +35,9 @@ public class ReceiverInfoService implements IReceiverInfoService {
         AssertUtil.isStringEmpty(receiverInfoVo.getReceiverAddress(),"address can't be empty");
         AssertUtil.isNull(receiverInfoVo.getUserId(),"userId can't be empty");
         ReceiverInfoPo receiverInfoPo = ObjectUtil.convertObjs(receiverInfoVo, ReceiverInfoPo.class);
+        PoUtil.buildCreateUserInfo(receiverInfoPo);
         receiverInfoMapper.insert(receiverInfoPo);
+        RedisUtil.set(RedisConstant.RECEIVER_INFO + receiverInfoPo.getReceiverId(),receiverInfoPo);
         return new BasicResponse();
     }
 

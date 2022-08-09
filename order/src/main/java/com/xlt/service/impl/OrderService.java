@@ -1,6 +1,7 @@
 package com.xlt.service.impl;
 
 import com.xlt.constant.CommConstant;
+import com.xlt.constant.RedisConstant;
 import com.xlt.mapper.IOrderCommodityMapper;
 import com.xlt.mapper.IOrderMapper;
 import com.xlt.mapper.IReceiverInfoMapper;
@@ -17,6 +18,9 @@ import com.xlt.service.feign.ICommodityFeignClient;
 import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +51,12 @@ public class OrderService implements IOrderService {
         AssertUtil.isNull(orderVo.getUserId(), "userId can't by empty");
         AssertUtil.isNull(orderVo.getReceiverId(), "receiverId can't empty");
         // 校验receiver在不在系统中
-        ReceiverInfoPo receiverInfoPo = receiverInfoMapper.selectById(orderVo.getReceiverId());
-        AssertUtil.isNull(receiverInfoPo,"receiverId not exist");
+        Object cachedReceiver = RedisUtil.get(RedisConstant.RECEIVER_INFO + orderVo.getReceiverId());
+        if(Objects.isNull(cachedReceiver)) {
+            ReceiverInfoPo receiverInfoPo = receiverInfoMapper.selectById(orderVo.getReceiverId());
+            AssertUtil.isNull(receiverInfoPo,"receiverId not exist");
+            RedisUtil.set(RedisConstant.RECEIVER_INFO + orderVo.getReceiverId(),receiverInfoPo);
+        }
         AssertUtil.isNull(orderVo.getOrderAmount(), "orderAmount can't be empty");
         AssertUtil.isNull(orderVo.getDeliveryAmount(), "deliveryAmount can't be empty");
         AssertUtil.isNull(orderVo.getTotalAmount(), "totalAmount can't be empty");
@@ -60,20 +68,23 @@ public class OrderService implements IOrderService {
             AssertUtil.isTrue(Objects.isNull(orderCommodityVo.getQuantity()) || orderCommodityVo.getQuantity() < 1,
                     "quantity can't be empty or less than 1");
             // 缓存中查询库存是否充足
-            Long curStock = (Long)RedisUtil.get("SkuId:" + orderCommodityVo.getSkuId());
-            AssertUtil.isTrue(curStock==null||curStock<orderCommodityVo.getQuantity(),"stock is not enough");
+            Long retCode = preDecrementStockInCache(orderCommodityVo);
+            if(retCode==-2){
+                return BasicResponse.errorWithMsg("no stock exist");
+            } else if(retCode==-1) {
+                return BasicResponse.errorWithMsg("stock is not enough");
+            }
         }
         // 先创建订单头，再创建明细
-        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 5);
+        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
         orderVo.setOrderNo(orderNo);
         OrderPo orderPo = ObjectUtil.convertObjs(orderVo, OrderPo.class);
         PoUtil.buildCreateUserInfo(orderPo);
-        // 返回主键ID才行
         orderMapper.insert(orderPo);
         List<OrderCommodityPo> orderCommodityPos = new ArrayList<>();
         List<StockVo> stockVoList = new ArrayList<>();
         orderVo.getCommodityList().forEach(orderComVo->{
-            orderComVo.setOrderId(orderPo.getOrderId());
+            orderComVo.setOrderId(orderPo.getOrderId()); // 插入之后自动生成orderID
             OrderCommodityPo orderCommodityPo = ObjectUtil.convertObjs(orderComVo, OrderCommodityPo.class);
             PoUtil.buildCreateUserInfo(orderCommodityPo);
             orderCommodityPos.add(orderCommodityPo);
@@ -81,8 +92,19 @@ public class OrderService implements IOrderService {
             stockVoList.add(stockVo);
         });
         orderCommodityMapper.batchInsert(orderCommodityPos);
-        commodityFeignClient.updateStockList(stockVoList);
+        BasicResponse updResponse = commodityFeignClient.updateStockList(stockVoList);
+        AssertUtil.isTrue(updResponse.isSuccess(),"update stock failed");
         return new BasicResponse("Submit order success, orderNo is:"+orderNo);
+    }
+
+    private Long preDecrementStockInCache(OrderCommodityVo orderCommodityVo) {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setResultType(Long.class);
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/preDecrementStock.lua")));
+        List<String> keyList = new ArrayList<>();
+        String key = RedisConstant.SKI_ID+orderCommodityVo.getSkuId();
+        keyList.add(key);
+        return RedisUtil.redisTemplate.opsForValue().getOperations().execute(redisScript, keyList, orderCommodityVo.getQuantity());
     }
 
     @Override

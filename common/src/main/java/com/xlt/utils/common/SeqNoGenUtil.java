@@ -45,14 +45,14 @@ public class SeqNoGenUtil {
 
 
     /**
-     * 获取全局唯一序列号，形如：D20220723110130xxxx
+     * 获取全局唯一序列号，形如：D20220723xxxx
      *
      * @param prefix    前缀
      * @param seqLength 序列长度，即xxxx长度
      * @return 序列号
      */
     public static String getSeqNoWithTime(String prefix, int seqLength) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String date = dateFormat.format(new Date());
         return getSequenceNo(prefix + date, seqLength);
     }

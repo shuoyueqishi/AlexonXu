@@ -11,6 +11,6 @@ import java.util.List;
 @FeignClient("commodity")
 public interface ICommodityFeignClient {
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/commodity/stock/update")
+    @RequestMapping(method = RequestMethod.PUT, value = "/commodity/stock/update",headers = "internal=order")
     BasicResponse updateStockList(List<StockVo> stockVoList);
 }

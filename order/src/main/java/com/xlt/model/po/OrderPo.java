@@ -27,6 +27,9 @@ public class OrderPo extends BasePo implements Serializable {
     @TableField("user_id")
     private Long userId;
 
+    @TableField("receiver_id")
+    private Long receiverId;
+
     @TableField("order_amount")
     private BigDecimal orderAmount;
 

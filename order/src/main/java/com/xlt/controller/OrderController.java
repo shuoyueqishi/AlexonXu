@@ -13,7 +13,7 @@ import javax.ws.rs.QueryParam;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping
 public class OrderController {
 
     @Autowired
