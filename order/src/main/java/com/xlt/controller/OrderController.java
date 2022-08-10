@@ -25,6 +25,12 @@ public class OrderController {
         return orderService.createOrder(orderVo);
     }
 
+    @RequestMapping(value = "/create/async", method = RequestMethod.POST, produces = "application/json")
+    @OperatePermission(resourceName = "OrderController",operateCode = OperateConstant.CREATE, operateDesc = "asynchronously create order")
+    BasicResponse asyncCreateOrder(@RequestBody OrderVo orderVo) {
+        return orderService.asyncCreateOrder(orderVo);
+    }
+
     @RequestMapping(value = "/{orderId}", method = RequestMethod.DELETE, produces = "application/json")
     @OperatePermission(resourceName = "OrderController",operateCode =OperateConstant.DELETE, operateDesc = "delete order")
     BasicResponse deleteOrder(@PathVariable("orderId") Long id) {

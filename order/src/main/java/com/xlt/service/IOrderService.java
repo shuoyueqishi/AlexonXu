@@ -10,6 +10,8 @@ public interface IOrderService {
 
     BasicResponse createOrder(OrderVo orderVo);
 
+    DataResponse<String> asyncCreateOrder(OrderVo orderVo);
+
     BasicResponse deleteOrder(Long id);
 
     BasicResponse updateOrder(OrderVo orderVo);

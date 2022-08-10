@@ -1,5 +1,6 @@
 package com.xlt.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xlt.constant.CommConstant;
 import com.xlt.constant.RedisConstant;
 import com.xlt.mapper.IOrderCommodityMapper;
@@ -17,6 +18,7 @@ import com.xlt.service.IOrderService;
 import com.xlt.service.feign.ICommodityFeignClient;
 import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -44,9 +46,42 @@ public class OrderService implements IOrderService {
     @Autowired
     private ICommodityFeignClient commodityFeignClient;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Override
     @Transactional
     public BasicResponse createOrder(OrderVo orderVo) {
+        BasicResponse checkResult = checkOrderParams(orderVo);
+        if (checkResult != null) return checkResult;
+        // 先创建订单头，再创建明细
+        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
+        orderVo.setOrderNo(orderNo);
+        createRealOrder(orderVo);
+        return new BasicResponse("Submit order success, orderNo is:"+orderNo);
+    }
+
+    public void createRealOrder(OrderVo orderVo) {
+        OrderPo orderPo = ObjectUtil.convertObjs(orderVo, OrderPo.class);
+        PoUtil.buildCreateUserInfo(orderPo);
+        orderMapper.insert(orderPo);
+        List<OrderCommodityPo> orderCommodityPos = new ArrayList<>();
+        List<StockVo> stockVoList = new ArrayList<>();
+        orderVo.getCommodityList().forEach(orderComVo->{
+            orderComVo.setOrderId(orderPo.getOrderId()); // 插入之后自动生成orderID
+            OrderCommodityPo orderCommodityPo = ObjectUtil.convertObjs(orderComVo, OrderCommodityPo.class);
+            PoUtil.buildCreateUserInfo(orderCommodityPo);
+            orderCommodityPos.add(orderCommodityPo);
+            StockVo stockVo = StockVo.builder().skuId(orderComVo.getSkuId()).quantity(orderComVo.getQuantity()).build();
+            stockVoList.add(stockVo);
+        });
+        orderCommodityMapper.batchInsert(orderCommodityPos);
+        BasicResponse updResponse = commodityFeignClient.updateStockList(stockVoList);
+        AssertUtil.isTrue(!updResponse.isSuccess(),"update stock failed");
+    }
+
+
+    private BasicResponse checkOrderParams(OrderVo orderVo) {
         AssertUtil.isNull(orderVo, "orderVo can't be empty");
         AssertUtil.isNull(orderVo.getUserId(), "userId can't by empty");
         AssertUtil.isNull(orderVo.getReceiverId(), "receiverId can't empty");
@@ -75,26 +110,19 @@ public class OrderService implements IOrderService {
                 return BasicResponse.errorWithMsg("stock is not enough");
             }
         }
-        // 先创建订单头，再创建明细
+        return null;
+    }
+
+    @Override
+    public DataResponse<String> asyncCreateOrder(OrderVo orderVo) {
+        BasicResponse checkResult = checkOrderParams(orderVo);
+        if (checkResult != null) {
+            return ObjectUtil.convertObjs(checkResult, DataResponse.class);
+        }
         String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
         orderVo.setOrderNo(orderNo);
-        OrderPo orderPo = ObjectUtil.convertObjs(orderVo, OrderPo.class);
-        PoUtil.buildCreateUserInfo(orderPo);
-        orderMapper.insert(orderPo);
-        List<OrderCommodityPo> orderCommodityPos = new ArrayList<>();
-        List<StockVo> stockVoList = new ArrayList<>();
-        orderVo.getCommodityList().forEach(orderComVo->{
-            orderComVo.setOrderId(orderPo.getOrderId()); // 插入之后自动生成orderID
-            OrderCommodityPo orderCommodityPo = ObjectUtil.convertObjs(orderComVo, OrderCommodityPo.class);
-            PoUtil.buildCreateUserInfo(orderCommodityPo);
-            orderCommodityPos.add(orderCommodityPo);
-            StockVo stockVo = StockVo.builder().skuId(orderComVo.getSkuId()).quantity(orderComVo.getQuantity()).build();
-            stockVoList.add(stockVo);
-        });
-        orderCommodityMapper.batchInsert(orderCommodityPos);
-        BasicResponse updResponse = commodityFeignClient.updateStockList(stockVoList);
-        AssertUtil.isTrue(updResponse.isSuccess(),"update stock failed");
-        return new BasicResponse("Submit order success, orderNo is:"+orderNo);
+        rabbitTemplate.convertAndSend("directExchange","order", JSON.toJSONString(orderVo));
+        return new DataResponse<>(orderNo);
     }
 
     private Long preDecrementStockInCache(OrderCommodityVo orderCommodityVo) {

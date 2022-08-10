@@ -75,15 +75,15 @@ public class StockService implements IStockService {
     public BasicResponse updateStock(StockVo stockVo) {
         log.info("update stock info:{}", stockVo);
         AssertUtil.isNull(stockVo.getSkuId(), "skuId can't be empty");
-        QueryWrapper<StockPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("skuId", stockVo.getSkuId());
-        StockPo stockPo = stockMapper.selectOne(queryWrapper);
-        AssertUtil.isNull(stockPo, "skuId:" + stockVo.getSkuId() + " not exists");
-        AssertUtil.isTrue(stockPo.getQuantity() < stockVo.getQuantity(),
-                "stock not enough,current stock is:" + stockPo.getQuantity());
         RLock fairLock = redissonClient.getFairLock(stockVo.getSkuId() + "");
         try {
             if (fairLock.tryLock(1000, 800, TimeUnit.MILLISECONDS)) {
+                QueryWrapper<StockPo> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("sku_id", stockVo.getSkuId());
+                StockPo stockPo = stockMapper.selectOne(queryWrapper);
+                AssertUtil.isNull(stockPo, "skuId:" + stockVo.getSkuId() + " not exists");
+                AssertUtil.isTrue(stockPo.getQuantity() < stockVo.getQuantity(),
+                        "stock not enough,current stock is:" + stockPo.getQuantity());
                 StockPo udpStockPo = StockPo.builder().quantity(stockPo.getQuantity() - stockVo.getQuantity()).build();
                 PoUtil.buildUpdateUserInfo(stockPo);
                 UpdateWrapper<StockPo> updateWrapper = new UpdateWrapper<>();
