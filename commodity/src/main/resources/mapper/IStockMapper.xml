@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.IStockMapper">
+
+    <update id="updateStock">
+        update commodity_stock_t
+        set quantity         = quantity - #{po.quantity},
+            last_update_by   = #{po.lastUpdateBy},
+            last_update_date = #{po.lastUpdateDate}
+        where sku_id = #{po.skuId}
+          and quantity > 0
+    </update>
+
+</mapper>

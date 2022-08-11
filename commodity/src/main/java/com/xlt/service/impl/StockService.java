@@ -77,21 +77,20 @@ public class StockService implements IStockService {
         AssertUtil.isNull(stockVo.getSkuId(), "skuId can't be empty");
         RLock fairLock = redissonClient.getFairLock(stockVo.getSkuId() + "");
         try {
-            if (fairLock.tryLock(1000, 800, TimeUnit.MILLISECONDS)) {
+            if (fairLock.tryLock(3, 2, TimeUnit.SECONDS)) {
                 QueryWrapper<StockPo> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("sku_id", stockVo.getSkuId());
                 StockPo stockPo = stockMapper.selectOne(queryWrapper);
                 AssertUtil.isNull(stockPo, "skuId:" + stockVo.getSkuId() + " not exists");
                 AssertUtil.isTrue(stockPo.getQuantity() < stockVo.getQuantity(),
                         "stock not enough,current stock is:" + stockPo.getQuantity());
-                StockPo udpStockPo = StockPo.builder().quantity(stockPo.getQuantity() - stockVo.getQuantity()).build();
-                PoUtil.buildUpdateUserInfo(stockPo);
-                UpdateWrapper<StockPo> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("sku_id", stockVo.getSkuId());
-                stockMapper.update(udpStockPo, queryWrapper);
+                StockPo udpStockPo = StockPo.builder().skuId(stockVo.getSkuId()).quantity(stockVo.getQuantity()).build();
+                PoUtil.buildUpdateUserInfo(udpStockPo);
+                stockMapper.updateStock(udpStockPo);
                 log.info("update stock success for skuId:" + stockVo.getSkuId());
             } else {
-                log.info("get redisson lock failed");
+                log.error("get redisson lock failed");
+                throw new CommonException("get redisson lock failed");
             }
         } catch (InterruptedException e) {
             log.error("update stock error:", e);

@@ -1,4 +1,4 @@
-package com.xlt.config.mq;
+package com.xlt.mq.config;
 
 
 import org.springframework.amqp.core.Binding;

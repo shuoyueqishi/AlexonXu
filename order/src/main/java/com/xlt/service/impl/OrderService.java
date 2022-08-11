@@ -14,6 +14,7 @@ import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.OrderCommodityVo;
 import com.xlt.model.vo.OrderVo;
 import com.xlt.model.vo.StockVo;
+import com.xlt.mq.sender.MqSender;
 import com.xlt.service.IOrderService;
 import com.xlt.service.feign.ICommodityFeignClient;
 import com.xlt.utils.common.*;
@@ -47,7 +48,7 @@ public class OrderService implements IOrderService {
     private ICommodityFeignClient commodityFeignClient;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private MqSender mqSender;
 
     @Override
     @Transactional
@@ -121,7 +122,7 @@ public class OrderService implements IOrderService {
         }
         String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
         orderVo.setOrderNo(orderNo);
-        rabbitTemplate.convertAndSend("directExchange","order", JSON.toJSONString(orderVo));
+        mqSender.send("directExchange","order", orderVo);
         return new DataResponse<>(orderNo);
     }
 

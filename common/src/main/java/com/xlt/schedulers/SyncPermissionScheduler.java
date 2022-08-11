@@ -38,7 +38,7 @@ public class SyncPermissionScheduler {
 
     private static final String PERMISSION_SYNC_LOCK = "permission_sync_lock";
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void syncPermissions() {
         RLock fairLock = redissonClient.getFairLock(PERMISSION_SYNC_LOCK);
         try {
@@ -47,7 +47,7 @@ public class SyncPermissionScheduler {
                 return;
             }
             List<PermissionVo> permissionVoList = PermissionSyncUtil.getOperationPermissions();
-            log.info("appName={},permissionVoList.size={}", appName, permissionVoList.size());
+            log.debug("appName={},permissionVoList.size={}", appName, permissionVoList.size());
             if ("user".equals(appName)) {
                 ISyncPermissionService syncPermissionService = AppContextUtil.getBean(ISyncPermissionService.class);
                 syncPermissionService.syncPermissionList(permissionVoList);
@@ -59,18 +59,18 @@ public class SyncPermissionScheduler {
                 ResponseEntity<BasicResponse> responseEntity = restTemplate.postForEntity("http://user/user/permission/synchronize/list", httpEntity, BasicResponse.class);
                 if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
                     BasicResponse basicRes = responseEntity.getBody();
-                    log.info("invoke result = {}", basicRes);
+                    log.debug("invoke result = {}", basicRes);
                 } else {
                     log.error("invoke error: http://user/user/permission/synchronize/list");
                 }
-                log.info("success to synchronize permission");
+                log.debug("success to synchronize permission");
             }
         } catch (InterruptedException e) {
             log.error("get redisson InterruptedException:", e);
         } finally {
             if (fairLock.isHeldByCurrentThread()) {
                 fairLock.unlock();
-                log.info("unlock redisson lock success for:" + PERMISSION_SYNC_LOCK);
+                log.debug("unlock redisson lock success for:" + PERMISSION_SYNC_LOCK);
             }
         }
 
