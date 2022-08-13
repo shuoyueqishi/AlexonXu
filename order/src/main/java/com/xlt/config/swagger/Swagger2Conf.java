@@ -17,8 +17,8 @@ public class Swagger2Conf {
     @Bean
     public Docket getUserDocket(){
         ApiInfo apiInfo=new ApiInfoBuilder()
-                .title("Commodity Micro Service")//api标题
-                .description("Commodity Micro Service API接口")//api描述
+                .title("Order Micro Service")//api标题
+                .description("Order Micro Service API接口")//api描述
                 .version("1.0.0")//版本号
                 .contact(new Contact("Alex xu","http://localhost:8081/","2219321592@qq.com"))
                 .build();
