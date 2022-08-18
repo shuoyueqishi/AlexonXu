@@ -1,7 +1,8 @@
 package com.xlt.controller;
 
-import com.xlt.annotation.OperatePermission;
+import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
+import com.xlt.limiter.RequestLimiter;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.OrderVo;
@@ -21,12 +22,14 @@ public class OrderController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     @OperatePermission(resourceName = "OrderController",operateCode = OperateConstant.CREATE, operateDesc = "create order")
+    @RequestLimiter(limiterName = "createOrder", rate = 20)
     BasicResponse createOrder(@RequestBody OrderVo orderVo) {
         return orderService.createOrder(orderVo);
     }
 
     @RequestMapping(value = "/create/async", method = RequestMethod.POST, produces = "application/json")
     @OperatePermission(resourceName = "OrderController",operateCode = OperateConstant.CREATE, operateDesc = "asynchronously create order")
+    @RequestLimiter(limiterName = "asyncCreateOrder", rate = 40)
     BasicResponse asyncCreateOrder(@RequestBody OrderVo orderVo) {
         return orderService.asyncCreateOrder(orderVo);
     }

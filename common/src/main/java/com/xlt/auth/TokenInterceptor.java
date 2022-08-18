@@ -1,7 +1,6 @@
-package com.xlt.config.auth;
+package com.xlt.auth;
 
 import com.alibaba.fastjson.JSON;
-import com.xlt.annotation.OperatePermission;
 import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.model.vo.*;

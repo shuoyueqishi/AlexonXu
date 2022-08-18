@@ -1,11 +1,10 @@
 package com.xlt.controller;
 
-import com.xlt.annotation.OperatePermission;
+import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.vo.StockVo;
 import com.xlt.model.vo.PageVo;
-import com.xlt.service.IStockService;
 import com.xlt.service.IStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

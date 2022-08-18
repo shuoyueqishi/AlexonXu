@@ -1,4 +1,4 @@
-package com.xlt.config.auth;
+package com.xlt.auth;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

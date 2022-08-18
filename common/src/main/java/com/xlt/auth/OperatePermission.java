@@ -1,4 +1,4 @@
-package com.xlt.annotation;
+package com.xlt.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

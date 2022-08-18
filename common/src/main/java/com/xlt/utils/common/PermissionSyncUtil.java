@@ -1,7 +1,7 @@
 package com.xlt.utils.common;
 
 
-import com.xlt.annotation.OperatePermission;
+import com.xlt.auth.OperatePermission;
 import com.xlt.model.vo.PermissionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
