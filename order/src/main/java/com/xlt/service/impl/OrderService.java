@@ -56,7 +56,7 @@ public class OrderService implements IOrderService {
         BasicResponse checkResult = checkOrderParams(orderVo);
         if (checkResult != null) return checkResult;
         // 先创建订单头，再创建明细
-        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
+        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 8);
         orderVo.setOrderNo(orderNo);
         createRealOrder(orderVo);
         return new BasicResponse("Submit order success, orderNo is:"+orderNo);
@@ -120,7 +120,7 @@ public class OrderService implements IOrderService {
         if (checkResult != null) {
             return ObjectUtil.convertObjs(checkResult, DataResponse.class);
         }
-        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 4);
+        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 8);
         orderVo.setOrderNo(orderNo);
         mqSender.send("directExchange","order", orderVo);
         return new DataResponse<>(orderNo);

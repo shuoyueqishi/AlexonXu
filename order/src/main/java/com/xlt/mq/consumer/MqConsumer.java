@@ -1,11 +1,9 @@
 package com.xlt.mq.consumer;
 
 import com.alibaba.fastjson.JSON;
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.xlt.model.vo.OrderVo;
 import com.xlt.service.impl.OrderService;
-import io.netty.channel.ChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
@@ -19,7 +17,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +42,7 @@ public class MqConsumer {
         log.info("receive messageId={}",messageId);
         RLock fairLock = redissonClient.getFairLock("lockMessageId:" + messageId);
         try {
-            if(fairLock.tryLock(5,4, TimeUnit.SECONDS)) {
+            if(fairLock.tryLock(10,9, TimeUnit.SECONDS)) {
                 OrderVo orderVo = JSON.parseObject(message.getBody(), OrderVo.class);
                 orderService.createRealOrder(orderVo);
                 log.info("asynchronously create order success");
