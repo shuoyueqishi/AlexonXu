@@ -213,6 +213,8 @@ public class RoleService implements IRoleService {
         RoleVo changedRole = ObjectUtil.convertObjs(rolePo, RoleVo.class);
         userInfo.setCurRole(changedRole);
 
+        // TODO: 设置用户的默认角色
+
         // 更新权限点
         // 查询当前角色的权限列表
         List<PermissionVo> permissionVoList = rolePermMapper.queryPermissionByRoleId(rolePo.getRoleId());
