@@ -1,15 +1,18 @@
 package com.xlt.utils.common;
 
+import com.alibaba.fastjson.JSON;
+import com.xlt.model.vo.RoleVo;
+import com.xlt.model.vo.UserInfoVo;
+import com.xlt.model.vo.UserRoleVo;
+import com.xlt.model.vo.UserVo;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectUtil {
     private static Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
@@ -67,5 +70,22 @@ public class ObjectUtil {
             targetList.add(target);
         });
         return targetList;
+    }
+
+    public static void convertMap2UserInfoVo(Map<Object, Object> map, UserInfoVo userInfoVo) {
+        if (CollectionUtils.isEmpty(map)) return;
+        userInfoVo.setToken((String) map.get("token"));
+        if (Objects.nonNull(map.get("curUser"))) {
+            userInfoVo.setCurUser(JSON.parseObject(JSON.toJSONString(map.get("curUser")), UserVo.class));
+        }
+        if (Objects.nonNull(map.get("curRole"))) {
+            userInfoVo.setCurRole(JSON.parseObject(JSON.toJSONString(map.get("curRole")), RoleVo.class));
+        }
+        if (Objects.nonNull(map.get("curPermissionList"))) {
+            userInfoVo.setCurPermissionList(JSON.parseArray(JSON.toJSONString(map.get("curPermissionList")), String.class));
+        }
+        if (Objects.nonNull(map.get("validRoleList"))) {
+            userInfoVo.setValidRoleList(JSON.parseArray(JSON.toJSONString(map.get("validRoleList")), UserRoleVo.class));
+        }
     }
 }

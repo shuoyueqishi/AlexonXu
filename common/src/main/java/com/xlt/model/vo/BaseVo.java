@@ -1,5 +1,6 @@
 package com.xlt.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +18,13 @@ public class BaseVo implements Serializable {
 
     private String createByStr;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date creationDate;
 
     private Long lastUpdateBy;
 
     private String lastUpdateByStr;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date LastUpdateDate;
 }

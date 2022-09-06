@@ -2,6 +2,7 @@ package com.xlt.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xlt.auth.JwtConfig;
 import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
@@ -42,6 +43,9 @@ public class RoleService implements IRoleService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private JwtConfig jwtConfig;
 
     /**
      * 新增用户
@@ -183,12 +187,14 @@ public class RoleService implements IRoleService {
         if (StringUtils.isEmpty(userId)) {
             throw new CommonException("userId can't be empty");
         }
-        UserInfoVo userInfo = (UserInfoVo) RedisUtil.get(CommConstant.USER_INFO_PREFIX + userId);
-        if (Objects.isNull(userInfo)) {
+
+        Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
+        if (Objects.isNull(userInfoMap)) {
             throw new CommonException("user info cached not exist");
         }
+        UserInfoVo userInfo = new UserInfoVo();
+        ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfo);
         UserContext.setUserInfo(userInfo);
-
         UserPo userPo = userMapper.selectByPrimaryKey(userId);
         if (Objects.isNull(userPo)) {
             throw new CommonException("User not exist in system, change role failed.");
@@ -212,7 +218,7 @@ public class RoleService implements IRoleService {
         List<PermissionVo> permissionVoList = rolePermMapper.queryPermissionByRoleId(rolePo.getRoleId());
         Set<String> permissionSet = new HashSet<>();
         permissionVoList.forEach(perm->{
-            permissionSet.add(perm.getTenant()+"#"+perm.getPath());
+            permissionSet.add(perm.getTenant()+"#"+perm.getResourceName()+"#"+perm.getOperateCode());
         });
         userInfo.setCurPermissionList(new ArrayList<>(permissionSet));
 
@@ -222,7 +228,8 @@ public class RoleService implements IRoleService {
         userMapper.updateByPrimaryKeySelective(updUserPo);
 
         // 更新缓存
-        RedisUtil.set(CommConstant.USER_INFO_PREFIX + userId, userInfo, 30, TimeUnit.MINUTES);
+        Map<String, Object> newUserInfoMap = ObjectUtil.getNonNullFields(userInfo);
+        RedisUtil.hmset(CommConstant.USER_INFO_PREFIX + userId, newUserInfoMap, jwtConfig.getJwtExpireTime());
 
         // 更新上下文
         UserContext.setUserInfo(userInfo);

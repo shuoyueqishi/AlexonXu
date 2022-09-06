@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.model.vo.*;
-import com.xlt.utils.common.AssertUtil;
-import com.xlt.utils.common.JwtUtil;
-import com.xlt.utils.common.RedisUtil;
+import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +63,7 @@ public class TokenInterceptor implements HandlerInterceptor {
                 }
                 Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
                 RedisUtil.expire(CommConstant.USER_INFO_PREFIX + userId, jwtConfig.getJwtExpireTime());
-                convertMap2UserInfoVo(userInfoMap, userInfoVo);
+                ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfoVo);
                 List<String> permissionList = userInfoVo.getCurPermissionList();
                 AssertUtil.isTrue(CollectionUtils.isEmpty(permissionList) || !permissionList.contains(perPoint),
                         "lack of permission: " + perPoint);
@@ -76,22 +74,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private void convertMap2UserInfoVo(Map<Object, Object> map, UserInfoVo userInfoVo) {
-        if (CollectionUtils.isEmpty(map)) return;
-        userInfoVo.setToken((String) map.get("token"));
-        if (Objects.nonNull(map.get("curUser"))) {
-            userInfoVo.setCurUser(JSON.parseObject(JSON.toJSONString(map.get("curUser")), UserVo.class));
-        }
-        if (Objects.nonNull(map.get("curRole"))) {
-            userInfoVo.setCurRole(JSON.parseObject(JSON.toJSONString(map.get("curRole")), RoleVo.class));
-        }
-        if (Objects.nonNull(map.get("curPermissionList"))) {
-            userInfoVo.setCurPermissionList(JSON.parseArray(JSON.toJSONString(map.get("curPermissionList")), String.class));
-        }
-        if (Objects.nonNull(map.get("validRoleList"))) {
-            userInfoVo.setValidRoleList(JSON.parseArray(JSON.toJSONString(map.get("validRoleList")), UserRoleVo.class));
-        }
-    }
+
 
 
     @Override

@@ -69,7 +69,7 @@ public class RoleController {
     @RequestMapping(value = "/change/{roleCode}/{userId}", method = RequestMethod.PUT, produces = "application/json")
     @ApiOperation("change role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.UPDATE, operateDesc = "change role")
-    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "change role")
+//    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "change role")
     public DataResponse<Object> changeRole(@PathVariable("roleCode") String roleCode,@PathVariable("userId")String userId) {
         return roleService.changeRole(roleCode,userId);
     }
