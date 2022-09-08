@@ -82,25 +82,25 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         permissionMapper.batchInsert(permissionPoList);
 
         RolePo sysAdminPo = roleMapper.selectOne(RolePo.builder().roleCode("SystemAdmin").build());
-        AssertUtil.isNull(sysAdminPo,"role code: SystemAdmin not exist in system");
+        AssertUtil.isNull(sysAdminPo, "role code: SystemAdmin not exist in system");
 
         List<PermissionVo> ownedPermList = rolePermissionMapper.queryPermissionByRoleId(sysAdminPo.getRoleId());
         Set<String> ownedPermSet = new HashSet<>();
-        ownedPermList.forEach(perm->{
-            ownedPermSet.add(perm.getTenant()+"#"+perm.getResourceName()+"#"+perm.getOperateCode());
+        ownedPermList.forEach(perm -> {
+            ownedPermSet.add(perm.getTenant() + "#" + perm.getResourceName() + "#" + perm.getOperateCode());
         });
         List<String> notOwnedList = new ArrayList<>();
-        for(PermissionVo perm: permissionVoList) {
+        for (PermissionVo perm : permissionVoList) {
             String permPoint = perm.getTenant() + "#" + perm.getResourceName() + "#" + perm.getOperateCode();
-            if(!ownedPermSet.contains(permPoint)) {
+            if (!ownedPermSet.contains(permPoint)) {
                 notOwnedList.add(permPoint);
             }
         }
 
-        if(!CollectionUtils.isEmpty(notOwnedList)) {
+        if (!CollectionUtils.isEmpty(notOwnedList)) {
             List<PermissionPo> permissionPos = permissionMapper.queryPermissionsByPoint(notOwnedList);
             List<Long> permIdList = permissionPos.stream().map(PermissionPo::getPermissionId).collect(Collectors.toList());
-            RolePermissionVo  rolePermissionVo = new RolePermissionVo();
+            RolePermissionVo rolePermissionVo = new RolePermissionVo();
             rolePermissionVo.setRoleId(sysAdminPo.getRoleId());
             rolePermissionVo.setPermissionList(permIdList);
             grantPermissions2Role(rolePermissionVo);
@@ -215,6 +215,23 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         }
         rolePermissionMapper.batchInsertPermissions(rolePermList);
         return new BasicResponse();
+    }
+
+    /**
+     * 删除角色的角色
+     *
+     * @param rolePermissionVo 角色权限信息
+     * @return 返回值
+     */
+    @Override
+    public BasicResponse removeRolePermission(RolePermissionVo rolePermissionVo) {
+        log.info("removeRolePermission input params:{}", rolePermissionVo);
+        AssertUtil.isNull(rolePermissionVo, "rolePermissionVo is null");
+        AssertUtil.isNull(rolePermissionVo.getRoleId(), "roleId can't be empty");
+        AssertUtil.isCollectionEmpty(rolePermissionVo.getPermissionList(), "permissionList can't be empty");
+        AssertUtil.isTrue(rolePermissionVo.getPermissionList().size() > 500, "PermissionList size can be larger than 500");
+        rolePermissionMapper.removeRolePermission(rolePermissionVo);
+        return new BasicResponse("remove role permissions successfully");
     }
 
     /**

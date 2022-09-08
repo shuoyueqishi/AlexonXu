@@ -34,6 +34,16 @@
                 last_update_date = VALUES(last_update_date)
         </if>
     </insert>
+
+    <delete id="removeRolePermission">
+        delete from role_permission_t
+        where  role_id = #{vo.roleId}
+          and  permission_id in
+        <foreach collection="vo.permissionList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
     <select id="queryPermissionByRoleId" resultType="com.xlt.model.vo.PermissionVo">
         select  p.permission_id as permissionId,
                 p.resource_name as resourceName,

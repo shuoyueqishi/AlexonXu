@@ -43,6 +43,14 @@ public interface IPermissionService {
     BasicResponse grantPermissions2Role(RolePermissionVo rolePermissionVo);
 
     /**
+     * 删除角色的角色
+     *
+     * @param rolePermissionVo 角色权限信息
+     * @return 返回值
+     */
+    BasicResponse removeRolePermission(RolePermissionVo rolePermissionVo);
+
+    /**
      * 取消用户角色
      *
      * @param userRoleVoList 用户角色信息

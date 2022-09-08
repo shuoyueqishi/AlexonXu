@@ -69,6 +69,14 @@ public class PermissionController {
         return permissionService.grantPermissions2Role(rolePermissionVo);
     }
 
+    @RequestMapping(value = "/remove/role/privilege", method = RequestMethod.DELETE, produces = "application/json")
+    @ApiOperation("remove role permissions")
+    @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.DELETE, operateDesc = "remove role permissions")
+    @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.DELETE, operateDesc = "remove role permissions")
+    BasicResponse removeRolePermission(@RequestBody RolePermissionVo rolePermissionVo) {
+        return permissionService.removeRolePermission(rolePermissionVo);
+    }
+
     @RequestMapping(value = "/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation("query permission paged list")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query permission paged list")
