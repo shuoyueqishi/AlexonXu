@@ -25,21 +25,21 @@ public class UserController {
     @Autowired
     private IUserService iUserService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("login")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "User login")
     public DataResponse<Object> userLogin(@RequestBody UserVo userVo)  throws NoSuchAlgorithmException {
         return iUserService.userLogin(userVo);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/logout", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("logout")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "User logout")
     public BasicResponse userLogout(@RequestBody UserVo userVo) {
         return iUserService.userLogout(userVo);
     }
 
-    @RequestMapping(value = "/query/list", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/query/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query user list")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user list")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
@@ -47,7 +47,7 @@ public class UserController {
         return iUserService.queryUserList(userVo);
     }
 
-    @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query user list")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user paged list")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
@@ -61,7 +61,7 @@ public class UserController {
         return iUserService.queryUserPageList(userVo, pageVo);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("add user")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.CREATE, operateDesc = "add new user")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.CREATE, operateDesc = "add new user")
@@ -69,7 +69,7 @@ public class UserController {
         return iUserService.addUser(userVo);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("update user")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "update user info")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.UPDATE, operateDesc = "update user info")
@@ -77,7 +77,7 @@ public class UserController {
         return iUserService.updateUser(userVo);
     }
 
-    @RequestMapping(value = "/update/pwd", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/update/pwd", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("update user password")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "update user password")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.UPDATE, operateDesc = "update user password")
@@ -85,7 +85,7 @@ public class UserController {
         return iUserService.updateUserPwd(updatePwdUserVo);
     }
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("delete user")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.DELETE, operateDesc = "delete a user")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.DELETE, operateDesc = "delete a user")

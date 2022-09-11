@@ -49,6 +49,12 @@ spring:
           filters:
             - SomeGatewayFilter
             - StripPrefix=1
+        - id: edoc
+          uri: lb://edoc
+          predicates:
+            - Path=/edoc-gw/**
+          filters:
+            - StripPrefix=1
   # redis
   redis: # redis配置
     host: 127.0.0.1

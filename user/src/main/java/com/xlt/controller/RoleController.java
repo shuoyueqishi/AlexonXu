@@ -23,7 +23,7 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("add role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.CREATE, operateDesc = "Role add")
     @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.CREATE, operateDesc = "Role add")
@@ -31,7 +31,7 @@ public class RoleController {
         return roleService.roleAdd(roleVo);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("update role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.UPDATE, operateDesc = "Role update")
     @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "Role update")
@@ -39,7 +39,7 @@ public class RoleController {
         return roleService.roleUpdate(roleVo);
     }
 
-    @RequestMapping(value = "/page/list/{pageSize}/{currentPage}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/page/list/{pageSize}/{currentPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query role paged list")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.READ, operateDesc = "query role paged list")
     @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.READ, operateDesc = "query role paged list")
@@ -50,7 +50,7 @@ public class RoleController {
         return roleService.queryRolePageList(roleVo,pageVo);
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query role list")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.READ, operateDesc = "query role list")
     @OperatePermission(resourceName = "RoleController", operateCode = OperateConstant.READ, operateDesc = "query role list")
@@ -58,7 +58,7 @@ public class RoleController {
         return roleService.queryRoleList(roleVo);
     }
 
-    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{roleId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("delete role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.DELETE, operateDesc = "delete role")
     @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.DELETE, operateDesc = "delete role")
@@ -66,7 +66,7 @@ public class RoleController {
         return roleService.deleteRoleById(roleId);
     }
 
-    @RequestMapping(value = "/change/{roleCode}/{userId}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/change/{roleCode}/{userId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("change role")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.UPDATE, operateDesc = "change role")
 //    @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.UPDATE, operateDesc = "change role")

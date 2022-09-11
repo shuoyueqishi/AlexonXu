@@ -20,6 +20,7 @@
         <module>order</module>
         <module>user</module>
         <module>commodity</module>
+        <module>edoc</module>
     </modules>
 
     <properties>

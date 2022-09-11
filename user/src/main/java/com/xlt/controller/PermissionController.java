@@ -28,7 +28,7 @@ public class PermissionController {
     @Autowired
     private IPermissionService permissionService;
 
-    @RequestMapping(value = "/synchronize", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/synchronize", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("fetch OperationPermission annotations")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.EXECUTE, operateDesc = "synchronize permission")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.EXECUTE, operateDesc = "synchronize permission")
@@ -36,7 +36,7 @@ public class PermissionController {
         return permissionService.synchronizePermission();
     }
 
-    @RequestMapping(value = "/synchronize/list", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/synchronize/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("fetch OperationPermission annotations")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.EXECUTE, operateDesc = "synchronize permission")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.EXECUTE, operateDesc = "EXECUTE")
@@ -45,7 +45,7 @@ public class PermissionController {
         return syncPermissionService.syncPermissionList(permVoList);
     }
 
-    @RequestMapping(value = "/grant/user/role", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/grant/user/role", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("grant roles to user")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.CREATE, operateDesc = "grant roles to user")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.CREATE, operateDesc = "grant roles to user")
@@ -53,7 +53,7 @@ public class PermissionController {
         return permissionService.grantRoles2User(userRoleVoList);
     }
 
-    @RequestMapping(value = "/user/role/{userId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/user/role/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query user roles by userId")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query user roles by userId")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query user roles by userId")
@@ -61,7 +61,7 @@ public class PermissionController {
         return permissionService.queryUserRoleList(userId);
     }
 
-    @RequestMapping(value = "/grant/role/privilege", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/grant/role/privilege", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("grant permissions to role")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.CREATE, operateDesc = "grant permissions to role")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.CREATE, operateDesc = "grant permissions to role")
@@ -69,7 +69,7 @@ public class PermissionController {
         return permissionService.grantPermissions2Role(rolePermissionVo);
     }
 
-    @RequestMapping(value = "/remove/role/privilege", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/remove/role/privilege", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("remove role permissions")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.DELETE, operateDesc = "remove role permissions")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.DELETE, operateDesc = "remove role permissions")
@@ -77,7 +77,7 @@ public class PermissionController {
         return permissionService.removeRolePermission(rolePermissionVo);
     }
 
-    @RequestMapping(value = "/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query permission paged list")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query permission paged list")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query permission paged list")
@@ -88,7 +88,7 @@ public class PermissionController {
         return permissionService.queryPermissionPageList(permissionVo,pageVo);
     }
 
-    @RequestMapping(value = "/list/{roleId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/list/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query role permission list")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query role permission list")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query role permission list")

@@ -20,13 +20,13 @@ public class ReceiverInfoController {
     @Autowired
     private IReceiverInfoService receiverInfoService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @OperatePermission(resourceName = "ReceiverInfoController", operateCode = OperateConstant.CREATE, operateDesc = "create Receiver Info")
     BasicResponse createReceiverInfo(@RequestBody ReceiverInfoVo receiverInfoVo) {
         return receiverInfoService.createReceiverInfo(receiverInfoVo);
     }
 
-    @RequestMapping(value = "/query/paged/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/query/paged/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @OperatePermission(resourceName = "ReceiverInfoController", operateCode = OperateConstant.READ, operateDesc = "query Receiver Info paged list")
     PagedResponse<List<ReceiverInfoVo>> queryReceiverInfoPagedList(@QueryParam("receiverInfoVo") ReceiverInfoVo receiverInfoVo,
                                                                    @PathVariable("pageSize") int pageSize,

@@ -105,3 +105,21 @@ CREATE TABLE `permission_t`
     UNIQUE KEY `uk_tenantResourceOpeCode` (`tenant`, `resource_name`,`operate_code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='权限表';
+
+DROP TABLE IF EXISTS `edoc_t`;
+create table edoc_t
+(
+    id                   bigint not null comment '主键ID',
+    doc_no               varchar(20) not null comment '文档编号，唯一',
+    doc_name             varchar(128) comment '文档名称',
+    doc_size             bigint comment '文档大小，KB',
+    download_url         varchar(256) comment '下载地址',
+    deleted              int default 0 comment '删除标志，0：未删除，1：删除',
+    created_by           bigint comment '创建人',
+    creation_date        date comment '创建时间',
+    last_update_by       bigint comment '更新人',
+    last_update_date     date comment '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_docNo` (`doc_no`)
+)ENGINE = InnoDB
+ DEFAULT CHARSET = utf8 COMMENT ='文档记录表';
