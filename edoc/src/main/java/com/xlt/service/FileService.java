@@ -1,9 +1,19 @@
 package com.xlt.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xlt.exception.CommonException;
+import com.xlt.mapper.IEDocMapper;
+import com.xlt.model.po.EDocPo;
+import com.xlt.model.vo.EDocVo;
+import com.xlt.utils.common.AssertUtil;
+import com.xlt.utils.common.ObjectUtil;
+import com.xlt.utils.common.PoUtil;
+import com.xlt.utils.common.SeqNoGenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,40 +32,60 @@ import java.util.List;
 @Slf4j
 public class FileService {
 
-    @Value("${server.port}")
-    private String port;
+    @Value("${file.gateway.port}")
+    private String gatewayPort;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    @Value("${file.gateway.context-path}")
+    private String gatewayContextPath;
+
     @Value("${file.dir}")
     private String fileDir;
 
-    public List<String> batchSaveFiles(MultipartFile[] files) {
+    @Autowired
+    private IEDocMapper eDocMapper;
+
+    @Transactional
+    public List<EDocVo> batchSaveFiles(MultipartFile[] files) {
         log.info("file size={}", files.length);
-        List<String> fileDownloadUrls = new ArrayList<>();
+        List<EDocVo> eDocVoList = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
-            String downloadUrl = saveFile(file);
-            fileDownloadUrls.add(downloadUrl);
+            EDocVo eDocVo = saveFile(file);
+            eDocVoList.add(eDocVo);
         }
-        return fileDownloadUrls;
+        return eDocVoList;
     }
 
-
-    public String saveFile(MultipartFile multipartFile) {
-
-        String filename = multipartFile.getOriginalFilename();
-
+    @Transactional
+    public EDocVo saveFile(MultipartFile multipartFile) {
+        String oriFilename = multipartFile.getOriginalFilename();
+        AssertUtil.isNull(oriFilename, "originalFilename is null");
+        int splitIdx = oriFilename.lastIndexOf(".");
+        String docType = oriFilename.substring(splitIdx + 1);
+        String docNo = SeqNoGenUtil.getSeqNoWithTime("doc", 6);
+        String filename = oriFilename.substring(0, splitIdx) + "-" + docNo + "." + docType;
+        String fileUrl = getFileUrl(docNo);
+        EDocPo eDocPo = EDocPo.builder()
+                .docName(filename)
+                .docSize(multipartFile.getSize())
+                .docType(docType)
+                .docNo(docNo)
+                .downloadUrl(fileUrl)
+                .deleted(0)
+                .build();
+        PoUtil.buildCreateUserInfo(eDocPo);
+        eDocMapper.insert(eDocPo);
         File file = new File(fileDir + filename);
-
         try {
             multipartFile.transferTo(file);
         } catch (IOException e) {
             log.error("save file error:", e);
-            throw new CommonException("save file:" + filename + " error:" + e.getMessage());
+            throw new CommonException("save file:" + oriFilename + " error:" + e.getMessage());
         }
-        return getFileUrl(filename);
+        return ObjectUtil.convertObjs(eDocPo, EDocVo.class);
     }
 
     public List<String> getFiles() {
@@ -73,35 +103,40 @@ public class FileService {
         return fileUrls;
     }
 
-    private String getFileUrl(String fileName) {
+    private String getFileUrl(String docNo) {
         try {
             InetAddress address = InetAddress.getLocalHost();
-            String fileUrl = "http://" + address.getHostAddress() + ":" + port + contextPath + "/file/" + fileName;
+            String fileUrl = "http://" + address.getHostAddress() + ":" + gatewayPort + gatewayContextPath + contextPath + "/file/download/" + docNo;
             log.info("fileUrl:{}", fileUrl);
             return fileUrl;
         } catch (UnknownHostException e) {
             log.error("get host error:", e);
-            throw new CommonException("get host error:"+e.getMessage());
+            throw new CommonException("get host error:" + e.getMessage());
         }
     }
 
-    public Boolean downloadFile(HttpServletResponse response, String fileName) {
-        File file = new File(fileDir + fileName);
+    public Boolean downloadFile(String docNo, HttpServletResponse response) {
+        log.info("download file, docNo={}", docNo);
+        AssertUtil.isStringEmpty(docNo, "docNo can't be empty");
+        QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("doc_no", docNo);
+        EDocPo eDocPo = eDocMapper.selectOne(queryWrapper);
+        AssertUtil.isNull(eDocPo, "docNo[" + docNo + "] not exist in system");
+        File file = new File(fileDir + eDocPo.getDocName());
         if (file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
-
-                response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));
+                response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(eDocPo.getDocName(), "UTF-8"));
                 ServletOutputStream outputStream = response.getOutputStream();
-
                 FileCopyUtils.copy(fileInputStream, outputStream);
                 return true;
             } catch (IOException e) {
-                log.error("download file error: {}", e.getMessage());
-                return false;
+                log.error("download file error:", e);
+                throw new CommonException("download file error:"+e.getMessage());
             }
+        } else {
+            throw  new CommonException("file exist");
         }
-        return false;
     }
 
 }

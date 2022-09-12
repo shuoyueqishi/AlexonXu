@@ -4,13 +4,16 @@ package com.xlt.controller;
 import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
 import com.xlt.logs.OperationLog;
+import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.vo.EDocVo;
 import com.xlt.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -23,16 +26,24 @@ public class EDocController {
     @RequestMapping(value = "/batch/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.UPLOAD, operateDesc = "upload file to server")
     @OperationLog(operateModule = "EDocController", operateType = OperateConstant.UPLOAD, operateDesc = "upload file to server")
-    DataResponse<List<String>> batchUploadFile(@RequestParam("files") MultipartFile[] files) {
-        List<String> downloadUrls = fileService.batchSaveFiles(files);
-        return new DataResponse<>(downloadUrls);
+    DataResponse<List<EDocVo>> batchUploadFile(@RequestParam("files") MultipartFile[] files) {
+        List<EDocVo> eDocVoList = fileService.batchSaveFiles(files);
+        return new DataResponse<>(eDocVoList);
     }
 
     @RequestMapping(value = "/single/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.UPLOAD, operateDesc = "upload file to server")
     @OperationLog(operateModule = "EDocController", operateType = OperateConstant.UPLOAD, operateDesc = "upload file to server")
-    DataResponse<String> singleUploadFile(@RequestParam("file") MultipartFile file) {
-        String downloadUrl = fileService.saveFile(file);
-        return new DataResponse<>(downloadUrl);
+    DataResponse<EDocVo> singleUploadFile(@RequestParam("file") MultipartFile file) {
+        EDocVo eDocVo = fileService.saveFile(file);
+        return new DataResponse<>(eDocVo);
+    }
+
+    @RequestMapping(value = "/download/{docNo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
+    @OperationLog(operateModule = "EDocController", operateType = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
+    DataResponse<Boolean> downloadFile(@PathVariable("docNo") String docNo, HttpServletResponse response) {
+        Boolean res = fileService.downloadFile(docNo, response);
+        return new DataResponse<>(res);
     }
 }

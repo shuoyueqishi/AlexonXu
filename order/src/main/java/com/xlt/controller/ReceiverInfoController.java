@@ -8,6 +8,7 @@ import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.ReceiverInfoVo;
 import com.xlt.service.IReceiverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;

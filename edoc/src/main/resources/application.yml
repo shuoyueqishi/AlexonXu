@@ -24,11 +24,18 @@ jwt:
 # 文件保存位置
 file:
   dir: D:\data\edoc\
+  gateway:
+    port: 8090
+    context-path: /edoc-gw
 
 spring:
   #项目名字
   application:
     name: edoc
+  servlet:
+    multipart:
+      max-file-size: 50MB # 单个文件最大 50MB
+      maxRequestSize: 300MB # 单个请求最大 300 MB
   # 数据源
   datasource:
     name: edoc-ds
