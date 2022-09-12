@@ -101,6 +101,11 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.xlt.model
 
+mybatis-plus:
+  configuration: ### 开启打印sql配置
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
 # 权限扫描基础路径
 base:
   service:

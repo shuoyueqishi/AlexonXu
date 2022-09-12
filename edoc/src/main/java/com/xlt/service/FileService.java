@@ -1,15 +1,19 @@
 package com.xlt.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.IEDocMapper;
 import com.xlt.model.po.EDocPo;
+import com.xlt.model.response.PagedResponse;
 import com.xlt.model.vo.EDocVo;
+import com.xlt.model.vo.PageVo;
 import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.ObjectUtil;
 import com.xlt.utils.common.PoUtil;
 import com.xlt.utils.common.SeqNoGenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,7 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -137,6 +142,23 @@ public class FileService {
         } else {
             throw  new CommonException("file exist");
         }
+    }
+
+   public PagedResponse<List<EDocVo>> queryPagedList(EDocVo eDocVo, PageVo pageVo) {
+        log.info("queryPagedList params:{}",eDocVo);
+        QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocVo.getDocNo()),"edoc_no",eDocVo.getDocNo());
+        queryWrapper.like(StringUtils.isNotEmpty(eDocVo.getDocName()),"doc_name",eDocVo.getDocName());
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocVo.getDocType()),"doc_type",eDocVo.getDocType());
+        queryWrapper.eq("deleted",0);
+        queryWrapper.eq(Objects.nonNull(eDocVo.getCreateBy()),"create_by",eDocVo.getCreateBy());
+        queryWrapper.eq(Objects.nonNull(eDocVo.getCreationDate()),"creation_date",eDocVo.getCreationDate());
+        Page<EDocPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
+        Page<EDocPo> docPoPage = eDocMapper.selectPage(page, queryWrapper);
+        List<EDocVo> eDocVoList = ObjectUtil.convertObjsList(docPoPage.getRecords(), EDocVo.class);
+        pageVo.setTotal(docPoPage.getTotal());
+        pageVo.setTotalPages(docPoPage.getPages());
+        return new PagedResponse<>(eDocVoList,pageVo);
     }
 
 }
