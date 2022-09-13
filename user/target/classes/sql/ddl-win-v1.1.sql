@@ -71,6 +71,7 @@ CREATE TABLE `user_role_t`
     UNIQUE KEY `uk_userIdRoleId` (`user_id`, `role_id`),
     KEY `idx_userId` (`user_id`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='用户角色表';
 
 DROP TABLE IF EXISTS `role_permission_t`;
@@ -84,6 +85,7 @@ CREATE TABLE `role_permission_t`
     `last_update_date` datetime    DEFAULT NULL COMMENT '修改时间',
     UNIQUE KEY `idx_rolePermId` (`role_id`, `permission_id`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='角色权限表';
 
 DROP TABLE IF EXISTS `permission_t`;
@@ -104,6 +106,7 @@ CREATE TABLE `permission_t`
     PRIMARY KEY (`permission_id`),
     UNIQUE KEY `uk_tenantResourceOpeCode` (`tenant`, `resource_name`,`operate_code`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='权限表';
 
 DROP TABLE IF EXISTS `edoc_t`;
@@ -111,15 +114,17 @@ create table edoc_t
 (
     id                   bigint not null AUTO_INCREMENT comment '主键ID',
     doc_no               varchar(20) not null comment '文档编号，唯一',
-    doc_name             varchar(128) comment '文档名称',
-    doc_size             bigint comment '文档大小，KB',
-    download_url         varchar(256) comment '下载地址',
+    doc_name             varchar(128) DEFAULT NULL comment '文档名称',
+    doc_type             varchar(16) DEFAULT NULL comment '文档类型',
+    doc_size             bigint DEFAULT NULL comment '文档大小，KB',
+    download_url         varchar(256) DEFAULT NULL comment '下载地址',
     deleted              int default 0 comment '删除标志，0：未删除，1：删除',
-    created_by           bigint comment '创建人',
-    creation_date        date comment '创建时间',
-    last_update_by       bigint comment '更新人',
-    last_update_date     date comment '更新时间',
+    create_by           bigint DEFAULT NULL comment '创建人',
+    creation_date        date DEFAULT NULL comment '创建时间',
+    last_update_by       bigint DEFAULT NULL comment '更新人',
+    last_update_date     date DEFAULT NULL comment '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_docNo` (`doc_no`)
 )ENGINE = InnoDB
+ AUTO_INCREMENT = 1000
  DEFAULT CHARSET = utf8 COMMENT ='文档记录表';
