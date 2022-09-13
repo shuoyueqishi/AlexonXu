@@ -23,7 +23,7 @@ jwt:
 
 # 文件保存位置
 file:
-  dir: D:\data\edoc\
+  dir: D:\Alexon\edoc\
   gateway:
     port: 8090
     context-path: /edoc-gw
