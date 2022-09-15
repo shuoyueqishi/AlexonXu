@@ -4,6 +4,7 @@ package com.xlt.controller;
 import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
 import com.xlt.logs.OperationLog;
+import com.xlt.model.request.EDocReq;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.response.PagedResponse;
@@ -42,7 +43,7 @@ public class EDocController {
         return new DataResponse<>(eDocVo);
     }
 
-    @RequestMapping(value = "/download/{docNo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/download/{docNo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
     @OperationLog(operateModule = "EDocController", operateType = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
     DataResponse<Boolean> downloadFile(@PathVariable("docNo") String docNo, HttpServletResponse response) {
@@ -53,8 +54,8 @@ public class EDocController {
     @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.READ, operateDesc = "query doc paged list")
     @OperationLog(operateModule = "EDocController", operateType = OperateConstant.READ, operateDesc = "query doc paged list")
-    PagedResponse<List<EDocVo>> queryPageList(@QueryParam("")EDocVo eDocVo, @PathVariable("curPage") int curPage, @PathVariable("pageSize")int pageSize) {
+    PagedResponse<List<EDocVo>> queryPageList(@QueryParam("") EDocReq eDocReq, @PathVariable("curPage") int curPage, @PathVariable("pageSize")int pageSize) {
         PageVo pageVo = PageVo.builder().currentPage(curPage).pageSize(pageSize).build();
-        return fileService.queryPagedList(eDocVo,pageVo);
+        return fileService.queryPagedList(eDocReq,pageVo);
     }
 }

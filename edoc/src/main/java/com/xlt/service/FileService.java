@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.IEDocMapper;
 import com.xlt.model.po.EDocPo;
+import com.xlt.model.request.EDocReq;
 import com.xlt.model.response.PagedResponse;
 import com.xlt.model.vo.EDocVo;
 import com.xlt.model.vo.PageVo;
@@ -144,15 +145,17 @@ public class FileService {
         }
     }
 
-   public PagedResponse<List<EDocVo>> queryPagedList(EDocVo eDocVo, PageVo pageVo) {
-        log.info("queryPagedList params:{}",eDocVo);
+   public PagedResponse<List<EDocVo>> queryPagedList(EDocReq eDocReq, PageVo pageVo) {
+        log.info("queryPagedList params:{}",eDocReq);
         QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(eDocVo.getDocNo()),"edoc_no",eDocVo.getDocNo());
-        queryWrapper.like(StringUtils.isNotEmpty(eDocVo.getDocName()),"doc_name",eDocVo.getDocName());
-        queryWrapper.eq(StringUtils.isNotEmpty(eDocVo.getDocType()),"doc_type",eDocVo.getDocType());
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocNo()),"edoc_no",eDocReq.getDocNo());
+        queryWrapper.like(StringUtils.isNotEmpty(eDocReq.getDocName()),"doc_name",eDocReq.getDocName());
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocType()),"doc_type",eDocReq.getDocType());
         queryWrapper.eq("deleted",0);
-        queryWrapper.eq(Objects.nonNull(eDocVo.getCreateBy()),"create_by",eDocVo.getCreateBy());
-        queryWrapper.eq(Objects.nonNull(eDocVo.getCreationDate()),"creation_date",eDocVo.getCreationDate());
+        queryWrapper.eq(Objects.nonNull(eDocReq.getCreateBy()),"create_by",eDocReq.getCreateBy());
+        queryWrapper.ge(Objects.nonNull(eDocReq.getCreationDateStart()),"creation_date",eDocReq.getCreationDateEnd());
+        queryWrapper.le(Objects.nonNull(eDocReq.getCreationDateEnd()),"creation_date",eDocReq.getCreationDateEnd());
+        queryWrapper.orderByDesc("creation_date");
         Page<EDocPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<EDocPo> docPoPage = eDocMapper.selectPage(page, queryWrapper);
         List<EDocVo> eDocVoList = ObjectUtil.convertObjsList(docPoPage.getRecords(), EDocVo.class);
