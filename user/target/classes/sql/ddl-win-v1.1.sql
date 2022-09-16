@@ -120,9 +120,9 @@ create table edoc_t
     download_url         varchar(256) DEFAULT NULL comment '下载地址',
     deleted              int default 0 comment '删除标志，0：未删除，1：删除',
     create_by           bigint DEFAULT NULL comment '创建人',
-    creation_date        date DEFAULT NULL comment '创建时间',
+    creation_date        datetime DEFAULT NULL comment '创建时间',
     last_update_by       bigint DEFAULT NULL comment '更新人',
-    last_update_date     date DEFAULT NULL comment '更新时间',
+    last_update_date     datetime DEFAULT NULL comment '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_docNo` (`doc_no`)
 )ENGINE = InnoDB
