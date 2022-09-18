@@ -58,4 +58,12 @@ public class EDocController {
         PageVo pageVo = PageVo.builder().currentPage(curPage).pageSize(pageSize).build();
         return fileService.queryPagedList(eDocReq,pageVo);
     }
+
+    @RequestMapping(value = "/delete/{docNo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.DELETE, operateDesc = "delete doc file")
+    @OperationLog(operateModule = "EDocController", operateType = OperateConstant.DELETE, operateDesc = "delete doc file")
+    BasicResponse deleteDoc(@PathVariable("docNo") String docNo) {
+        fileService.deleteFile(docNo);
+        return new BasicResponse();
+    }
 }

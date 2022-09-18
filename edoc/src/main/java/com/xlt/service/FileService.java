@@ -1,7 +1,9 @@
 package com.xlt.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.IEDocMapper;
 import com.xlt.model.po.EDocPo;
@@ -94,6 +96,20 @@ public class FileService {
         return ObjectUtil.convertObjs(eDocPo, EDocVo.class);
     }
 
+    public boolean deleteFile(String docNo) {
+        log.info("delete file docNo={}", docNo);
+        boolean res = false;
+        QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("doc_no", docNo);
+        queryWrapper.eq("deleted", CommConstant.NOT_DELETED);
+        EDocPo eDocPo = eDocMapper.selectOne(queryWrapper);
+        AssertUtil.isNull(eDocPo, "file not exist/deleted");
+        eDocPo.setDeleted(CommConstant.DELETED);
+        eDocMapper.updateById(eDocPo);
+        File file2Del = new File(fileDir+eDocPo.getDocName());
+        return file2Del.delete();
+    }
+
     public List<String> getFiles() {
         List<String> fileUrls = new ArrayList<>();
 
@@ -138,30 +154,30 @@ public class FileService {
                 return true;
             } catch (IOException e) {
                 log.error("download file error:", e);
-                throw new CommonException("download file error:"+e.getMessage());
+                throw new CommonException("download file error:" + e.getMessage());
             }
         } else {
-            throw  new CommonException("file exist");
+            throw new CommonException("file exist");
         }
     }
 
-   public PagedResponse<List<EDocVo>> queryPagedList(EDocReq eDocReq, PageVo pageVo) {
-        log.info("queryPagedList params:{}",eDocReq);
+    public PagedResponse<List<EDocVo>> queryPagedList(EDocReq eDocReq, PageVo pageVo) {
+        log.info("queryPagedList params:{}", eDocReq);
         QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocNo()),"edoc_no",eDocReq.getDocNo());
-        queryWrapper.like(StringUtils.isNotEmpty(eDocReq.getDocName()),"doc_name",eDocReq.getDocName());
-        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocType()),"doc_type",eDocReq.getDocType());
-        queryWrapper.eq("deleted",0);
-        queryWrapper.eq(Objects.nonNull(eDocReq.getCreateBy()),"create_by",eDocReq.getCreateBy());
-        queryWrapper.ge(Objects.nonNull(eDocReq.getCreationDateStart()),"creation_date",eDocReq.getCreationDateEnd());
-        queryWrapper.le(Objects.nonNull(eDocReq.getCreationDateEnd()),"creation_date",eDocReq.getCreationDateEnd());
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocNo()), "edoc_no", eDocReq.getDocNo());
+        queryWrapper.like(StringUtils.isNotEmpty(eDocReq.getDocName()), "doc_name", eDocReq.getDocName());
+        queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocType()), "doc_type", eDocReq.getDocType());
+        queryWrapper.eq(Objects.nonNull(eDocReq.getDeleted()),"deleted", eDocReq.getDeleted());
+        queryWrapper.eq(Objects.nonNull(eDocReq.getCreateBy()), "create_by", eDocReq.getCreateBy());
+        queryWrapper.ge(Objects.nonNull(eDocReq.getCreationDateStart()), "creation_date", eDocReq.getCreationDateEnd());
+        queryWrapper.le(Objects.nonNull(eDocReq.getCreationDateEnd()), "creation_date", eDocReq.getCreationDateEnd());
         queryWrapper.orderByDesc("creation_date");
         Page<EDocPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<EDocPo> docPoPage = eDocMapper.selectPage(page, queryWrapper);
         List<EDocVo> eDocVoList = ObjectUtil.convertObjsList(docPoPage.getRecords(), EDocVo.class);
         pageVo.setTotal(docPoPage.getTotal());
         pageVo.setTotalPages(docPoPage.getPages());
-        return new PagedResponse<>(eDocVoList,pageVo);
+        return new PagedResponse<>(eDocVoList, pageVo);
     }
 
 }
