@@ -169,7 +169,7 @@ public class FileService {
         queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocType()), "doc_type", eDocReq.getDocType());
         queryWrapper.eq(Objects.nonNull(eDocReq.getDeleted()),"deleted", eDocReq.getDeleted());
         queryWrapper.eq(Objects.nonNull(eDocReq.getCreateBy()), "create_by", eDocReq.getCreateBy());
-        queryWrapper.ge(Objects.nonNull(eDocReq.getCreationDateStart()), "creation_date", eDocReq.getCreationDateEnd());
+        queryWrapper.ge(Objects.nonNull(eDocReq.getCreationDateStart()), "creation_date", eDocReq.getCreationDateStart());
         queryWrapper.le(Objects.nonNull(eDocReq.getCreationDateEnd()), "creation_date", eDocReq.getCreationDateEnd());
         queryWrapper.orderByDesc("creation_date");
         Page<EDocPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
