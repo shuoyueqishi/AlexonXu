@@ -5,13 +5,14 @@ import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.UpdatePwdUserVo;
 import com.xlt.model.vo.UserVo;
+import com.xlt.service.IUserQueryService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-public interface IUserService {
+public interface IUserService extends IUserQueryService {
     /**
      * 用户登录
      *

@@ -2,7 +2,7 @@ package com.xlt.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xlt.ISyncPermissionService;
+import com.xlt.service.ISyncPermissionService;
 import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.*;
@@ -19,7 +19,6 @@ import com.xlt.utils.common.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

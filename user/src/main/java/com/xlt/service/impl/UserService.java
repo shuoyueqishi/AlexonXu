@@ -6,6 +6,8 @@ import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
+import com.xlt.service.IUserQueryService;
+import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.JwtUtil;
 import com.xlt.utils.MD5Util;
 import com.xlt.logs.OperationLog;
@@ -23,6 +25,7 @@ import com.xlt.utils.TkPoUtil;
 import com.xlt.utils.common.ObjectUtil;
 import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,6 +50,35 @@ public class UserService implements IUserService {
 
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
+
+    /**
+     * 根据用户userId 列表获取用户数据，调用该接口之后，用户信息会缓存在Redis中
+     *
+     * @param userIdList userIdList
+     * @return 用户信息
+     */
+    @Override
+    public Map<Long, UserVo> fetchUserInfo(List<Long> userIdList) {
+        log.info("fetchUserInfo query params={}",userIdList);
+        Map<Long,UserVo> userMap = new HashMap<>();
+        if(CollectionUtils.isEmpty(userIdList)) {
+            return userMap;
+        }
+        Example example = new Example(UserPo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id",new HashSet(userIdList));
+        List<UserPo> userPoList = userMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(userPoList)) {
+            return userMap;
+        }
+        List<UserVo> userVoList = ObjectUtil.convertObjsList(userPoList, UserVo.class);
+        userVoList.forEach(userVo -> {
+            userVo.setPassword(null);
+            RedisUtil.set(CommConstant.USER_NAMES_PREFIX+userVo.getUserId(), userVo,12, TimeUnit.HOURS);
+            userMap.put(userVo.getUserId(),userVo);
+        });
+        return userMap;
+    }
 
     @Override
     @OperationLog(operateModule = "UserService", operateType = "Login", operateDesc = "用户登录")

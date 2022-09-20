@@ -1,6 +1,6 @@
 package com.xlt.schedulers;
 
-import com.xlt.ISyncPermissionService;
+import com.xlt.service.ISyncPermissionService;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.vo.PermissionVo;
 import com.xlt.utils.common.AppContextUtil;

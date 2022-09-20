@@ -1,4 +1,4 @@
-package com.xlt;
+package com.xlt.service;
 
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.vo.PermissionVo;

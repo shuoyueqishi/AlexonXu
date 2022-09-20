@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.QueryParam;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -46,6 +47,15 @@ public class UserController {
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
     public DataResponse<List<UserVo>> queryUserList(@QueryParam("") UserVo userVo) {
         return iUserService.queryUserList(userVo);
+    }
+
+    @RequestMapping(value = "/query/cache", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("query user info and cache")
+    @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user info and put in redis cache")
+    @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user info and put in redis cache")
+    public DataResponse<Map<Long,UserVo>> queryUserInfoAndCache(@RequestBody List<Long> userIdList) {
+        Map<Long, UserVo> userVoMap = iUserService.fetchUserInfo(userIdList);
+        return new DataResponse<>(userVoMap);
     }
 
     @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

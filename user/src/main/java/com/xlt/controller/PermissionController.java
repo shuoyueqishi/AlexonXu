@@ -1,6 +1,6 @@
 package com.xlt.controller;
 
-import com.xlt.ISyncPermissionService;
+import com.xlt.service.ISyncPermissionService;
 import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
 import com.xlt.logs.OperationLog;
