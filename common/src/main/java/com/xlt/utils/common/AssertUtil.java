@@ -27,6 +27,12 @@ public class AssertUtil {
         }
     }
 
+    public static void isNotTrue(boolean condition,String msg) {
+        if(!condition) {
+            throw new CommonException(msg);
+        }
+    }
+
     public static void isCollectionEmpty(Collection<?> collection,String msg) {
         if(CollectionUtils.isEmpty(collection)) {
             throw new CommonException(msg);

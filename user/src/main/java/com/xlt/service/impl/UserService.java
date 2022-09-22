@@ -7,8 +7,7 @@ import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
 import com.xlt.service.IUserQueryService;
-import com.xlt.utils.common.AssertUtil;
-import com.xlt.utils.common.JwtUtil;
+import com.xlt.utils.common.*;
 import com.xlt.utils.MD5Util;
 import com.xlt.logs.OperationLog;
 import com.xlt.mapper.RoleMapper;
@@ -22,8 +21,6 @@ import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.*;
 import com.xlt.service.api.IUserService;
 import com.xlt.utils.TkPoUtil;
-import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,19 +51,19 @@ public class UserService implements IUserService {
     /**
      * 根据用户userId 列表获取用户数据，调用该接口之后，用户信息会缓存在Redis中
      *
-     * @param userIdList userIdList
+     * @param userIdSet userIdSet
      * @return 用户信息
      */
     @Override
-    public Map<Long, UserVo> fetchUserInfo(List<Long> userIdList) {
-        log.info("fetchUserInfo query params={}",userIdList);
+    public Map<Long, UserVo> fetchUserInfo(Set<Long> userIdSet) {
+        log.info("fetchUserInfo query params={}",userIdSet);
         Map<Long,UserVo> userMap = new HashMap<>();
-        if(CollectionUtils.isEmpty(userIdList)) {
+        if(CollectionUtils.isEmpty(userIdSet)) {
             return userMap;
         }
         Example example = new Example(UserPo.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andIn("id",new HashSet(userIdList));
+        criteria.andIn("userId",userIdSet);
         List<UserPo> userPoList = userMapper.selectByExample(example);
         if(CollectionUtils.isEmpty(userPoList)) {
             return userMap;
@@ -159,6 +156,7 @@ public class UserService implements IUserService {
         log.info("query params:{}", userVo);
         List<UserPo> userPos = queryUserPos(userVo);
         List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
+        VoUtil.fillUserNames(userVos);
         return new DataResponse<>(userVos);
     }
 
@@ -197,7 +195,9 @@ public class UserService implements IUserService {
     public DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo) {
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<UserPo> userPos = queryUserPos(userVo);
-        PageInfo<UserPo> pageInfo = new PageInfo<>(userPos);
+        List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
+        VoUtil.fillUserNames(userVos);
+        PageInfo<UserVo> pageInfo = new PageInfo<>(userVos);
         return DataResponse.builder().data(pageInfo).build();
     }
 

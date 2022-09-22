@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @RestController
@@ -53,7 +54,7 @@ public class UserController {
     @ApiOperation("query user info and cache")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user info and put in redis cache")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user info and put in redis cache")
-    public DataResponse<Map<Long,UserVo>> queryUserInfoAndCache(@RequestBody List<Long> userIdList) {
+    public DataResponse<Map<Long,UserVo>> queryUserInfoAndCache(@RequestBody Set<Long> userIdList) {
         Map<Long, UserVo> userVoMap = iUserService.fetchUserInfo(userIdList);
         return new DataResponse<>(userVoMap);
     }
