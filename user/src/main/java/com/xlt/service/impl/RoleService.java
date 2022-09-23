@@ -20,6 +20,7 @@ import com.xlt.service.api.IRoleService;
 import com.xlt.utils.TkPoUtil;
 import com.xlt.utils.common.ObjectUtil;
 import com.xlt.utils.common.RedisUtil;
+import com.xlt.utils.common.VoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
@@ -118,7 +119,9 @@ public class RoleService implements IRoleService {
         log.info("queryRolePageList params:{}",roleVo);
         PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
         List<RolePo> rolePos = queryRolePos(roleVo);
-        PageInfo<RolePo> pageInfo = new PageInfo<>(rolePos);
+        List<RoleVo> roleVos = ObjectUtil.convertObjsList(rolePos, RoleVo.class);
+        VoUtil.fillUserNames(roleVos);
+        PageInfo<RoleVo> pageInfo = new PageInfo<>(roleVos);
         return DataResponse.builder().data(pageInfo).build();
     }
 
@@ -156,7 +159,9 @@ public class RoleService implements IRoleService {
     @Override
     public DataResponse<Object> queryRoleList(RoleVo roleVo) {
         List<RolePo> rolePos = queryRolePos(roleVo);
-        return DataResponse.builder().data(rolePos).build();
+        List<RoleVo> roleVos = ObjectUtil.convertObjsList(rolePos, RoleVo.class);
+        VoUtil.fillUserNames(roleVos);
+        return DataResponse.builder().data(roleVos).build();
     }
 
     /**

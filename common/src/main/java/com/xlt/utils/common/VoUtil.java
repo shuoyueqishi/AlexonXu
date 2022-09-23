@@ -2,8 +2,6 @@ package com.xlt.utils.common;
 
 import com.alibaba.fastjson.JSON;
 import com.xlt.constant.CommConstant;
-import com.xlt.exception.CommonException;
-import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
 import com.xlt.model.vo.BaseVo;
 import com.xlt.model.vo.UserVo;
@@ -27,7 +25,7 @@ public class VoUtil {
             if (Objects.isNull(cachedUserVo)) {
                 notCachedSet.add(vo.getCreateBy());
             } else {
-                vo.setLastUpdateByStr(cachedUserVo.getName());
+                vo.setCreateByStr(cachedUserVo.getName());
             }
             cachedUserVo = JSON.parseObject(JSON.toJSONString(RedisUtil.get(CommConstant.USER_NAMES_PREFIX + vo.getLastUpdateBy())),UserVo.class);
             if (Objects.isNull(cachedUserVo)) {

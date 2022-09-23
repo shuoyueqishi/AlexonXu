@@ -16,6 +16,7 @@ import com.xlt.utils.TkPoUtil;
 import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.PermissionSyncUtil;
 import com.xlt.utils.common.ObjectUtil;
+import com.xlt.utils.common.VoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,8 +245,10 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
     public DataResponse<Object> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo) {
         log.info("queryPermissionPageList input params:{}", permissionVo);
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
-        List<PermissionPo> rolePos = fetchPermissionPos(permissionVo);
-        PageInfo<PermissionPo> pageInfo = new PageInfo<>(rolePos);
+        List<PermissionPo> permissionPoList = fetchPermissionPos(permissionVo);
+        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
+        VoUtil.fillUserNames(permissionVos);
+        PageInfo<PermissionVo> pageInfo = new PageInfo<>(permissionVos);
         return DataResponse.builder().data(pageInfo).build();
     }
 
@@ -287,6 +290,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
             throw new CommonException("roleId can't be empty.");
         }
         List<PermissionVo> permissionVoList = rolePermissionMapper.queryPermissionByRoleId(roleId);
+        VoUtil.fillUserNames(permissionVoList);
         return new DataResponse<>(permissionVoList);
     }
 
@@ -303,6 +307,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
             throw new CommonException("userId can't be empty");
         }
         List<UserRoleVo> roleVoList = rolePermissionMapper.queryRoleListByUserId(userId);
+        VoUtil.fillUserNames(roleVoList);
         return new DataResponse<>(roleVoList);
     }
 }
