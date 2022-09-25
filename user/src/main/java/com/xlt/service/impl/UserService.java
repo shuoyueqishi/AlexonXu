@@ -195,9 +195,7 @@ public class UserService implements IUserService {
     public DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo) {
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<UserPo> userPos = queryUserPos(userVo);
-        List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
-        VoUtil.fillUserNames(userVos);
-        PageInfo<UserVo> pageInfo = new PageInfo<>(userVos);
+        PageInfo<UserPo> pageInfo = new PageInfo<>(userPos);
         return DataResponse.builder().data(pageInfo).build();
     }
 

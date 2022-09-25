@@ -1,5 +1,7 @@
 package com.xlt.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.xlt.model.po.PermissionPo;
 import com.xlt.service.ISyncPermissionService;
 import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
@@ -12,6 +14,8 @@ import com.xlt.model.vo.RolePermissionVo;
 import com.xlt.model.vo.UserRoleVo;
 import com.xlt.service.api.IPermissionService;
 import com.xlt.utils.common.AppContextUtil;
+import com.xlt.utils.common.ObjectUtil;
+import com.xlt.utils.common.VoUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +90,19 @@ public class PermissionController {
                                                  @PathVariable("pageSize") int pageSize,
                                                  @PathVariable("curPage") int curPage) {
         PageVo pageVo = PageVo.builder().pageSize(pageSize).currentPage(curPage).build();
-        return permissionService.queryPermissionPageList(permissionVo,pageVo);
+        DataResponse<Object> res = permissionService.queryPermissionPageList(permissionVo, pageVo);
+//        PageInfo<PermissionPo> pageInfo = (PageInfo<PermissionPo>)res.getData();
+//        List<PermissionPo> permissionPoList = (List<PermissionPo>) pageInfo.getList();
+//        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
+//        VoUtil.fillUserNames(permissionVos);
+//        PageInfo<PermissionVo> newPageInfo = new PageInfo<>();
+//        newPageInfo.setPages(pageInfo.getPages());
+//        newPageInfo.setPageNum(pageInfo.getPageNum());
+//        newPageInfo.setSize(pageInfo.getSize());
+//        newPageInfo.setTotal(pageInfo.getTotal());
+//        newPageInfo.setList(permissionVos);
+//        res.setData(newPageInfo);
+        return res;
     }
 
     @RequestMapping(value = "/list/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

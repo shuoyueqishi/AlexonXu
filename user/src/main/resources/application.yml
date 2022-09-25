@@ -99,8 +99,7 @@ base:
 logging:
   config: classpath:log/log4j2.xml
   level:
-    com:
-      tk: debug
+    com.tk: debug
 
 
 # http pool配置

@@ -246,9 +246,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         log.info("queryPermissionPageList input params:{}", permissionVo);
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<PermissionPo> permissionPoList = fetchPermissionPos(permissionVo);
-        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
-        VoUtil.fillUserNames(permissionVos);
-        PageInfo<PermissionVo> pageInfo = new PageInfo<>(permissionVos);
+        PageInfo<PermissionPo> pageInfo = new PageInfo<>(permissionPoList);
         return DataResponse.builder().data(pageInfo).build();
     }
 
