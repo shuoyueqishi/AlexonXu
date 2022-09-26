@@ -2,6 +2,7 @@ package com.xlt.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.service.ISyncPermissionService;
 import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
@@ -242,12 +243,19 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
      * @return 返回值
      */
     @Override
-    public DataResponse<Object> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo) {
+    public PageDataResponse<PermissionVo> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo) {
         log.info("queryPermissionPageList input params:{}", permissionVo);
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<PermissionPo> permissionPoList = fetchPermissionPos(permissionVo);
         PageInfo<PermissionPo> pageInfo = new PageInfo<>(permissionPoList);
-        return DataResponse.builder().data(pageInfo).build();
+        PageDataResponse<PermissionVo> response = new PageDataResponse<>();
+        pageVo.setTotalPages(pageInfo.getPages());
+        pageVo.setTotal(pageInfo.getTotal());
+        response.setPageVo(pageVo);
+        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
+        VoUtil.fillUserNames(permissionVos);
+        response.setData(permissionVos);
+        return response;
     }
 
     List<PermissionPo> fetchPermissionPos(PermissionVo permissionVo) {

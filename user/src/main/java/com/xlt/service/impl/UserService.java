@@ -6,6 +6,7 @@ import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.service.IUserQueryService;
 import com.xlt.utils.common.*;
 import com.xlt.utils.MD5Util;
@@ -192,11 +193,18 @@ public class UserService implements IUserService {
      * @return 返回值
      */
     @Override
-    public DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo) {
+    public PageDataResponse<UserVo> queryUserPageList(UserVo userVo, PageVo pageVo) {
         PageHelper.startPage((int) pageVo.getCurrentPage(), (int) pageVo.getPageSize());
         List<UserPo> userPos = queryUserPos(userVo);
         PageInfo<UserPo> pageInfo = new PageInfo<>(userPos);
-        return DataResponse.builder().data(pageInfo).build();
+        PageDataResponse<UserVo> response = new PageDataResponse<>();
+        pageVo.setTotalPages(pageInfo.getPages());
+        pageVo.setTotal(pageInfo.getTotal());
+        response.setPageVo(pageVo);
+        List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
+        VoUtil.fillUserNames(userVos);
+        response.setData(userVos);
+        return response;
     }
 
     /**

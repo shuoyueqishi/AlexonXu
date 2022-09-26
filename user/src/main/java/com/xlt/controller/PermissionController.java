@@ -2,6 +2,7 @@ package com.xlt.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.xlt.model.po.PermissionPo;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.service.ISyncPermissionService;
 import com.xlt.auth.OperatePermission;
 import com.xlt.constant.OperateConstant;
@@ -86,23 +87,11 @@ public class PermissionController {
     @ApiOperation("query permission paged list")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query permission paged list")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query permission paged list")
-    DataResponse<Object> queryPermissionPageList(@QueryParam("")PermissionVo permissionVo,
-                                                 @PathVariable("pageSize") int pageSize,
-                                                 @PathVariable("curPage") int curPage) {
+    PageDataResponse<PermissionVo> queryPermissionPageList(@QueryParam("")PermissionVo permissionVo,
+                                                     @PathVariable("pageSize") int pageSize,
+                                                     @PathVariable("curPage") int curPage) {
         PageVo pageVo = PageVo.builder().pageSize(pageSize).currentPage(curPage).build();
-        DataResponse<Object> res = permissionService.queryPermissionPageList(permissionVo, pageVo);
-//        PageInfo<PermissionPo> pageInfo = (PageInfo<PermissionPo>)res.getData();
-//        List<PermissionPo> permissionPoList = (List<PermissionPo>) pageInfo.getList();
-//        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
-//        VoUtil.fillUserNames(permissionVos);
-//        PageInfo<PermissionVo> newPageInfo = new PageInfo<>();
-//        newPageInfo.setPages(pageInfo.getPages());
-//        newPageInfo.setPageNum(pageInfo.getPageNum());
-//        newPageInfo.setSize(pageInfo.getSize());
-//        newPageInfo.setTotal(pageInfo.getTotal());
-//        newPageInfo.setList(permissionVos);
-//        res.setData(newPageInfo);
-        return res;
+        return permissionService.queryPermissionPageList(permissionVo, pageVo);
     }
 
     @RequestMapping(value = "/list/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

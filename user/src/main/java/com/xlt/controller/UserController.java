@@ -5,6 +5,7 @@ import com.xlt.constant.OperateConstant;
 import com.xlt.logs.OperationLog;
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.UpdatePwdUserVo;
 import com.xlt.model.vo.UserVo;
@@ -63,9 +64,9 @@ public class UserController {
     @ApiOperation("query user list")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user paged list")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
-    public DataResponse<Object> queryUserPageList(@QueryParam("") UserVo userVo,
-                                                   @PathVariable("pageSize") int pageSize,
-                                                   @PathVariable("curPage") int curPage) {
+    public PageDataResponse<UserVo> queryUserPageList(@QueryParam("") UserVo userVo,
+                                                      @PathVariable("pageSize") int pageSize,
+                                                      @PathVariable("curPage") int curPage) {
         PageVo pageVo = PageVo.builder()
                 .pageSize(pageSize)
                 .currentPage(curPage)

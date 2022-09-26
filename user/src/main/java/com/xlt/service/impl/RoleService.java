@@ -12,6 +12,7 @@ import com.xlt.mapper.UserMapper;
 import com.xlt.model.po.RolePo;
 import com.xlt.model.po.UserPo;
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.PermissionVo;
 import com.xlt.model.vo.RoleVo;
@@ -115,12 +116,19 @@ public class RoleService implements IRoleService {
      * @return 查询结果
      */
     @Override
-    public DataResponse<Object> queryRolePageList(RoleVo roleVo, PageVo pageVo) {
+    public PageDataResponse<RoleVo> queryRolePageList(RoleVo roleVo, PageVo pageVo) {
         log.info("queryRolePageList params:{}",roleVo);
         PageHelper.startPage((int)pageVo.getCurrentPage(), (int)pageVo.getPageSize());
         List<RolePo> rolePos = queryRolePos(roleVo);
         PageInfo<RolePo> pageInfo = new PageInfo<>(rolePos);
-        return DataResponse.builder().data(pageInfo).build();
+        PageDataResponse<RoleVo> response = new PageDataResponse<>();
+        pageVo.setTotalPages(pageInfo.getPages());
+        pageVo.setTotal(pageInfo.getTotal());
+        response.setPageVo(pageVo);
+        List<RoleVo> roleVos = ObjectUtil.convertObjsList(rolePos, RoleVo.class);
+        VoUtil.fillUserNames(roleVos);
+        response.setData(roleVos);
+        return response;
     }
 
     private List<RolePo> queryRolePos(RoleVo roleVo) {

@@ -2,6 +2,7 @@ package com.xlt.service.api;
 
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.PermissionVo;
 import com.xlt.model.vo.RolePermissionVo;
@@ -65,7 +66,7 @@ public interface IPermissionService {
      * @param pageVo       分页参数
      * @return 返回值
      */
-    DataResponse<Object> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo);
+    PageDataResponse<PermissionVo> queryPermissionPageList(PermissionVo permissionVo, PageVo pageVo);
 
     /**
      * 查询角色权限

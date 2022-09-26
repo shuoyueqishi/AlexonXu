@@ -1,6 +1,7 @@
 package com.xlt.service.api;
 
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.RoleVo;
 
@@ -31,7 +32,7 @@ public interface IRoleService {
      * @param pageVo 分页信息
      * @return 查询结果
      */
-    DataResponse<Object> queryRolePageList(RoleVo roleVo, PageVo pageVo);
+    PageDataResponse<RoleVo> queryRolePageList(RoleVo roleVo, PageVo pageVo);
 
     /**
      * 查询角色列表

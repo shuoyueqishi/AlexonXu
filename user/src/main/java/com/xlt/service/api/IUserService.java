@@ -2,6 +2,7 @@ package com.xlt.service.api;
 
 import com.xlt.model.response.BasicResponse;
 import com.xlt.model.response.DataResponse;
+import com.xlt.model.response.PageDataResponse;
 import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.UpdatePwdUserVo;
 import com.xlt.model.vo.UserVo;
@@ -41,7 +42,7 @@ public interface IUserService extends IUserQueryService {
      * @param userVo 入参
      * @return 返回值
      */
-    DataResponse<Object> queryUserPageList(UserVo userVo, PageVo pageVo);
+    PageDataResponse<UserVo> queryUserPageList(UserVo userVo, PageVo pageVo);
 
     /**
      * add new user
