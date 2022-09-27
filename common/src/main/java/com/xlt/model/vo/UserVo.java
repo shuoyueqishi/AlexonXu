@@ -26,6 +26,8 @@ public class UserVo extends BaseVo implements Serializable {
     private String telephone;
     @ApiModelProperty("邮箱")
     private String email;
+    @ApiModelProperty("头像docNo")
+    private String headImg;
     @ApiModelProperty("默认角色")
     private Long defaultRole;
 }

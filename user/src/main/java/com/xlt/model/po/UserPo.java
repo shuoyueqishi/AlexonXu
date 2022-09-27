@@ -34,6 +34,9 @@ public class UserPo extends TkBasePo implements Serializable {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "head_img")
+    private String headImg;
+
     @Column(name = "default_role")
     private Long defaultRole;
 
