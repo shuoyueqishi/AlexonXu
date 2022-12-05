@@ -15,8 +15,6 @@ import com.xlt.model.vo.RolePermissionVo;
 import com.xlt.model.vo.UserRoleVo;
 import com.xlt.service.api.IPermissionService;
 import com.xlt.utils.common.AppContextUtil;
-import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.VoUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
