@@ -22,7 +22,7 @@ public interface IPermissionService {
     /**
      * 给用户授权角色
      *
-     * @param userRoleVoList 授权信息
+     * @param userRoleVoList userRoleVoList
      * @return 返回值
      */
     BasicResponse grantRoles2User(List<UserRoleVo> userRoleVoList);

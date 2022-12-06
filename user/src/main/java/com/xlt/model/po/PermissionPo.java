@@ -1,10 +1,10 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,32 +12,32 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="permission_t")
-public class PermissionPo extends TkBasePo implements Serializable {
+@TableName("permission_t")
+public class PermissionPo extends BasePo implements Serializable {
 
     private static final long serialVersionUID = -1323424357091886666L;
-    @Id
-    @Column(name = "permission_id")
+
+    @TableId("permission_id")
     private Long permissionId;
 
-    @Column(name = "resource_name")
+    @TableField("resource_name")
     private String resourceName;
 
-    @Column(name = "operate_code")
+    @TableField("operate_code")
     private String operateCode;
 
-    @Column(name = "operate_desc")
+    @TableField("operate_desc")
     private String operateDesc;
 
-    @Column(name = "path")
+    @TableField("path")
     private String path;
 
-    @Column(name = "http_method")
+    @TableField("http_method")
     private String httpMethod;
 
-    @Column(name = "method_name")
+    @TableField("method_name")
     private String methodName;
 
-    @Column(name = "tenant")
+    @TableField("tenant")
     private String tenant;
 }

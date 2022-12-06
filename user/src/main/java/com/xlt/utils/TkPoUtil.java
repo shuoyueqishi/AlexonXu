@@ -7,14 +7,14 @@ import com.xlt.model.po.TkBasePo;
 import java.util.Date;
 
 public class TkPoUtil {
-    public static <T extends TkBasePo> void buildCreateUserInfo(T po) {
+    public static <T extends BasePo> void buildCreateUserInfo(T po) {
         po.setCreateBy(UserContext.getUserId());
         po.setLastUpdateBy(UserContext.getUserId());
         po.setCreationDate(new Date());
         po.setLastUpdateDate(new Date());
     }
 
-    public static <T extends TkBasePo> void buildUpdateUserInfo(T po) {
+    public static <T extends BasePo> void buildUpdateUserInfo(T po) {
         po.setLastUpdateBy(UserContext.getUserId());
         po.setLastUpdateDate(new Date());
     }

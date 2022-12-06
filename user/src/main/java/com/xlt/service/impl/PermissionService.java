@@ -1,5 +1,6 @@
 package com.xlt.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xlt.model.response.PageDataResponse;
@@ -82,7 +83,9 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         });
         permissionMapper.batchInsert(permissionPoList);
 
-        RolePo sysAdminPo = roleMapper.selectOne(RolePo.builder().roleCode("SystemAdmin").build());
+        QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_code","SystemAdmin");
+        RolePo sysAdminPo = roleMapper.selectOne(queryWrapper);
         AssertUtil.isNull(sysAdminPo, "role code: SystemAdmin not exist in system");
 
         List<PermissionVo> ownedPermList = rolePermissionMapper.queryPermissionByRoleId(sysAdminPo.getRoleId());
@@ -129,20 +132,16 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         }
         // 校验用户是否存在
         Set<Long> userIds = userRoleVoList.stream().map(UserRoleVo::getUserId).collect(Collectors.toSet());
-        Example userExample = new Example(UserPo.class);
-        Example.Criteria userCriteria = userExample.createCriteria();
-        userCriteria.andIn("userId", userIds);
-        List<UserPo> userPoList = userMapper.selectByExample(userExample);
+        QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("user_id",userIds);
+        List<UserPo> userPoList = userMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(userPoList) || userPoList.size() != userIds.size()) {
             throw new CommonException("User maybe not exist in system, so it can't grant roles.");
         }
 
         // 校验角色是否存在
         Set<Long> roleIds = userRoleVoList.stream().map(UserRoleVo::getRoleId).collect(Collectors.toSet());
-        Example roleExample = new Example(RolePo.class);
-        Example.Criteria roleCriteria = roleExample.createCriteria();
-        roleCriteria.andIn("roleId", roleIds);
-        List<RolePo> rolePoList = roleMapper.selectByExample(roleExample);
+        List<RolePo> rolePoList = roleMapper.selectList(new QueryWrapper<RolePo>().eq("role_id",roleIds));
         if (CollectionUtils.isEmpty(rolePoList) || rolePoList.size() != roleIds.size()) {
             throw new CommonException("Role may not exist in system, so it can't grant roles.");
         }
@@ -193,15 +192,15 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         if (CollectionUtils.isEmpty(rolePermissionVo.getPermissionList())) {
             throw new CommonException("permissionList can't be empty");
         }
-        RolePo rolePo = roleMapper.selectByPrimaryKey(rolePermissionVo.getRoleId());
+        RolePo rolePo = roleMapper.selectById(rolePermissionVo.getRoleId());
         if (Objects.isNull(rolePo)) {
             throw new CommonException("roleId=" + rolePermissionVo.getRoleId() + " not exists in system");
         }
-        Example permExample = new Example(PermissionPo.class);
-        Example.Criteria permCriteria = permExample.createCriteria();
+
         Set<Long> permSet = new HashSet<>(rolePermissionVo.getPermissionList());
-        permCriteria.andIn("permissionId", permSet);
-        List<PermissionPo> existPermPoList = permissionMapper.selectByExample(permExample);
+        QueryWrapper<PermissionPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("permission_id",permSet);
+        List<PermissionPo> existPermPoList = permissionMapper.selectList(queryWrapper);
         Set<Long> existPermSet = existPermPoList.stream().map(PermissionPo::getPermissionId).collect(Collectors.toSet());
         if (permSet.size() != existPermSet.size()) {
             throw new CommonException("permissionId not exist in system");
@@ -261,24 +260,13 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
     List<PermissionPo> fetchPermissionPos(PermissionVo permissionVo) {
         List<PermissionPo> permissionPoList = new ArrayList<>();
         if (Objects.nonNull(permissionVo)) {
-            Example example = new Example(PermissionPo.class);
-            Example.Criteria criteria = example.createCriteria();
-            if (StringUtils.isNotEmpty(permissionVo.getOperateDesc())) {
-                criteria.andLike("operateDesc", CommConstant.PERCENTAGE + permissionVo.getOperateDesc() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(permissionVo.getOperateCode())) {
-                criteria.andLike("operateCode", permissionVo.getOperateCode() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(permissionVo.getResourceName())) {
-                criteria.andLike("resourceName", permissionVo.getResourceName() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(permissionVo.getPath())) {
-                criteria.andLike("path", permissionVo.getPath() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(permissionVo.getTenant())) {
-                criteria.andEqualTo("tenant", permissionVo.getTenant());
-            }
-            permissionPoList = permissionMapper.selectByExample(example);
+            QueryWrapper<PermissionPo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getOperateDesc()),"operate_desc", permissionVo.getOperateDesc());
+            queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getOperateCode()),"operate_code",permissionVo.getOperateCode());
+            queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getResourceName()),"resource_name",permissionVo.getResourceName());
+            queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getPath()),"path",permissionVo.getPath());
+            queryWrapper.eq(StringUtils.isNotEmpty(permissionVo.getTenant()),"tenant",permissionVo.getTenant());
+            permissionPoList = permissionMapper.selectList(queryWrapper);
         }
         return permissionPoList;
     }

@@ -1,5 +1,6 @@
 package com.xlt.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xlt.auth.JwtConfig;
@@ -19,6 +20,7 @@ import com.xlt.model.vo.RoleVo;
 import com.xlt.model.vo.UserInfoVo;
 import com.xlt.service.api.IRoleService;
 import com.xlt.utils.TkPoUtil;
+import com.xlt.utils.common.AssertUtil;
 import com.xlt.utils.common.ObjectUtil;
 import com.xlt.utils.common.RedisUtil;
 import com.xlt.utils.common.VoUtil;
@@ -61,10 +63,9 @@ public class RoleService implements IRoleService {
         Asserts.notNull(roleVo.getRoleCode(),"role code can't be empty.");
         Asserts.notNull(roleVo.getRoleName(),"role name can't be empty.");
         Asserts.notNull(roleVo.getTenant(),"tenant can't be empty.");
-        Example example = new Example(RolePo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleCode",roleVo.getRoleCode());
-        RolePo existRolePo = roleMapper.selectOneByExample(example);
+        QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_code",roleVo.getRoleCode());
+        RolePo existRolePo = roleMapper.selectOne(queryWrapper);
         if (Objects.nonNull(existRolePo))  {
             throw new CommonException(roleVo.getRoleCode()+" already exists in system.");
         }
@@ -104,7 +105,7 @@ public class RoleService implements IRoleService {
             updRolePo.setTenant(roleVo.getTenant());
         }
         TkPoUtil.buildUpdateUserInfo(updRolePo);
-        roleMapper.updateByPrimaryKeySelective(updRolePo);
+        roleMapper.updateById(updRolePo);
         return DataResponse.builder().build();
     }
 
@@ -132,28 +133,16 @@ public class RoleService implements IRoleService {
     }
 
     private List<RolePo> queryRolePos(RoleVo roleVo) {
-        Example example = new Example(RolePo.class);
-        Example.Criteria criteria = example.createCriteria();
+        QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
         if (!Objects.isNull(roleVo)) {
-            if (roleVo.getRoleId()!=null) {
-                criteria.andEqualTo("roleId", roleVo.getRoleId());
-            }
-            if(StringUtils.isNotEmpty(roleVo.getRoleCode())) {
-                criteria.andLike("roleCode",CommConstant.PERCENTAGE+ roleVo.getRoleCode()+CommConstant.PERCENTAGE);
-            }
-            if(StringUtils.isNotEmpty(roleVo.getRoleName())) {
-                criteria.andLike("roleName",CommConstant.PERCENTAGE+ roleVo.getRoleName()+CommConstant.PERCENTAGE);
-            }
-            if(StringUtils.isNotEmpty(roleVo.getRoleDesc())) {
-                criteria.andEqualTo("roleDesc", roleVo.getRoleDesc());
-            }
-            if(StringUtils.isNotEmpty(roleVo.getTenant())) {
-                criteria.andEqualTo("tenant", roleVo.getTenant());
-            }
+            queryWrapper.eq(Objects.nonNull(roleVo.getRoleId()),"role_id",roleVo.getRoleId());
+            queryWrapper.like(StringUtils.isNotEmpty(roleVo.getRoleCode()),"role_code",roleVo.getRoleCode());
+            queryWrapper.like(StringUtils.isNotEmpty(roleVo.getRoleName()),"role_name",roleVo.getRoleName());
+            queryWrapper.like(StringUtils.isNotEmpty(roleVo.getRoleDesc()),"role_desc",roleVo.getRoleDesc());
+            queryWrapper.eq(StringUtils.isNotEmpty(roleVo.getTenant()),"tenant",roleVo.getTenant());
         }
-        example.orderBy("lastUpdateDate").desc();
-        List<RolePo> rolePos = roleMapper.selectByExample(example);
-        return rolePos;
+        queryWrapper.orderByDesc("last_update_date");
+        return roleMapper.selectList(queryWrapper);
     }
 
     /**
@@ -180,7 +169,7 @@ public class RoleService implements IRoleService {
     public DataResponse<Object> deleteRoleById(Long roleId) {
         log.info("delete roleId={}",roleId);
         Asserts.notNull(roleId,"roleId can't be null.");
-        roleMapper.deleteByPrimaryKey(roleId);
+        roleMapper.deleteById(roleId);
         return new DataResponse<>();
     }
 
@@ -206,7 +195,7 @@ public class RoleService implements IRoleService {
         UserInfoVo userInfo = new UserInfoVo();
         ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfo);
         UserContext.setUserInfo(userInfo);
-        UserPo userPo = userMapper.selectByPrimaryKey(userId);
+        UserPo userPo = userMapper.selectById(userId);
         if (Objects.isNull(userPo)) {
             throw new CommonException("User not exist in system, change role failed.");
         }
@@ -216,11 +205,11 @@ public class RoleService implements IRoleService {
             log.info("no need to change role, roleCode={}",roleCode);
             return new DataResponse<>();
         }
-        if (!roleList.contains(roleCode)) {
-            throw new CommonException("lack of role: "+roleCode);
-        }
+        AssertUtil.isTrue(!roleList.contains(roleCode),"lack of role: "+roleCode);
         // 更新角色
-        RolePo rolePo = roleMapper.selectOne(RolePo.builder().roleCode(roleCode).build());
+        QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_code",roleCode);
+        RolePo rolePo = roleMapper.selectOne(queryWrapper);
         RoleVo changedRole = ObjectUtil.convertObjs(rolePo, RoleVo.class);
         userInfo.setCurRole(changedRole);
 
@@ -236,9 +225,12 @@ public class RoleService implements IRoleService {
         userInfo.setCurPermissionList(new ArrayList<>(permissionSet));
 
         // 设置默认角色
-        UserPo updUserPo = UserPo.builder().userId(userInfo.getCurUser().getUserId()).defaultRole(rolePo.getRoleId()).build();
+        UserPo updUserPo = UserPo.builder()
+                .userId(userInfo.getCurUser().getUserId())
+                .defaultRole(rolePo.getRoleId())
+                .build();
         TkPoUtil.buildUpdateUserInfo(updUserPo);
-        userMapper.updateByPrimaryKeySelective(updUserPo);
+        userMapper.updateById(updUserPo);
 
         // 更新缓存
         Map<String, Object> newUserInfoMap = ObjectUtil.getNonNullFields(userInfo);

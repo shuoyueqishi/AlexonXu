@@ -1,10 +1,9 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,32 +11,31 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_t")
-public class UserPo extends TkBasePo implements Serializable {
+@TableName("user_t")
+public class UserPo extends BasePo implements Serializable {
     private static final long serialVersionUID = -6547364084413382629L;
-    @Id
-    @Column(name = "user_id")
+    @TableField("user_id")
     private Long userId;
 
-    @Column(name = "nick_name")
+    @TableField("nick_name")
     private String nickName;
 
-    @Column(name = "name")
+    @TableField("name")
     private String name;
 
-    @Column(name = "password")
+    @TableField("password")
     private String password;
 
-    @Column(name = "telephone")
+    @TableField("telephone")
     private String telephone;
 
-    @Column(name = "email")
+    @TableField("email")
     private String email;
 
-    @Column(name = "head_img")
+    @TableField("head_img")
     private String headImg;
 
-    @Column(name = "default_role")
+    @TableField("default_role")
     private Long defaultRole;
 
 }

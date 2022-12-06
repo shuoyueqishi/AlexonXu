@@ -1,10 +1,10 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -13,28 +13,28 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="product_t")
-public class ProductPo extends TkBasePo implements Serializable {
+@TableName("product_t")
+public class ProductPo extends BasePo implements Serializable {
     private static final long serialVersionUID = 2660677350391367339L;
     @Id
-    @Column(name="id")
+    @TableField("id")
     private Long id;
 
-    @Column(name="product_code")
+    @TableField("product_code")
     private String productCode;
 
-    @Column(name="product_name")
+    @TableField("product_name")
     private String productName;
 
-    @Column(name="price")
+    @TableField("price")
     private BigDecimal price;
 
-    @Column(name="description")
+    @TableField("description")
     private String description;
 
-    @Column(name="remark")
+    @TableField("remark")
     private String remark;
 
-    @Column(name="valid_flag")
+    @TableField("valid_flag")
     private Integer validFlag;
 }

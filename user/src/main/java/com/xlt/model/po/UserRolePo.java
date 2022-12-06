@@ -1,5 +1,7 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -12,20 +14,20 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_role_t")
-public class UserRolePo extends TkBasePo implements Serializable {
+@TableName("user_role_t")
+public class UserRolePo extends BasePo implements Serializable {
 
     private static final long serialVersionUID = -3455587923768658816L;
 
-    @Column(name = "user_id")
+    @TableField("user_id")
     private Long userId;
 
-    @Column(name = "role_id")
+    @TableField("role_id")
     private Long roleId;
 
-    @Column(name = "start_time")
+    @TableField("start_time")
     private Date startTime;
 
-    @Column(name = "end_time")
+    @TableField("end_time")
     private Date endTime;
 }

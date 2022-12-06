@@ -1,18 +1,18 @@
 package com.xlt.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xlt.model.po.RolePermissionPo;
 import com.xlt.model.vo.PermissionVo;
 import com.xlt.model.vo.RolePermissionVo;
 import com.xlt.model.vo.UserRoleVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
-import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
 
 @Component
-public interface RolePermissionMapper extends Mapper<RolePermissionPo> {
+public interface RolePermissionMapper extends BaseMapper<RolePermissionPo> {
 
     int batchInsertPermissions(@Param("list") List<RolePermissionPo> list);
 

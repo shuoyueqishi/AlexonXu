@@ -1,11 +1,11 @@
 package com.xlt.mapper;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xlt.model.po.UserPo;
 import org.springframework.stereotype.Component;
-import tk.mybatis.mapper.common.Mapper;
 
 
 @Component
-public interface UserMapper extends Mapper<UserPo> {
+public interface UserMapper extends BaseMapper<UserPo> {
 }

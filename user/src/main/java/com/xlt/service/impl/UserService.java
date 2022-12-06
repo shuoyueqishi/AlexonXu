@@ -1,5 +1,6 @@
 package com.xlt.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xlt.constant.CommConstant;
@@ -62,10 +63,9 @@ public class UserService implements IUserService {
         if(CollectionUtils.isEmpty(userIdSet)) {
             return userMap;
         }
-        Example example = new Example(UserPo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andIn("userId",userIdSet);
-        List<UserPo> userPoList = userMapper.selectByExample(example);
+        QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("user_id",userIdSet);
+        List<UserPo> userPoList = userMapper.selectList(queryWrapper);
         if(CollectionUtils.isEmpty(userPoList)) {
             return userMap;
         }
@@ -82,16 +82,15 @@ public class UserService implements IUserService {
     @OperationLog(operateModule = "UserService", operateType = "Login", operateDesc = "用户登录")
     public DataResponse<Object> userLogin(UserVo userVo) throws NoSuchAlgorithmException {
         log.info("current user info:{}", userVo);
-        Example example = new Example(UserPo.class);
-        Example.Criteria criteria = example.createCriteria();
+        QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isEmpty(userVo.getName())) {
             throw new CommonException(ErrorEnum.PARAMETER_ERROR.getErrorCode(), "username can't be null");
         }
         if (StringUtils.isEmpty(userVo.getPassword())) {
             throw new CommonException(ErrorEnum.PARAMETER_ERROR.getErrorCode(), "user password can't be null");
         }
-        criteria.andEqualTo("name", userVo.getName());
-        UserPo userPo = userMapper.selectOneByExample(example);
+        queryWrapper.eq("name",userVo.getName());
+        UserPo userPo = userMapper.selectOne(queryWrapper);
         DataResponse<Object> response = new DataResponse<>();
         if (Objects.isNull(userPo)) {
             throw new CommonException("User [" + userVo.getName() + "] not exists in system.");
@@ -103,7 +102,7 @@ public class UserService implements IUserService {
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
             // 查询用户的当前角色
             curUser.setPassword(null);
-            RolePo curRolePo = roleMapper.selectByPrimaryKey(userPo.getDefaultRole());
+            RolePo curRolePo = roleMapper.selectById(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
 
@@ -162,28 +161,16 @@ public class UserService implements IUserService {
     }
 
     private List<UserPo> queryUserPos(UserVo userVo) {
-        Example example = new Example(UserPo.class);
-        Example.Criteria criteria = example.createCriteria();
+        QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         if (Objects.nonNull(userVo)) {
-            if (StringUtils.isNotEmpty(userVo.getName())) {
-                criteria.andLike("name", CommConstant.PERCENTAGE + userVo.getName() + CommConstant.PERCENTAGE);
-            }
-            if (Objects.nonNull(userVo.getUserId())) {
-                criteria.andEqualTo("userId", userVo.getUserId());
-            }
-            if (StringUtils.isNotEmpty(userVo.getNickName())) {
-                criteria.andLike("nickName", CommConstant.PERCENTAGE + userVo.getNickName() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(userVo.getTelephone())) {
-                criteria.andLike("telephone", userVo.getTelephone() + CommConstant.PERCENTAGE);
-            }
-            if (StringUtils.isNotEmpty(userVo.getEmail())) {
-                criteria.andLike("email", userVo.getEmail() + CommConstant.PERCENTAGE);
-            }
+            queryWrapper.like(StringUtils.isNotEmpty(userVo.getName()),"name",userVo.getName());
+            queryWrapper.eq(Objects.nonNull(userVo.getUserId()),"user_id",userVo.getUserId());
+            queryWrapper.like(StringUtils.isNotEmpty(userVo.getNickName()),"nick_name",userVo.getNickName());
+            queryWrapper.like(StringUtils.isNotEmpty(userVo.getTelephone()),"telephone",userVo.getTelephone());
+            queryWrapper.like(StringUtils.isNotEmpty(userVo.getEmail()),"email",userVo.getEmail());
         }
-        example.orderBy("lastUpdateDate").desc();
-        List<UserPo> userPos = userMapper.selectByExample(example);
-        return userPos;
+        queryWrapper.orderByDesc("last_update_date");
+        return userMapper.selectList(queryWrapper);
     }
 
     /**
@@ -221,10 +208,9 @@ public class UserService implements IUserService {
         Asserts.notNull(userVo.getPassword(), "password can't be empty");
         Asserts.notNull(userVo.getTelephone(), "telephone can't be empty");
         Asserts.notNull(userVo.getEmail(), "email can't be empty");
-        Example example = new Example(UserPo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("name", userVo.getName());
-        UserPo existUser = userMapper.selectOneByExample(example);
+        QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name",userVo.getName());
+        UserPo existUser = userMapper.selectOne(queryWrapper);
         if (Objects.nonNull(existUser)) {
             throw new CommonException(userVo.getName() + " has existed in system.");
         }
@@ -250,7 +236,7 @@ public class UserService implements IUserService {
         UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
         userPo.setLastUpdateDate(new Date());
         userPo.setLastUpdateBy(UserContext.getUserId());
-        userMapper.updateByPrimaryKeySelective(userPo);
+        userMapper.updateById(userPo);
         return new BasicResponse();
     }
 
@@ -265,7 +251,7 @@ public class UserService implements IUserService {
         Asserts.notNull(pwdUserVo.getUserId(), "userId can't be empty");
         Asserts.notNull(pwdUserVo.getPassword(), "old password can't be empty");
         Asserts.notNull(pwdUserVo.getNewPassword(), "new password can't be empty");
-        UserPo userPo = userMapper.selectByPrimaryKey(pwdUserVo.getUserId());
+        UserPo userPo = userMapper.selectById(pwdUserVo.getUserId());
         Asserts.notNull(userPo, "user not exist in system, userId=" + pwdUserVo.getUserId());
         // 校验输入的原始密码是否正确
         try {
@@ -283,7 +269,7 @@ public class UserService implements IUserService {
                 .build();
         updateUserPo.setLastUpdateDate(new Date());
         updateUserPo.setLastUpdateBy(UserContext.getUserId());
-        userMapper.updateByPrimaryKeySelective(updateUserPo);
+        userMapper.updateById(updateUserPo);
         return new BasicResponse();
     }
 
@@ -296,20 +282,15 @@ public class UserService implements IUserService {
     @Override
     public BasicResponse deleteUserById(Long userId) {
         log.info("delete userId:{}", userId);
-        UserPo userPo = userMapper.selectByPrimaryKey(userId);
+        UserPo userPo = userMapper.selectById(userId);
         Asserts.notNull(userPo, "user not exists in system, delete failed.");
-        userMapper.deleteByPrimaryKey(userId);
+        userMapper.selectById(userId);
         return new BasicResponse();
     }
 
     public UserVo queryUserById(Long userId) {
-        Example example = new Example(UserPo.class);
-        Example.Criteria criteria = example.createCriteria();
-        if (Objects.isNull(userId)) {
-            throw new CommonException("userId can't be null.");
-        }
-        criteria.andEqualTo("userId", userId);
-        UserPo userPo = userMapper.selectOneByExample(example);
+        AssertUtil.isNull(userId,"userId can't be null.");
+        UserPo userPo = userMapper.selectById(userId);
         return ObjectUtil.convertObjs(userPo, UserVo.class);
     }
 
