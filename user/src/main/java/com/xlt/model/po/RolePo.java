@@ -1,6 +1,8 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
@@ -16,7 +18,7 @@ public class RolePo extends BasePo implements Serializable {
 
     private static final long serialVersionUID = 7249862574164740075L;
 
-    @TableField("role_id")
+    @TableId(value = "role_id",type = IdType.AUTO)
     private Long roleId;
 
     @TableField("role_code")

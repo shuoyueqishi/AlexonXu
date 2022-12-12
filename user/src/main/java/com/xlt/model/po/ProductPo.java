@@ -1,6 +1,8 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
@@ -16,8 +18,8 @@ import java.math.BigDecimal;
 @TableName("product_t")
 public class ProductPo extends BasePo implements Serializable {
     private static final long serialVersionUID = 2660677350391367339L;
-    @Id
-    @TableField("id")
+
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
     @TableField("product_code")

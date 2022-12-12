@@ -284,14 +284,7 @@ public class UserService implements IUserService {
         log.info("delete userId:{}", userId);
         UserPo userPo = userMapper.selectById(userId);
         Asserts.notNull(userPo, "user not exists in system, delete failed.");
-        userMapper.selectById(userId);
+        userMapper.deleteById(userId);
         return new BasicResponse();
     }
-
-    public UserVo queryUserById(Long userId) {
-        AssertUtil.isNull(userId,"userId can't be null.");
-        UserPo userPo = userMapper.selectById(userId);
-        return ObjectUtil.convertObjs(userPo, UserVo.class);
-    }
-
 }

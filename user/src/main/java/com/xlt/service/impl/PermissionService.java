@@ -141,7 +141,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
 
         // 校验角色是否存在
         Set<Long> roleIds = userRoleVoList.stream().map(UserRoleVo::getRoleId).collect(Collectors.toSet());
-        List<RolePo> rolePoList = roleMapper.selectList(new QueryWrapper<RolePo>().eq("role_id",roleIds));
+        List<RolePo> rolePoList = roleMapper.selectList(new QueryWrapper<RolePo>().in("role_id",roleIds));
         if (CollectionUtils.isEmpty(rolePoList) || rolePoList.size() != roleIds.size()) {
             throw new CommonException("Role may not exist in system, so it can't grant roles.");
         }
@@ -199,7 +199,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
 
         Set<Long> permSet = new HashSet<>(rolePermissionVo.getPermissionList());
         QueryWrapper<PermissionPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("permission_id",permSet);
+        queryWrapper.in("permission_id",permSet);
         List<PermissionPo> existPermPoList = permissionMapper.selectList(queryWrapper);
         Set<Long> existPermSet = existPermPoList.stream().map(PermissionPo::getPermissionId).collect(Collectors.toSet());
         if (permSet.size() != existPermSet.size()) {

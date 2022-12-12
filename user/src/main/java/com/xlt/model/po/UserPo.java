@@ -1,6 +1,8 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
@@ -14,7 +16,8 @@ import java.io.Serializable;
 @TableName("user_t")
 public class UserPo extends BasePo implements Serializable {
     private static final long serialVersionUID = -6547364084413382629L;
-    @TableField("user_id")
+
+    @TableId(value = "user_id",type = IdType.AUTO)
     private Long userId;
 
     @TableField("nick_name")

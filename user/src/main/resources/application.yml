@@ -101,6 +101,10 @@ logging:
   level:
     com.tk: debug
 
+mybatis-plus:
+  configuration: ### 开启打印sql配置
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 
 # http pool配置
 http_pool:
