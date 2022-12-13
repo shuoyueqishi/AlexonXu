@@ -23,8 +23,11 @@ public class EDocReq implements Serializable {
     @ApiModelProperty("文档编码")
     private String docNo;
 
-    @ApiModelProperty("文档名称")
+    @ApiModelProperty("doc名称")
     private String docName;
+
+    @ApiModelProperty("文档原始名称")
+    private String fileName;
 
     @ApiModelProperty("文档类型")
     private String docType;

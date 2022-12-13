@@ -115,7 +115,8 @@ create table edoc_t
 (
     id                   bigint not null AUTO_INCREMENT comment '主键ID',
     doc_no               varchar(20) not null comment '文档编号，唯一',
-    doc_name             varchar(128) DEFAULT NULL comment '文档名称',
+    doc_name             varchar(128) DEFAULT NULL comment 'doc名称',
+    file_name            varchar(256) DEFAULT NULL comment '文档名称',
     doc_type             varchar(16) DEFAULT NULL comment '文档类型',
     doc_size             bigint DEFAULT NULL comment '文档大小，KB',
     download_url         varchar(256) DEFAULT NULL comment '下载地址',

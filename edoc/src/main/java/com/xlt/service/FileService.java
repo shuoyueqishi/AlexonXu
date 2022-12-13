@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,10 +73,12 @@ public class FileService {
         int splitIdx = oriFilename.lastIndexOf(".");
         String docType = oriFilename.substring(splitIdx + 1);
         String docNo = SeqNoGenUtil.getSeqNoWithTime("doc", 6);
-        String filename = oriFilename.substring(0, splitIdx) + "-" + docNo + "." + docType;
+        String filename = oriFilename.substring(0, splitIdx)+"."+docType;
+        String docName = docNo+"."+docType;
         String fileUrl = getFileUrl(docNo);
         EDocPo eDocPo = EDocPo.builder()
-                .docName(filename)
+                .docName(docName)
+                .fileName(filename)
                 .docSize(multipartFile.getSize())
                 .docType(docType)
                 .docNo(docNo)
@@ -83,14 +87,26 @@ public class FileService {
                 .build();
         PoUtil.buildCreateUserInfo(eDocPo);
         eDocMapper.insert(eDocPo);
-        File file = new File(fileDir + filename);
+        String pathName = getPathName(docType, docName);
+        log.info("pathName={}",pathName);
+        File file = new File(pathName);
         try {
+            if(!file.getParentFile().exists()) {
+                boolean mkdirs = file.getParentFile().mkdirs();
+                log.info("file directory {} created", mkdirs);
+            }
             multipartFile.transferTo(file);
         } catch (IOException e) {
             log.error("save file error:", e);
             throw new CommonException("save file:" + oriFilename + " error:" + e.getMessage());
         }
         return ObjectUtil.convertObjs(eDocPo, EDocVo.class);
+    }
+
+    private String getPathName(String docType, String docName) {
+        String date = DateUtils.formatDate(new Date());
+        String pathName = MessageFormat.format("{0}\\{1}\\{2}\\{3}", fileDir, docType, date, docName);
+        return pathName;
     }
 
     public boolean deleteFile(String docNo) {
@@ -103,7 +119,8 @@ public class FileService {
         AssertUtil.isNull(eDocPo, "file not exist/deleted");
         eDocPo.setDeleted(CommConstant.DELETED);
         eDocMapper.updateById(eDocPo);
-        File file2Del = new File(fileDir+eDocPo.getDocName());
+        String pathName = getPathName(eDocPo.getDocType(), eDocPo.getDocName());
+        File file2Del = new File(pathName);
         return file2Del.delete();
     }
 
@@ -141,11 +158,12 @@ public class FileService {
         queryWrapper.eq("doc_no", docNo);
         EDocPo eDocPo = eDocMapper.selectOne(queryWrapper);
         AssertUtil.isNull(eDocPo, "docNo[" + docNo + "] not exist in system");
-        File file = new File(fileDir + eDocPo.getDocName());
+        String pathName = getPathName(eDocPo.getDocType(), eDocPo.getDocName());
+        File file = new File(pathName);
         if (file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(eDocPo.getDocName(), "UTF-8"));
+                response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(eDocPo.getFileName(), "UTF-8"));
                 ServletOutputStream outputStream = response.getOutputStream();
                 FileCopyUtils.copy(fileInputStream, outputStream);
                 return true;
@@ -163,6 +181,7 @@ public class FileService {
         QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocNo()), "edoc_no", eDocReq.getDocNo());
         queryWrapper.like(StringUtils.isNotEmpty(eDocReq.getDocName()), "doc_name", eDocReq.getDocName());
+        queryWrapper.like(StringUtils.isNotEmpty(eDocReq.getFileName()), "file_name", eDocReq.getFileName());
         queryWrapper.eq(StringUtils.isNotEmpty(eDocReq.getDocType()), "doc_type", eDocReq.getDocType());
         queryWrapper.eq(Objects.nonNull(eDocReq.getDeleted()),"deleted", eDocReq.getDeleted());
         queryWrapper.eq(Objects.nonNull(eDocReq.getCreateBy()), "create_by", eDocReq.getCreateBy());

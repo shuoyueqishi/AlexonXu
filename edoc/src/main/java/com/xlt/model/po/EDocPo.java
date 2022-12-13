@@ -27,6 +27,9 @@ public class EDocPo extends BasePo implements Serializable {
     @TableField("doc_name")
     private String docName;
 
+    @TableField("file_name")
+    private String fileName;
+
     @TableField("doc_type")
     private String docType;
 
