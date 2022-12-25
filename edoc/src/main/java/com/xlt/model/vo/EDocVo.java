@@ -38,6 +38,9 @@ public class EDocVo extends BaseVo implements Serializable {
     @ApiModelProperty("文档下载链接")
     private String downloadUrl;
 
+    @ApiModelProperty("文件本地存储路径")
+    private String localPath;
+
     @ApiModelProperty("文档是否已删除，0：否，1：是")
     private Integer deleted;
 }

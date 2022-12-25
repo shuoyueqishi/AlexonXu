@@ -76,6 +76,8 @@ public class FileService {
         String filename = oriFilename.substring(0, splitIdx)+"."+docType;
         String docName = docNo+"."+docType;
         String fileUrl = getFileUrl(docNo);
+        String localPath = getPathName(docType, docName);
+        log.info("localPath={}",localPath);
         EDocPo eDocPo = EDocPo.builder()
                 .docName(docName)
                 .fileName(filename)
@@ -83,13 +85,12 @@ public class FileService {
                 .docType(docType)
                 .docNo(docNo)
                 .downloadUrl(fileUrl)
+                .localPath(localPath)
                 .deleted(0)
                 .build();
         PoUtil.buildCreateUserInfo(eDocPo);
         eDocMapper.insert(eDocPo);
-        String pathName = getPathName(docType, docName);
-        log.info("pathName={}",pathName);
-        File file = new File(pathName);
+        File file = new File(localPath);
         try {
             if(!file.getParentFile().exists()) {
                 boolean mkdirs = file.getParentFile().mkdirs();
@@ -158,8 +159,7 @@ public class FileService {
         queryWrapper.eq("doc_no", docNo);
         EDocPo eDocPo = eDocMapper.selectOne(queryWrapper);
         AssertUtil.isNull(eDocPo, "docNo[" + docNo + "] not exist in system");
-        String pathName = getPathName(eDocPo.getDocType(), eDocPo.getDocName());
-        File file = new File(pathName);
+        File file = new File(eDocPo.getLocalPath());
         if (file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);

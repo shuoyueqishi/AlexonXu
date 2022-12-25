@@ -1,6 +1,7 @@
 package com.xlt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xlt.constant.CommConstant;
@@ -233,10 +234,30 @@ public class UserService implements IUserService {
         log.info("update user info:{}", userVo);
         Asserts.notNull(userVo, "userVo can't be null");
         Asserts.notNull(userVo.getUserId(), "userId can't be empty");
-        UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
+        UserPo userPo = new UserPo();
+        if(StringUtils.isNotEmpty(userVo.getName())){
+            userPo.setName(userVo.getName());
+        }
+        if(StringUtils.isNotEmpty(userVo.getNickName())) {
+            userPo.setNickName(userVo.getNickName());
+        }
+        if(StringUtils.isNotEmpty(userVo.getEmail())) {
+            userPo.setEmail(userVo.getEmail());
+        }
+        if(StringUtils.isNotEmpty(userVo.getTelephone())) {
+            userPo.setTelephone(userVo.getTelephone());
+        }
+        if(StringUtils.isNotEmpty(userVo.getHeadImg())) {
+            userPo.setHeadImg(userVo.getHeadImg());
+        }
+        if(Objects.nonNull(userVo.getDefaultRole())) {
+            userPo.setDefaultRole(userVo.getDefaultRole());
+        }
         userPo.setLastUpdateDate(new Date());
         userPo.setLastUpdateBy(UserContext.getUserId());
-        userMapper.updateById(userPo);
+        UpdateWrapper<UserPo> updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("user_id",userVo.getUserId());
+        userMapper.update(userPo,updateWrapper);
         return new BasicResponse();
     }
 

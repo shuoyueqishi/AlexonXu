@@ -39,6 +39,9 @@ public class EDocPo extends BasePo implements Serializable {
     @TableField("download_url")
     private String downloadUrl;
 
+    @TableField("local_path")
+    private String localPath;
+
     @TableField("deleted")
     private Integer deleted;
 }

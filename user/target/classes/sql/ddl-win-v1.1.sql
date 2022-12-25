@@ -115,10 +115,12 @@ create table edoc_t
 (
     id                   bigint not null AUTO_INCREMENT comment '主键ID',
     doc_no               varchar(20) not null comment '文档编号，唯一',
-    doc_name             varchar(128) DEFAULT NULL comment '文档名称',
+    doc_name             varchar(128) DEFAULT NULL comment 'doc名称',
+    file_name            varchar(256) DEFAULT NULL comment '文档名称',
     doc_type             varchar(16) DEFAULT NULL comment '文档类型',
     doc_size             bigint DEFAULT NULL comment '文档大小，KB',
     download_url         varchar(256) DEFAULT NULL comment '下载地址',
+    local_path           varchar(256) DEFAULT NULL comment '文件本地存储路径',
     deleted              int default 0 comment '删除标志，0：未删除，1：删除',
     create_by           bigint DEFAULT NULL comment '创建人',
     creation_date        datetime DEFAULT NULL comment '创建时间',

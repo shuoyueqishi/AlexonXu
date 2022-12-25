@@ -30,6 +30,9 @@ public class OperationLogAspect {
     @Autowired
     IOperationLogMapper operationLogMapper;
 
+    @Autowired
+    AsyncRecordLog asyncRecordLog;
+
     /**
      * 设置操作日志切入点   在注解的位置切入代码
      */
@@ -83,8 +86,7 @@ public class OperationLogAspect {
             operationLogPo.setResponse(JSON.toJSONString(result));
 
             //保存日志
-            operationLogMapper.insert(operationLogPo);
-
+            asyncRecordLog.recordLogTask(operationLogPo);
         } catch (Exception e) {
             log.error("error while record operation log:", e);
         }

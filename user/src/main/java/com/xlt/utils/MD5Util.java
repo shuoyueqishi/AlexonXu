@@ -72,15 +72,15 @@ public class MD5Util {
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        String a = "test1";
-        String b = "test2";
+        String a = "xlt";
+        String b = "sys";
         String c = "Xlt@1314";
         String[] str = {a, b, c};
         for (String s : str) {
             byte[] bytes = encryptionStr(s);
             System.out.println("数据：" + s + " 加密后为：" + bytes.toString());
         }
-        String dbPassword = toHex(encryptionStr("Xlt@1314"));
+        String dbPassword = toHex(encryptionStr("xlt"));
         System.out.println(dbPassword);
         String inputPassword = "Xlt@1314";
         String inputPassword2 = "abcdeffff";
