@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public interface PermissionMapper extends BaseMapper<PermissionPo> {
+public interface IPermissionMapper extends BaseMapper<PermissionPo> {
 
     int batchInsert(@Param("list") List<PermissionPo> list);
 

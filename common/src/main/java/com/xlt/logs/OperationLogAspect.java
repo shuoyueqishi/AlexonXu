@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.xlt.mapper.IOperationLogMapper;
 import com.xlt.model.po.OperationLogPo;
 import com.xlt.utils.common.IpUtil;
+import com.xlt.utils.common.PoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -69,10 +70,10 @@ public class OperationLogAspect {
                 operationLogPo.setOperateDesc(annotation.operateDesc());
             }
             //操作时间
-            operationLogPo.setCreationTime(new Date());
+            operationLogPo.setCreationDate(new Date());
 
             //操作用户
-            operationLogPo.setUserName(request.getHeader("userName"));
+            operationLogPo.setCreateBy(PoUtil.getCurUserId());
             //操作IP
             operationLogPo.setUserIp(IpUtil.getIpAddr(request));
 

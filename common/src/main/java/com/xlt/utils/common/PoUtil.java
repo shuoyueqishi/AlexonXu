@@ -17,4 +17,8 @@ public class PoUtil {
         po.setLastUpdateBy(UserContext.getUserId());
         po.setLastUpdateDate(new Date());
     }
+
+    public static Long getCurUserId() {
+        return UserContext.getUserId();
+    }
 }

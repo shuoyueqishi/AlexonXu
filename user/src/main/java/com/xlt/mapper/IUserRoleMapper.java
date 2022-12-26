@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Component
-public interface UserRoleMapper extends BaseMapper<UserRolePo> {
+public interface IUserRoleMapper extends BaseMapper<UserRolePo> {
 
     int batchInsert(@Param("list")List<UserRolePo> list);
 

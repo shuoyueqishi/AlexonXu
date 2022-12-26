@@ -7,9 +7,9 @@ import com.xlt.auth.JwtConfig;
 import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
-import com.xlt.mapper.RoleMapper;
-import com.xlt.mapper.RolePermissionMapper;
-import com.xlt.mapper.UserMapper;
+import com.xlt.mapper.IRoleMapper;
+import com.xlt.mapper.IRolePermissionMapper;
+import com.xlt.mapper.IUserMapper;
 import com.xlt.model.po.RolePo;
 import com.xlt.model.po.UserPo;
 import com.xlt.model.response.DataResponse;
@@ -29,10 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,13 +38,13 @@ import java.util.stream.Collectors;
 public class RoleService implements IRoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private IRoleMapper IRoleMapper;
 
     @Autowired
-    private RolePermissionMapper rolePermMapper;
+    private IRolePermissionMapper rolePermMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private IUserMapper IUserMapper;
 
     @Autowired
     private JwtConfig jwtConfig;
@@ -65,7 +63,7 @@ public class RoleService implements IRoleService {
         Asserts.notNull(roleVo.getTenant(),"tenant can't be empty.");
         QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_code",roleVo.getRoleCode());
-        RolePo existRolePo = roleMapper.selectOne(queryWrapper);
+        RolePo existRolePo = IRoleMapper.selectOne(queryWrapper);
         if (Objects.nonNull(existRolePo))  {
             throw new CommonException(roleVo.getRoleCode()+" already exists in system.");
         }
@@ -76,7 +74,7 @@ public class RoleService implements IRoleService {
                 .tenant(roleVo.getTenant())
                 .build();
         TkPoUtil.buildCreateUserInfo(rolePo);
-        roleMapper.insert(rolePo);
+        IRoleMapper.insert(rolePo);
         return new DataResponse<>();
     }
 
@@ -105,7 +103,7 @@ public class RoleService implements IRoleService {
             updRolePo.setTenant(roleVo.getTenant());
         }
         TkPoUtil.buildUpdateUserInfo(updRolePo);
-        roleMapper.updateById(updRolePo);
+        IRoleMapper.updateById(updRolePo);
         return DataResponse.builder().build();
     }
 
@@ -142,7 +140,7 @@ public class RoleService implements IRoleService {
             queryWrapper.eq(StringUtils.isNotEmpty(roleVo.getTenant()),"tenant",roleVo.getTenant());
         }
         queryWrapper.orderByDesc("last_update_date");
-        return roleMapper.selectList(queryWrapper);
+        return IRoleMapper.selectList(queryWrapper);
     }
 
     /**
@@ -169,7 +167,7 @@ public class RoleService implements IRoleService {
     public DataResponse<Object> deleteRoleById(Long roleId) {
         log.info("delete roleId={}",roleId);
         Asserts.notNull(roleId,"roleId can't be null.");
-        roleMapper.deleteById(roleId);
+        IRoleMapper.deleteById(roleId);
         return new DataResponse<>();
     }
 
@@ -195,7 +193,7 @@ public class RoleService implements IRoleService {
         UserInfoVo userInfo = new UserInfoVo();
         ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfo);
         UserContext.setUserInfo(userInfo);
-        UserPo userPo = userMapper.selectById(userId);
+        UserPo userPo = IUserMapper.selectById(userId);
         if (Objects.isNull(userPo)) {
             throw new CommonException("User not exist in system, change role failed.");
         }
@@ -209,7 +207,7 @@ public class RoleService implements IRoleService {
         // 更新角色
         QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_code",roleCode);
-        RolePo rolePo = roleMapper.selectOne(queryWrapper);
+        RolePo rolePo = IRoleMapper.selectOne(queryWrapper);
         RoleVo changedRole = ObjectUtil.convertObjs(rolePo, RoleVo.class);
         userInfo.setCurRole(changedRole);
 
@@ -230,7 +228,7 @@ public class RoleService implements IRoleService {
                 .defaultRole(rolePo.getRoleId())
                 .build();
         TkPoUtil.buildUpdateUserInfo(updUserPo);
-        userMapper.updateById(updUserPo);
+        IUserMapper.updateById(updUserPo);
 
         // 更新缓存
         Map<String, Object> newUserInfoMap = ObjectUtil.getNonNullFields(userInfo);

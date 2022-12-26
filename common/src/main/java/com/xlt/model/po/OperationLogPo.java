@@ -3,6 +3,7 @@ package com.xlt.model.po;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,9 +45,10 @@ public class OperationLogPo implements Serializable {
     @TableField("user_ip")
     private String userIp;
 
-    @TableField("user_name")
-    private String userName;
+    @TableField("create_by")
+    private Long createBy;
 
-    @TableField("creation_time")
-    private Date creationTime;
+    @TableField("creation_date")
+    private Date creationDate;
+
 }

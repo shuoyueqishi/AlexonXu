@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Component
-public interface RolePermissionMapper extends BaseMapper<RolePermissionPo> {
+public interface IRolePermissionMapper extends BaseMapper<RolePermissionPo> {
 
     int batchInsertPermissions(@Param("list") List<RolePermissionPo> list);
 

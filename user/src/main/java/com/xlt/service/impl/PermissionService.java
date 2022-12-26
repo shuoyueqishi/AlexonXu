@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xlt.model.response.PageDataResponse;
 import com.xlt.service.ISyncPermissionService;
-import com.xlt.constant.CommConstant;
 import com.xlt.exception.CommonException;
 import com.xlt.mapper.*;
 import com.xlt.model.vo.PermissionVo;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,19 +33,19 @@ import java.util.stream.Collectors;
 public class PermissionService implements IPermissionService, ISyncPermissionService {
 
     @Autowired
-    private PermissionMapper permissionMapper;
+    private IPermissionMapper IPermissionMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private IUserMapper IUserMapper;
 
     @Autowired
-    private RoleMapper roleMapper;
+    private IRoleMapper IRoleMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private IUserRoleMapper IUserRoleMapper;
 
     @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private IRolePermissionMapper rolePermissionMapper;
 
 
     /**
@@ -81,11 +79,11 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
             TkPoUtil.buildCreateUserInfo(permissionPo);
             permissionPoList.add(permissionPo);
         });
-        permissionMapper.batchInsert(permissionPoList);
+        IPermissionMapper.batchInsert(permissionPoList);
 
         QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_code","SystemAdmin");
-        RolePo sysAdminPo = roleMapper.selectOne(queryWrapper);
+        RolePo sysAdminPo = IRoleMapper.selectOne(queryWrapper);
         AssertUtil.isNull(sysAdminPo, "role code: SystemAdmin not exist in system");
 
         List<PermissionVo> ownedPermList = rolePermissionMapper.queryPermissionByRoleId(sysAdminPo.getRoleId());
@@ -102,7 +100,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         }
 
         if (!CollectionUtils.isEmpty(notOwnedList)) {
-            List<PermissionPo> permissionPos = permissionMapper.queryPermissionsByPoint(notOwnedList);
+            List<PermissionPo> permissionPos = IPermissionMapper.queryPermissionsByPoint(notOwnedList);
             List<Long> permIdList = permissionPos.stream().map(PermissionPo::getPermissionId).collect(Collectors.toList());
             RolePermissionVo rolePermissionVo = new RolePermissionVo();
             rolePermissionVo.setRoleId(sysAdminPo.getRoleId());
@@ -134,14 +132,14 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         Set<Long> userIds = userRoleVoList.stream().map(UserRoleVo::getUserId).collect(Collectors.toSet());
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("user_id",userIds);
-        List<UserPo> userPoList = userMapper.selectList(queryWrapper);
+        List<UserPo> userPoList = IUserMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(userPoList) || userPoList.size() != userIds.size()) {
             throw new CommonException("User maybe not exist in system, so it can't grant roles.");
         }
 
         // 校验角色是否存在
         Set<Long> roleIds = userRoleVoList.stream().map(UserRoleVo::getRoleId).collect(Collectors.toSet());
-        List<RolePo> rolePoList = roleMapper.selectList(new QueryWrapper<RolePo>().in("role_id",roleIds));
+        List<RolePo> rolePoList = IRoleMapper.selectList(new QueryWrapper<RolePo>().in("role_id",roleIds));
         if (CollectionUtils.isEmpty(rolePoList) || rolePoList.size() != roleIds.size()) {
             throw new CommonException("Role may not exist in system, so it can't grant roles.");
         }
@@ -162,7 +160,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         // 授予角色
         List<UserRolePo> userRolePoList = ObjectUtil.convertObjsList(userRoleVoList, UserRolePo.class);
         userRolePoList.forEach(TkPoUtil::buildCreateUserInfo);
-        userRoleMapper.batchInsert(userRolePoList);
+        IUserRoleMapper.batchInsert(userRolePoList);
         return new BasicResponse();
     }
 
@@ -192,7 +190,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         if (CollectionUtils.isEmpty(rolePermissionVo.getPermissionList())) {
             throw new CommonException("permissionList can't be empty");
         }
-        RolePo rolePo = roleMapper.selectById(rolePermissionVo.getRoleId());
+        RolePo rolePo = IRoleMapper.selectById(rolePermissionVo.getRoleId());
         if (Objects.isNull(rolePo)) {
             throw new CommonException("roleId=" + rolePermissionVo.getRoleId() + " not exists in system");
         }
@@ -200,7 +198,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         Set<Long> permSet = new HashSet<>(rolePermissionVo.getPermissionList());
         QueryWrapper<PermissionPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("permission_id",permSet);
-        List<PermissionPo> existPermPoList = permissionMapper.selectList(queryWrapper);
+        List<PermissionPo> existPermPoList = IPermissionMapper.selectList(queryWrapper);
         Set<Long> existPermSet = existPermPoList.stream().map(PermissionPo::getPermissionId).collect(Collectors.toSet());
         if (permSet.size() != existPermSet.size()) {
             throw new CommonException("permissionId not exist in system");
@@ -266,7 +264,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
             queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getResourceName()),"resource_name",permissionVo.getResourceName());
             queryWrapper.like(StringUtils.isNotEmpty(permissionVo.getPath()),"path",permissionVo.getPath());
             queryWrapper.eq(StringUtils.isNotEmpty(permissionVo.getTenant()),"tenant",permissionVo.getTenant());
-            permissionPoList = permissionMapper.selectList(queryWrapper);
+            permissionPoList = IPermissionMapper.selectList(queryWrapper);
         }
         return permissionPoList;
     }

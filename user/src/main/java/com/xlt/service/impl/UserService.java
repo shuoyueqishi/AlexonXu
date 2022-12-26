@@ -8,14 +8,13 @@ import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
+import com.xlt.mapper.IRoleMapper;
 import com.xlt.model.response.PageDataResponse;
-import com.xlt.service.IUserQueryService;
 import com.xlt.utils.common.*;
 import com.xlt.utils.MD5Util;
 import com.xlt.logs.OperationLog;
-import com.xlt.mapper.RoleMapper;
-import com.xlt.mapper.RolePermissionMapper;
-import com.xlt.mapper.UserMapper;
+import com.xlt.mapper.IRolePermissionMapper;
+import com.xlt.mapper.IUserMapper;
 import com.xlt.model.vo.PermissionVo;
 import com.xlt.model.po.RolePo;
 import com.xlt.model.po.UserPo;
@@ -30,12 +29,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -43,13 +40,13 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private IUserMapper IUserMapper;
 
     @Autowired
-    private RoleMapper roleMapper;
+    private IRoleMapper IRoleMapper;
 
     @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private IRolePermissionMapper rolePermissionMapper;
 
     /**
      * 根据用户userId 列表获取用户数据，调用该接口之后，用户信息会缓存在Redis中
@@ -66,7 +63,7 @@ public class UserService implements IUserService {
         }
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("user_id",userIdSet);
-        List<UserPo> userPoList = userMapper.selectList(queryWrapper);
+        List<UserPo> userPoList = IUserMapper.selectList(queryWrapper);
         if(CollectionUtils.isEmpty(userPoList)) {
             return userMap;
         }
@@ -91,7 +88,7 @@ public class UserService implements IUserService {
             throw new CommonException(ErrorEnum.PARAMETER_ERROR.getErrorCode(), "user password can't be null");
         }
         queryWrapper.eq("name",userVo.getName());
-        UserPo userPo = userMapper.selectOne(queryWrapper);
+        UserPo userPo = IUserMapper.selectOne(queryWrapper);
         DataResponse<Object> response = new DataResponse<>();
         if (Objects.isNull(userPo)) {
             throw new CommonException("User [" + userVo.getName() + "] not exists in system.");
@@ -103,7 +100,7 @@ public class UserService implements IUserService {
         if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
             // 查询用户的当前角色
             curUser.setPassword(null);
-            RolePo curRolePo = roleMapper.selectById(userPo.getDefaultRole());
+            RolePo curRolePo = IRoleMapper.selectById(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
 
@@ -171,7 +168,7 @@ public class UserService implements IUserService {
             queryWrapper.like(StringUtils.isNotEmpty(userVo.getEmail()),"email",userVo.getEmail());
         }
         queryWrapper.orderByDesc("last_update_date");
-        return userMapper.selectList(queryWrapper);
+        return IUserMapper.selectList(queryWrapper);
     }
 
     /**
@@ -211,7 +208,7 @@ public class UserService implements IUserService {
         Asserts.notNull(userVo.getEmail(), "email can't be empty");
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",userVo.getName());
-        UserPo existUser = userMapper.selectOne(queryWrapper);
+        UserPo existUser = IUserMapper.selectOne(queryWrapper);
         if (Objects.nonNull(existUser)) {
             throw new CommonException(userVo.getName() + " has existed in system.");
         }
@@ -219,7 +216,7 @@ public class UserService implements IUserService {
         String encryptPassword = MD5Util.encryptPassword(userPo.getPassword());
         userPo.setPassword(encryptPassword);
         TkPoUtil.buildCreateUserInfo(userPo);
-        userMapper.insert(userPo);
+        IUserMapper.insert(userPo);
         return new BasicResponse("add user successfully.");
     }
 
@@ -257,7 +254,7 @@ public class UserService implements IUserService {
         userPo.setLastUpdateBy(UserContext.getUserId());
         UpdateWrapper<UserPo> updateWrapper = new UpdateWrapper();
         updateWrapper.eq("user_id",userVo.getUserId());
-        userMapper.update(userPo,updateWrapper);
+        IUserMapper.update(userPo,updateWrapper);
         return new BasicResponse();
     }
 
@@ -272,7 +269,7 @@ public class UserService implements IUserService {
         Asserts.notNull(pwdUserVo.getUserId(), "userId can't be empty");
         Asserts.notNull(pwdUserVo.getPassword(), "old password can't be empty");
         Asserts.notNull(pwdUserVo.getNewPassword(), "new password can't be empty");
-        UserPo userPo = userMapper.selectById(pwdUserVo.getUserId());
+        UserPo userPo = IUserMapper.selectById(pwdUserVo.getUserId());
         Asserts.notNull(userPo, "user not exist in system, userId=" + pwdUserVo.getUserId());
         // 校验输入的原始密码是否正确
         try {
@@ -290,7 +287,7 @@ public class UserService implements IUserService {
                 .build();
         updateUserPo.setLastUpdateDate(new Date());
         updateUserPo.setLastUpdateBy(UserContext.getUserId());
-        userMapper.updateById(updateUserPo);
+        IUserMapper.updateById(updateUserPo);
         return new BasicResponse();
     }
 
@@ -303,9 +300,9 @@ public class UserService implements IUserService {
     @Override
     public BasicResponse deleteUserById(Long userId) {
         log.info("delete userId:{}", userId);
-        UserPo userPo = userMapper.selectById(userId);
+        UserPo userPo = IUserMapper.selectById(userId);
         Asserts.notNull(userPo, "user not exists in system, delete failed.");
-        userMapper.deleteById(userId);
+        IUserMapper.deleteById(userId);
         return new BasicResponse();
     }
 }
