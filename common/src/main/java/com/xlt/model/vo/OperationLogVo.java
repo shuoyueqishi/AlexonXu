@@ -5,16 +5,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("操作日志信息")
-public class OperationLogVo implements Serializable {
+public class OperationLogVo extends BaseVo implements Serializable {
 
     private static final long serialVersionUID = 1142825251639390814L;
 
@@ -41,10 +43,4 @@ public class OperationLogVo implements Serializable {
 
     @ApiModelProperty("操作人IP")
     private String userIp;
-
-    @ApiModelProperty("创建人")
-    private Long createBy;
-
-    @ApiModelProperty("创建时间")
-    private Date creationDate;
 }

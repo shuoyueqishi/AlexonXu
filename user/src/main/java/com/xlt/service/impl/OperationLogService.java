@@ -10,6 +10,7 @@ import com.xlt.model.vo.OperationLogVo;
 import com.xlt.model.vo.PageVo;
 import com.xlt.service.api.IOperationLogService;
 import com.xlt.utils.common.ObjectUtil;
+import com.xlt.utils.common.VoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class OperationLogService implements IOperationLogService {
         Page<OperationLogPo> page = new Page<>(pageVo.getCurrentPage(),pageVo.getPageSize());
         Page<OperationLogPo> infoPoPage = optLogMapper.selectPage(page, queryWrapper);
         List<OperationLogVo> operationLogVos = ObjectUtil.convertObjsList(infoPoPage.getRecords(), OperationLogVo.class);
+        VoUtil.fillUserNames(operationLogVos);
         pageVo.setTotalPages(page.getPages());
         pageVo.setTotal(page.getTotal());
         return  new PageDataResponse<>(operationLogVos, pageVo);
