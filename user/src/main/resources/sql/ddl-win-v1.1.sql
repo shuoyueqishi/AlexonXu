@@ -49,10 +49,10 @@ CREATE TABLE `operation_log_t`
     `request`        longtext COMMENT '请求参数',
     `response`       longtext COMMENT '返回参数',
     `user_ip`        varchar(64)  DEFAULT NULL COMMENT '操作人ip',
-    `user_name`      varchar(64)  DEFAULT NULL COMMENT '操作人',
-    `creation_time`  datetime     DEFAULT NULL COMMENT '操作时间',
+    `create_by`      varchar(50)  DEFAULT NULL COMMENT '操作人',
+    `creation_date`  datetime     DEFAULT NULL COMMENT '操作时间',
     PRIMARY KEY (`id`),
-    KEY `idx_user_name` (`user_name`),
+    KEY `idx_user_name` (`create_by`),
     KEY `idx_operate_module` (`operate_module`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 413
