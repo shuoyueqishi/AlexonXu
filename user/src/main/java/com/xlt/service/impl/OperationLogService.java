@@ -43,6 +43,7 @@ public class OperationLogService implements IOperationLogService {
         queryWrapper.le(Objects.nonNull(optLogQueryVo.getCreationDateEnd()),"creation_date",optLogQueryVo.getCreationDateEnd());
         queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getUrl()),"url",optLogQueryVo.getUrl());
         queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateModule()),"operate_module",optLogQueryVo.getOperateModule());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateType()),"operate_type",optLogQueryVo.getOperateType());
         queryWrapper.likeRight(StringUtils.isNotEmpty(optLogQueryVo.getUserIp()),"user_ip",optLogQueryVo.getUserIp());
         queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateDesc()),"operate_desc",optLogQueryVo.getOperateDesc());
         queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getRequest()),"request",optLogQueryVo.getRequest());

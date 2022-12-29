@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,7 +15,7 @@ import java.util.Date;
 public class OperationLogQueryVo extends OperationLogVo implements Serializable {
     private static final long serialVersionUID = -5762829769525902419L;
 
-    private Date creationDateStart;
+    private String creationDateStart;
 
-    private Date creationDateEnd;
+    private String creationDateEnd;
 }
