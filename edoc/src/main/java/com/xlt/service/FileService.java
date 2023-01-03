@@ -152,7 +152,7 @@ public class FileService {
         }
     }
 
-    public Boolean downloadFile(String docNo, HttpServletResponse response) {
+    public void downloadFile(String docNo, HttpServletResponse response) {
         log.info("download file, docNo={}", docNo);
         AssertUtil.isStringEmpty(docNo, "docNo can't be empty");
         QueryWrapper<EDocPo> queryWrapper = new QueryWrapper<>();
@@ -166,7 +166,6 @@ public class FileService {
                 response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(eDocPo.getFileName(), "UTF-8"));
                 ServletOutputStream outputStream = response.getOutputStream();
                 FileCopyUtils.copy(fileInputStream, outputStream);
-                return true;
             } catch (IOException e) {
                 log.error("download file error:", e);
                 throw new CommonException("download file error:" + e.getMessage());

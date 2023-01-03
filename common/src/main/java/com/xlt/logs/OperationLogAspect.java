@@ -15,14 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Aspect
 @Component
@@ -81,10 +84,16 @@ public class OperationLogAspect {
 
             // 请求参数
             Map<String, Object> requestParams = getRequestParams(joinPoint);
-            operationLogPo.setRequest(JSON.toJSONString(requestParams));
+            log.info("requestParams={}", requestParams);
+            if (!CollectionUtils.isEmpty(requestParams)) {
+                operationLogPo.setRequest(JSON.toJSONString(requestParams));
+            }
 
             // 返回值
-            operationLogPo.setResponse(JSON.toJSONString(result));
+            log.info("result={}", result);
+            if (Objects.nonNull(result)) {
+                operationLogPo.setResponse(JSON.toJSONString(result));
+            }
 
             //保存日志
             asyncRecordLog.recordLogTask(operationLogPo);
@@ -110,6 +119,13 @@ public class OperationLogAspect {
         String[] parameterNames = pnd.getParameterNames(method);
         Map<String, Object> paramMap = new HashMap<>(32);
         for (int i = 0; i < parameterNames.length; i++) {
+            if (args[i] instanceof HttpServletResponse || args[i] instanceof HttpServletRequest) {
+                continue;
+            }
+            if(parameterNames[i].contains("password")) {
+                paramMap.put(parameterNames[i], "***");
+                continue;
+            }
             paramMap.put(parameterNames[i], args[i]);
         }
         return paramMap;

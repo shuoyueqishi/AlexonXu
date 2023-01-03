@@ -43,12 +43,11 @@ public class EDocController {
         return new DataResponse<>(eDocVo);
     }
 
-    @RequestMapping(value = "/download/{docNo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(value = "/download/{docNo}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @OperatePermission(resourceName = "EDocController",operateCode = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
     @OperationLog(operateModule = "EDocController", operateType = OperateConstant.DOWNLOAD, operateDesc = "download file by docNo")
-    DataResponse<Boolean> downloadFile(@PathVariable("docNo") String docNo, HttpServletResponse response) {
-        Boolean res = fileService.downloadFile(docNo, response);
-        return new DataResponse<>(res);
+    void downloadFile(@PathVariable("docNo") String docNo, HttpServletResponse response) {
+        fileService.downloadFile(docNo, response);
     }
 
     @RequestMapping(value = "/query/page/list/{pageSize}/{curPage}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
