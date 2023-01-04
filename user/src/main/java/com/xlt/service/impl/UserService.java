@@ -25,6 +25,7 @@ import com.xlt.service.api.IUserService;
 import com.xlt.utils.TkPoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +98,10 @@ public class UserService implements IUserService {
 
         UserVo curUser = ObjectUtil.convertObjs(userPo, UserVo.class);
         userInfoVo.setCurUser(curUser);
-        if (MD5Util.validPassword(userVo.getPassword(), userPo.getPassword())) {
+        if (MD5Util.validPassword(userVo.getPassword()+userPo.getSalt(), userPo.getPassword())) {
             // 查询用户的当前角色
             curUser.setPassword(null);
+            curUser.setSalt(null);
             RolePo curRolePo = IRoleMapper.selectById(userPo.getDefaultRole());
             RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
@@ -209,12 +211,17 @@ public class UserService implements IUserService {
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",userVo.getName());
         UserPo existUser = IUserMapper.selectOne(queryWrapper);
-        if (Objects.nonNull(existUser)) {
-            throw new CommonException(userVo.getName() + " has existed in system.");
-        }
+        AssertUtil.isTrue(Objects.nonNull(existUser),userVo.getName() + " has existed in system.");
+        QueryWrapper<RolePo> roleWrapper = new QueryWrapper<>();
+        roleWrapper.eq("role_code","Guest");
+        RolePo defaultRolePo = IRoleMapper.selectOne(roleWrapper);
+        AssertUtil.isNull(defaultRolePo,"Default role Guest not exist");
         UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
-        String encryptPassword = MD5Util.encryptPassword(userPo.getPassword());
+        String salt = RandomStringUtils.randomAlphanumeric(16);
+        String encryptPassword = MD5Util.encryptPassword(userPo.getPassword()+salt);
         userPo.setPassword(encryptPassword);
+        userPo.setSalt(salt);
+        userPo.setDefaultRole(defaultRolePo.getRoleId());
         TkPoUtil.buildCreateUserInfo(userPo);
         IUserMapper.insert(userPo);
         return new BasicResponse("add user successfully.");
@@ -273,17 +280,19 @@ public class UserService implements IUserService {
         Asserts.notNull(userPo, "user not exist in system, userId=" + pwdUserVo.getUserId());
         // 校验输入的原始密码是否正确
         try {
-            if (!MD5Util.validPassword(pwdUserVo.getPassword(), userPo.getPassword())) {
+            if (!MD5Util.validPassword(pwdUserVo.getPassword()+userPo.getSalt(), userPo.getPassword())) {
                 throw new CommonException("Origin password is not correct.");
             }
         } catch (NoSuchAlgorithmException e) {
             log.error("valid password encounter error:", e);
         }
         // 加密新密码
-        String encryptedPwd = MD5Util.encryptPassword(pwdUserVo.getNewPassword());
+        String salt = RandomStringUtils.randomAlphanumeric(16);
+        String encryptedPwd = MD5Util.encryptPassword(pwdUserVo.getNewPassword()+salt);
         UserPo updateUserPo = UserPo.builder()
                 .userId(pwdUserVo.getUserId())
                 .password(encryptedPwd)
+                .salt(salt)
                 .build();
         updateUserPo.setLastUpdateDate(new Date());
         updateUserPo.setLastUpdateBy(UserContext.getUserId());

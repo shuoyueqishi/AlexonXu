@@ -5,6 +5,7 @@ CREATE TABLE `user_t`
     `nick_name`        varchar(64)  DEFAULT NULL COMMENT '昵称',
     `name`             varchar(64)  DEFAULT NULL COMMENT '姓名',
     `password`         varchar(128) DEFAULT NULL COMMENT '密码',
+    `salt`             varchar(16) DEFAULT NULL COMMENT '密码盐值',
     `telephone`        varchar(32)  DEFAULT NULL COMMENT '电话',
     `email`            varchar(128) DEFAULT NULL COMMENT '邮箱',
     `head_img`         varchar(20)  DEFAULT NULL COMMENT '头像，存储图片的docNo',

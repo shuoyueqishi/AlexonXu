@@ -29,6 +29,9 @@ public class UserPo extends BasePo implements Serializable {
     @TableField("password")
     private String password;
 
+    @TableField("salt")
+    private String salt;
+
     @TableField("telephone")
     private String telephone;
 
