@@ -26,34 +26,36 @@ public class OperationLogService implements IOperationLogService {
     @Autowired
     private IOperationLogMapper optLogMapper;
 
+
     /**
      * 分页查询操作日志
      *
      * @param optLogQueryVo 查询条件
-     * @param pageVo         分页参数
+     * @param pageVo        分页参数
      * @return 返回值
      */
     @Override
     public PageDataResponse<OperationLogVo> queryOperationLogPageList(OperationLogQueryVo optLogQueryVo, PageVo pageVo) {
-        log.info("operationLogVo={}",optLogQueryVo);
+        log.info("operationLogVo={}", optLogQueryVo);
         QueryWrapper<OperationLogPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(Objects.nonNull(optLogQueryVo.getId()),"id",optLogQueryVo.getId());
-        queryWrapper.eq(Objects.nonNull(optLogQueryVo.getCreateBy()),"create_by",optLogQueryVo.getCreateBy());
-        queryWrapper.ge(Objects.nonNull(optLogQueryVo.getCreationDateStart()),"creation_date",optLogQueryVo.getCreationDateStart());
-        queryWrapper.le(Objects.nonNull(optLogQueryVo.getCreationDateEnd()),"creation_date",optLogQueryVo.getCreationDateEnd());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getUrl()),"url",optLogQueryVo.getUrl());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateModule()),"operate_module",optLogQueryVo.getOperateModule());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateType()),"operate_type",optLogQueryVo.getOperateType());
-        queryWrapper.likeRight(StringUtils.isNotEmpty(optLogQueryVo.getUserIp()),"user_ip",optLogQueryVo.getUserIp());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateDesc()),"operate_desc",optLogQueryVo.getOperateDesc());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getRequest()),"request",optLogQueryVo.getRequest());
-        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getResponse()),"response",optLogQueryVo.getResponse());
-        Page<OperationLogPo> page = new Page<>(pageVo.getCurrentPage(),pageVo.getPageSize());
+        queryWrapper.eq(Objects.nonNull(optLogQueryVo.getId()), "id", optLogQueryVo.getId());
+        queryWrapper.eq(Objects.nonNull(optLogQueryVo.getCreateBy()), "create_by", optLogQueryVo.getCreateBy());
+        queryWrapper.ge(Objects.nonNull(optLogQueryVo.getCreationDateStart()), "creation_date", optLogQueryVo.getCreationDateStart());
+        queryWrapper.le(Objects.nonNull(optLogQueryVo.getCreationDateEnd()), "creation_date", optLogQueryVo.getCreationDateEnd());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getUrl()), "url", optLogQueryVo.getUrl());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateModule()), "operate_module", optLogQueryVo.getOperateModule());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateType()), "operate_type", optLogQueryVo.getOperateType());
+        queryWrapper.likeRight(StringUtils.isNotEmpty(optLogQueryVo.getUserIp()), "user_ip", optLogQueryVo.getUserIp());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getOperateDesc()), "operate_desc", optLogQueryVo.getOperateDesc());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getRequest()), "request", optLogQueryVo.getRequest());
+        queryWrapper.like(StringUtils.isNotEmpty(optLogQueryVo.getResponse()), "response", optLogQueryVo.getResponse());
+        queryWrapper.orderByDesc("creation_date");
+        Page<OperationLogPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<OperationLogPo> infoPoPage = optLogMapper.selectPage(page, queryWrapper);
         List<OperationLogVo> operationLogVos = ObjectUtil.convertObjsList(infoPoPage.getRecords(), OperationLogVo.class);
         VoUtil.fillUserNames(operationLogVos);
         pageVo.setTotalPages(page.getPages());
         pageVo.setTotal(page.getTotal());
-        return  new PageDataResponse<>(operationLogVos, pageVo);
+        return new PageDataResponse<>(operationLogVos, pageVo);
     }
 }

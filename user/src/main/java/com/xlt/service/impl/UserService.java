@@ -10,6 +10,7 @@ import com.xlt.exception.CommonException;
 import com.xlt.exception.ErrorEnum;
 import com.xlt.mapper.IRoleMapper;
 import com.xlt.model.response.PageDataResponse;
+import com.xlt.service.impl.asyncTasks.UserAsyncTasks;
 import com.xlt.utils.common.*;
 import com.xlt.utils.MD5Util;
 import com.xlt.logs.OperationLog;
@@ -48,6 +49,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private IRolePermissionMapper rolePermissionMapper;
+
+    @Autowired
+    private UserAsyncTasks userAsyncTasks;
 
     /**
      * 根据用户userId 列表获取用户数据，调用该接口之后，用户信息会缓存在Redis中
@@ -224,6 +228,12 @@ public class UserService implements IUserService {
         userPo.setDefaultRole(defaultRolePo.getRoleId());
         TkPoUtil.buildCreateUserInfo(userPo);
         IUserMapper.insert(userPo);
+
+        UserRoleVo userRoleVo = new UserRoleVo();
+        userRoleVo.setUserName(userVo.getName());
+        userRoleVo.setRoleId(defaultRolePo.getRoleId());
+        userAsyncTasks.grantRole2UserTask(userRoleVo);
+        log.info("grant role to user, async task is  UserAsyncTasks#grantRole2UserTask");
         return new BasicResponse("add user successfully.");
     }
 
