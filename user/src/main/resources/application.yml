@@ -20,7 +20,14 @@ jwt:
   token:
     secret: 12345abcd # token加密密钥
 
+
+
 spring:
+  cloud:
+    # nacos配置
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
   #项目名字
   application:
     name: user
