@@ -17,6 +17,24 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>nacos-config-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -147,25 +165,25 @@
         </dependency>
 
         <!-- eureka-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>${eureka.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>archaius-core</artifactId>
-                    <groupId>com.netflix.archaius</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-configuration</artifactId>
-                    <groupId>commons-configuration</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+<!--            <version>${eureka.version}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>archaius-core</artifactId>-->
+<!--                    <groupId>com.netflix.archaius</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>commons-configuration</artifactId>-->
+<!--                    <groupId>commons-configuration</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>servlet-api</artifactId>-->
+<!--                    <groupId>javax.servlet</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
         <!-- spring-cloud-dependencies-->
         <dependency>
@@ -182,6 +200,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
 </project>

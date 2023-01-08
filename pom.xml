@@ -42,11 +42,11 @@
 
     <dependencies>
         <!-- eureka-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>${eureka.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+<!--            <version>${eureka.version}</version>-->
+<!--        </dependency>-->
 
         <!-- spring-cloud-dependencies-->
         <dependency>
@@ -142,6 +142,18 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-starter</artifactId>
+                <version>0.2.7</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
@@ -156,6 +168,7 @@
                 <artifactId>servo-core</artifactId>
                 <version>0.12.21</version>
             </dependency>
+
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
@@ -166,6 +179,13 @@
                 <artifactId>httpclient</artifactId>
                 <version>4.5.3</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-commons</artifactId>
+                <version>3.1.1</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
