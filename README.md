@@ -1,6 +1,16 @@
 # AlexonXu
   Springboot快速开发框架
 
+## swagger
+swagger地址
+```shell
+http://localhost:端口号/路径上下文/swagger-ui/index.html
+```
+如:
+```shell
+http://localhost:8190/user/swagger-ui/index.html
+```
+
 # TODO List
 ```yaml
 1、新建用户增加图像选择  --ok

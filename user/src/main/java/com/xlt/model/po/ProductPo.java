@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 

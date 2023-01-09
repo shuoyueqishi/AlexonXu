@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
