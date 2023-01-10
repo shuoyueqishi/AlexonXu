@@ -25,8 +25,6 @@ spring:
         shared-configs:
           - data-id: Alexon.yml
             refresh: true #是否支持自动刷新
-          - data-id: Alexon-${spring.profiles.active}.yml
-            refresh: true #是否支持自动刷新
       discovery:
         # 注册中心的地址
         server-addr: localhost:8848

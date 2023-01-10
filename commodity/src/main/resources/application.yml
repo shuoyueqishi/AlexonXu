@@ -8,9 +8,6 @@ info:
     name: ${spring.application.name}
     description: 商品管理微服务
   author: Alexon
-  build:
-    artifactId: @project.artifactId@
-    version: @project.version@
 
 #jwt
 jwt:

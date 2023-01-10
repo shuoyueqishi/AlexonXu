@@ -1,3 +1,7 @@
+server:
+  port: 8490
+  servlet:
+    context-path: /edoc
 
 info:
   app:

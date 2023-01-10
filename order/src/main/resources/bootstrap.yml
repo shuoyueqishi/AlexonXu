@@ -1,13 +1,13 @@
 server:
-  port: 8490
+  port: 8390
   servlet:
-    context-path: /edoc
+    context-path: /order
 
 spring:
-  application:
-    name: edoc
   profiles:
     active: dev
+  application:
+    name: order
   cloud:
     nacos:
       config:

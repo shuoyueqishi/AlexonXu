@@ -296,6 +296,14 @@
                 <scope>runtime</scope>
             </dependency>
 
+            <!-- 用于VO和PO之间的转化-->
+            <dependency>
+                <groupId>net.sf.dozer</groupId>
+                <artifactId>dozer</artifactId>
+                <version>5.5.1</version>
+            </dependency>
+
+
             <!-- eureka-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -307,12 +315,12 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.4</version>
             </dependency>
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-okhttp</artifactId>
-                <version>11.0</version>
+                <version>12.1</version>
             </dependency>
 
             <!-- 邮件模块依赖-->

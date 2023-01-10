@@ -22,10 +22,9 @@ spring:
         # 配置中心配置文件Data Id 的格式是 ${prefix}-${spring.profile.active}.${file-extension}，会同时加载配置文件
         # ${prefix}-${spring.profile.active}.${file-extension} 和 ${prefix}.${file-extension}的属性，若有相同属性
         # 则以${prefix}-${spring.profile.active}.${file-extension}的属性为准
+        # 以user为例，配置优先级：user-dev.yml>user.yml>Alexon.yml
         shared-configs:
           - data-id: Alexon.yml
-            refresh: true #是否支持自动刷新
-          - data-id: Alexon-${spring.profiles.active}.yml
             refresh: true #是否支持自动刷新
       discovery:
         # 注册中心的地址

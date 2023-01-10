@@ -1,13 +1,13 @@
 server:
-  port: 8490
+  port: 8290
   servlet:
-    context-path: /edoc
+    context-path: /commodity
 
 spring:
-  application:
-    name: edoc
   profiles:
     active: dev
+  application:
+    name: commodity
   cloud:
     nacos:
       config:
