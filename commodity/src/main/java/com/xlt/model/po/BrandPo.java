@@ -1,5 +1,6 @@
 package com.xlt.model.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -17,7 +18,7 @@ public class BrandPo extends BasePo implements Serializable {
 
     private static final long serialVersionUID = -957727940372645265L;
 
-    @TableId("brand_id")
+    @TableId(value="brand_id",type = IdType.AUTO)
     private Long brandId;
 
     @TableField("name")
