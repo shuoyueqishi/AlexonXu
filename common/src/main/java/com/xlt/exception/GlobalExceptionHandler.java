@@ -15,9 +15,9 @@ public class GlobalExceptionHandler {
      * 处理自定义异常
      *
      */
-    @ExceptionHandler(value = com.xlt.exception.CommonException.class)
+    @ExceptionHandler(value = CommonException.class)
     @ResponseBody
-    public BasicResponse bizExceptionHandler(com.xlt.exception.CommonException e) {
+    public BasicResponse bizExceptionHandler(CommonException e) {
         log.error("CommonException error info:",e);
         return BasicResponse.commonError(e);
     }

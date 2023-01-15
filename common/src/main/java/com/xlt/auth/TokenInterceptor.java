@@ -62,7 +62,13 @@ public class TokenInterceptor implements HandlerInterceptor {
                     userId = JwtUtil.verifyToken(token).get("userId").asString();
                 }
                 Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
-                RedisUtil.expire(CommConstant.USER_INFO_PREFIX + userId, jwtConfig.getJwtExpireTime());
+                long expireSec = RedisUtil.getExpireSec(CommConstant.USER_INFO_PREFIX + userId);
+                log.info("current token expireSec={}", expireSec);
+                long newExpireSec = expireSec + 300; // 请求一次加5min token过期时间，最长不超过jwtConfig.getJwtExpireTime()
+                if (newExpireSec > jwtConfig.getJwtExpireTime()) {
+                    newExpireSec = jwtConfig.getJwtExpireTime();
+                }
+                RedisUtil.expire(CommConstant.USER_INFO_PREFIX + userId, newExpireSec);
                 ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfoVo);
                 List<String> permissionList = userInfoVo.getCurPermissionList();
                 AssertUtil.isTrue(CollectionUtils.isEmpty(permissionList) || !permissionList.contains(perPoint),
@@ -73,8 +79,6 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         return true;
     }
-
-
 
 
     @Override

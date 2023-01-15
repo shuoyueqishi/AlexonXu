@@ -19,6 +19,9 @@ http://localhost:8190/user/swagger-ui/index.html
 4、日志查询页面 --Ok
 5、修改页面上的一些小bug --OK
 6、eureka改为nacos --OK
+8、实现多种方式登录：用户名、手机号、邮箱
+9、我的待办实现
+10、我的账本模块功能
 ```
 
 

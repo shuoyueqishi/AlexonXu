@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xlt.auth.JwtConfig;
 import com.xlt.constant.CommConstant;
 import com.xlt.context.UserContext;
 import com.xlt.exception.CommonException;
@@ -53,6 +54,9 @@ public class UserService implements IUserService {
     @Autowired
     private UserAsyncTasks userAsyncTasks;
 
+    @Autowired
+    private JwtConfig jwtConfig;
+
     /**
      * 根据用户userId 列表获取用户数据，调用该接口之后，用户信息会缓存在Redis中
      *
@@ -86,20 +90,13 @@ public class UserService implements IUserService {
     public DataResponse<Object> userLogin(UserVo userVo) throws NoSuchAlgorithmException {
         log.info("current user info:{}", userVo);
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isEmpty(userVo.getName())) {
-            throw new CommonException(ErrorEnum.PARAMETER_ERROR.getErrorCode(), "username can't be null");
-        }
-        if (StringUtils.isEmpty(userVo.getPassword())) {
-            throw new CommonException(ErrorEnum.PARAMETER_ERROR.getErrorCode(), "user password can't be null");
-        }
+        AssertUtil.isStringEmpty(userVo.getName(),"username can't be null");
+        AssertUtil.isStringEmpty(userVo.getPassword(),"user password can't be null");
         queryWrapper.eq("name",userVo.getName());
         UserPo userPo = IUserMapper.selectOne(queryWrapper);
         DataResponse<Object> response = new DataResponse<>();
-        if (Objects.isNull(userPo)) {
-            throw new CommonException("User [" + userVo.getName() + "] not exists in system.");
-        }
+        AssertUtil.isNull(userPo,"User [" + userVo.getName() + "] not exists in system.");
         UserInfoVo userInfoVo = new UserInfoVo();
-
         UserVo curUser = ObjectUtil.convertObjs(userPo, UserVo.class);
         userInfoVo.setCurUser(curUser);
         if (MD5Util.validPassword(userVo.getPassword()+userPo.getSalt(), userPo.getPassword())) {
@@ -128,7 +125,7 @@ public class UserService implements IUserService {
             String userInfoKey = CommConstant.USER_INFO_PREFIX + userPo.getUserId();
             log.info("user info cache key={}", userInfoKey);
             Map<String, Object> userInfoMap = ObjectUtil.getNonNullFields(userInfoVo);
-            RedisUtil.hmset(userInfoKey, userInfoMap, 1800);
+            RedisUtil.hmset(userInfoKey, userInfoMap, jwtConfig.getJwtExpireTime());
             UserContext.setUserInfo(userInfoVo);
             response.setData(userInfoVo);
             response.setMessage("Login successfully for user " + userVo.getName());
