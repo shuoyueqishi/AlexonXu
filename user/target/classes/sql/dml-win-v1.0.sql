@@ -1,57 +1,36 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_member_datas`(IN `totalRecords` int)
-BEGIN
-    DECLARE i INT DEFAULT 0 ; -- 定义变量
-    DECLARE _telephone BIGINT(11);
-    DECLARE _card_number varchar(10);
-    DECLARE _name varchar(60) ;
-    DECLARE _payment_type int(4);
-    DECLARE _temNum BIGINT(10);
-    SET _telephone=18272069216;
-    SET _card_number='10000';
-    SET _name='Member_';
-    SET _payment_type=0;
-    SELECT max(id) INTO i FROM member_t;
-    IF i IS NULL
-    THEN SET i = 0;
-    END IF;
-    SET totalRecords=totalRecords+i;
-    WHILE i < totalRecords DO  -- 符合条件就循环
-    -- 核心循环SQL;
-            SET i = i + 1 ; -- 计数器+1
-            SET _telephone = _telephone+3;
-            SET _temNum=CONVERT(_card_number,UNSIGNED);
-            SET _temNum=_temNum+1;
-            SET _card_number = CONVERT(_temNum, CHAR);
-            SET _name = CONCAT(_name,i);
-            SET _payment_type = i mod 5;
-            INSERT INTO `member_t`
-            ( `id`,
-              `card_number`,
-              `name`,
-              `birthday`,
-              `telephone`,
-              `integral`,
-              `money`,
-              `payment_type`,
-              `address`,
-              `create_by`,
-              `creation_date`,
-              `last_update_by`,
-              `last_update_date` )
-            VALUES
-            ( i,
-              _card_number,
-              _name,
-              '01-22',
-              _telephone,
-              100,
-              1000,
-              _payment_type,
-              '龙岗区雪岗路2057',
-              'Alex',
-              SYSDATE(),
-              'xulitao',
-              SYSDATE() );
-            SET _name='Member_';
-        END WHILE;
-END
+-- 初始化用户 xlt/xlt
+INSERT INTO `user_t`(`user_id`, `nick_name`, `name`, `password`, `salt`, `telephone`, `email`, `head_img`, `default_role`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (-1, 'sys', 'sys', 'D283E36786ED081D4FA06B8A4D0E51D6', 'r7DA4jKxKVbRuL1S', '18272069216', '2219321592@qq.com', 'doc20221225000005', 1, '-1', sysdate(), '-1', sysdate());
+INSERT INTO `user_t`(`user_id`, `nick_name`, `name`, `password`, `salt`, `telephone`, `email`, `head_img`, `default_role`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 'Alexon', 'xlt', 'BC27F5697DA23BF5D1E9F677D7461CFD', 'FkzknhEhHBrWHm6c', '18272069216', '2219321592@qq.com', 'doc20221225000013', 1, '-1', sysdate(), '-1', sysdate());
+
+
+INSERT INTO `role_t`(`role_id`, `role_code`, `role_name`, `role_desc`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 'SystemAdmin', '系统管理员', '系统管理员，权限最大', 'Alexon', '-1', sysdate(), '-1', sysdate());
+INSERT INTO `role_t`(`role_id`, `role_code`, `role_name`, `role_desc`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1002, 'Guest', '游客', '公共角色', 'Alexon', '-1', sysdate(), '-1', sysdate());
+
+INSERT INTO `user_role_t`(`user_id`, `role_id`, `start_time`, `end_time`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (-1, 1001, sysdate(), DATE_ADD(SYSDATE(), INTERVAL 2 YEAR), '-1', sysdate(), '-1', sysdate());
+INSERT INTO `user_role_t`(`user_id`, `role_id`, `start_time`, `end_time`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1001, sysdate(), DATE_ADD(SYSDATE(), INTERVAL 2 YEAR), '-1', sysdate(), '-1', sysdate());
+INSERT INTO `user_role_t`(`user_id`, `role_id`, `start_time`, `end_time`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1002, sysdate(), DATE_ADD(SYSDATE(), INTERVAL 2 YEAR), '-1', sysdate(), '-1', sysdate());
+
+
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 'UserController', 'Update', 'update user password', '/update/pwd', 'PUT', 'com.xlt.controller.UserController#updateUserPassword', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1002, 'RoleController', 'Update', 'Role update', '/role/update', 'PUT', 'com.xlt.controller.RoleController#roleUpdate', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1003, 'PermissionController', 'Read', 'query user roles by userId', '/permission/user/role/{userId}', 'GET', 'com.xlt.controller.PermissionController#queryUserRoleList', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1004, 'PermissionController', 'Create', 'grant permissions to role', '/permission/grant/role/privilege', 'POST', 'com.xlt.controller.PermissionController#grantPermission', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1005, 'UserController', 'Delete', 'delete a user', '/{userId}', 'DELETE', 'com.xlt.controller.UserController#deleteUser', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1006, 'RoleController', 'Delete', 'delete role', '/role/{roleId}', 'DELETE', 'com.xlt.controller.RoleController#deleteRoleById', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1007, 'UserController', 'Read', 'query user list', '/query/page/list/{pageSize}/{curPage}', 'GET', 'com.xlt.controller.UserController#queryUserPageList', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1008, 'PermissionController', 'Execute', 'synchronize permission', '/permission/synchronize', 'GET', 'com.xlt.controller.PermissionController#synchronizePermissions', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1009, 'RoleController', 'Read', 'query role list', '/role/list', 'GET', 'com.xlt.controller.RoleController#queryRoleList', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1010, 'RoleController', 'Create', 'Role add', '/role/add', 'POST', 'com.xlt.controller.RoleController#roleAdd', 'user', '-1', '2022-08-05 23:06:00', '-1', '2023-01-15 22:50:00');
+INSERT INTO `permission_t`(`permission_id`, `resource_name`, `operate_code`, `operate_desc`, `path`, `http_method`, `method_name`, `tenant`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1011, 'PermissionController', 'Delete', 'remove role permissions', '/permission/remove/role/privilege', 'DELETE', 'com.xlt.controller.PermissionController#removeRolePermission', 'user', '-1', '2022-09-08 23:40:00', '-1', '2023-01-15 22:50:00');
+
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1001, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1002, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1003, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1004, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1005, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1006, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1007, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1008, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1009, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1010, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');
+INSERT INTO `role_permission_t`(`role_id`, `permission_id`, `create_by`, `creation_date`, `last_update_by`, `last_update_date`) VALUES (1001, 1011, '-1', '2022-08-05 23:06:00', '-1', '2022-08-05 23:06:00');

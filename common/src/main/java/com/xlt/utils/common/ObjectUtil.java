@@ -15,7 +15,9 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class ObjectUtil {
-    private static Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
+
+    private static final Mapper dozerMapper = new DozerBeanMapper();
 
     public static <T> Map<String,Object> getAllFields(T obj){
         Class cls = obj.getClass();
@@ -59,7 +61,6 @@ public class ObjectUtil {
     }
 
     public static <T> T convertObjs(Object origin, Class<T> tClass) {
-        Mapper dozerMapper = new DozerBeanMapper();
         return dozerMapper.map(origin, tClass);
     }
 

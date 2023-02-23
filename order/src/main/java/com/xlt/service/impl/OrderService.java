@@ -1,11 +1,12 @@
 package com.xlt.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xlt.constant.CommConstant;
 import com.xlt.constant.RedisConstant;
 import com.xlt.mapper.IOrderCommodityMapper;
 import com.xlt.mapper.IOrderMapper;
 import com.xlt.mapper.IReceiverInfoMapper;
+import com.xlt.model.mapper.OrderConvertor;
 import com.xlt.model.po.OrderCommodityPo;
 import com.xlt.model.po.OrderPo;
 import com.xlt.model.po.ReceiverInfoPo;
@@ -19,7 +20,7 @@ import com.xlt.service.IOrderService;
 import com.xlt.service.feign.ICommodityFeignClient;
 import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -148,6 +149,14 @@ public class OrderService implements IOrderService {
 
     @Override
     public DataResponse<List<OrderVo>> queryOrderList(OrderVo orderVo) {
-        return null;
+        QueryWrapper<OrderPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Objects.nonNull(orderVo.getOrderId()),"order_id",orderVo.getOrderId());
+        queryWrapper.eq(StringUtils.isNotEmpty(orderVo.getOrderNo()),"order_no",orderVo.getOrderNo());
+        List<OrderPo> orderPos = orderMapper.selectList(queryWrapper);
+
+        long startMs=System.currentTimeMillis();
+        List<OrderVo> orderVos = OrderConvertor.INSTANCE.convert2OrderVos(orderPos);
+        log.info("converted by mapstruct,time cost={}ms",System.currentTimeMillis()-startMs);
+        return new DataResponse<>(orderVos);
     }
 }
