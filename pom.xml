@@ -21,6 +21,7 @@
         <module>user</module>
         <module>commodity</module>
         <module>edoc</module>
+        <module>chat-gpt</module>
     </modules>
 
     <properties>

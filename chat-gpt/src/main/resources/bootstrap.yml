@@ -1,0 +1,34 @@
+server:
+  port: 8590
+  servlet:
+    context-path: /chat-gpt
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: chat-gpt
+  cloud:
+    nacos:
+      config:
+        # 配置中心配置文件分组，默认为DEFAULT_GROUP
+        # group: TEST_GROUP
+        # 配置中心配置文件后缀，默认为properties
+        file-extension: yml
+        # 配置中心地址
+        server-addr: localhost:8848
+        # 配置中心命名空间ID，默认为public
+        namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
+        # 配置中心配置文件Data Id 的格式是 ${prefix}-${spring.profile.active}.${file-extension}，
+        # prefix默认为spring.application.name, spring.profile.active可以是dev、test、prod等；file-extension支持yaml、yml和 properties类型文件
+        # 以user为例，配置prefix默认、spring.profile.active=dev,file-extension=yml,
+        #   则会同时加载配置文件user.yml、user-dev.yml的属性，若有相同属性，则以user-dev.yml的属性为准
+        #   如果配置了共享配置，则配置优先级：user-dev.yml>user.yml>Alexon.yml
+        shared-configs:
+          - data-id: Alexon.yml
+            refresh: true #是否支持自动刷新
+      discovery:
+        # 注册中心的地址
+        server-addr: localhost:8848
+        # 配置中心命名空间ID，默认为public
+        namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98

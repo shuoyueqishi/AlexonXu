@@ -19,7 +19,7 @@ public class HttpUtil {
     @PostConstruct
     public void init() {
         if (restTemplate == null) {
-            restTemplate = com.xlt.utils.common.AppContextUtil.getBean(RestTemplate.class);
+            restTemplate = AppContextUtil.getBean("restTemplate",RestTemplate.class);
         }
     }
 
