@@ -51,7 +51,7 @@ spring:
 
 # chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
 chatgpt:
-  token: "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"
+  token: "sk-xxxx"
 
 #jwt
 jwt:
