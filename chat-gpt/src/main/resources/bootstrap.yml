@@ -27,6 +27,8 @@ spring:
         shared-configs:
           - data-id: Alexon.yml
             refresh: true #是否支持自动刷新
+        refresh-enabled: true
+        refreshable-dataids: chat-gpt.yml
       discovery:
         # 注册中心的地址
         server-addr: localhost:8848
