@@ -11,12 +11,9 @@ spring:
   cloud:
     nacos:
       config:
-        # 配置中心配置文件分组，默认为DEFAULT_GROUP
-        # group: TEST_GROUP
         # 配置中心配置文件后缀，默认为properties
         file-extension: yml
         # 配置中心地址
-#        server-addr: localhost:8848
         server-addr: 8.218.219.31:8848
         # 配置中心命名空间ID，默认为public
         namespace: dc42b4e6-fa87-4df9-ae52-95e03426cf2b
@@ -29,7 +26,6 @@ spring:
           - data-id: Alexon.yml
             refresh: true #是否支持自动刷新
         refresh-enabled: true
-        refreshable-dataids: chat-gpt.yml
       discovery:
         # 注册中心的地址
         server-addr: 8.218.219.31:8848
