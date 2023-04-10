@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP_NAME="chat-gpt-1.0-SNAPSHOT.jar"
+APP_NAME="edoc-1.0-SNAPSHOT.jar"
 cd ../
 chmod +x $APP_NAME
 echo "begin to start $APP_NAME"

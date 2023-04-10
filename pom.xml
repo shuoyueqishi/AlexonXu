@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.3</version>
+        <version>2.6.11</version>
         <relativePath/>
     </parent>
 
@@ -22,6 +22,7 @@
         <module>commodity</module>
         <module>edoc</module>
         <module>chat-gpt</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
@@ -39,9 +40,9 @@
         <mybatisplus.version>3.4.1</mybatisplus.version>
         <tkmybatis.version>2.1.5</tkmybatis.version>
         <eureka.version>3.0.1</eureka.version>
-        <spring-boot.version>2.6.3</spring-boot.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
+        <spring-boot.version>2.6.11</spring-boot.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
         <spring-cloud-commons.version>3.1.5</spring-cloud-commons.version>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <lombok.version>1.18.22</lombok.version>

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP_NAME="chat-gpt-1.0-SNAPSHOT.jar"
+APP_NAME="gateway-1.0-SNAPSHOT.jar"
 
 PID=$(ps -ef | grep $APP_NAME | grep -v grep | awk '{print $2}')
 if [ -z "$PID" ]

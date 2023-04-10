@@ -3,6 +3,11 @@ server:
   servlet:
     context-path: /order
 
+nacos:
+  config:
+    server-addr: 8.218.219.31:8848
+    namespace: 2f019a6e-afd5-44da-b5b5-ea673dce862f
+
 spring:
   profiles:
     active: dev
@@ -16,9 +21,9 @@ spring:
         # 配置中心配置文件后缀，默认为properties
         file-extension: yml
         # 配置中心地址
-        server-addr: localhost:8848
+        server-addr: ${nacos.config.server-addr}
         # 配置中心命名空间ID，默认为public
-        namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
+        namespace: ${nacos.config.namespace}
         # 配置中心配置文件Data Id 的格式是 ${prefix}-${spring.profile.active}.${file-extension}，
         # prefix默认为spring.application.name, spring.profile.active可以是dev、test、prod等；file-extension支持yaml、yml和 properties类型文件
         # 以user为例，配置prefix默认、spring.profile.active=dev,file-extension=yml,
@@ -29,6 +34,6 @@ spring:
             refresh: true #是否支持自动刷新
       discovery:
         # 注册中心的地址
-        server-addr: localhost:8848
+        server-addr: ${nacos.config.server-addr}
         # 配置中心命名空间ID，默认为public
-        namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
+        namespace: ${nacos.config.namespace}
