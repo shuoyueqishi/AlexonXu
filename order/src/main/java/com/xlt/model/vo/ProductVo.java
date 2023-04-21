@@ -1,8 +1,7 @@
 package com.xlt.model.vo;
 
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.alexon.model.vo.BaseVo;
 import lombok.*;
 
 import java.io.Serializable;

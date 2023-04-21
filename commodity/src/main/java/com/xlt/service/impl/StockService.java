@@ -1,7 +1,6 @@
 package com.xlt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.constant.RedisConstant;
 import com.xlt.exception.CommonException;

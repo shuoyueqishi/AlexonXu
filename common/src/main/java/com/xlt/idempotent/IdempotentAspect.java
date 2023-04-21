@@ -1,7 +1,7 @@
 package com.xlt.idempotent;
 
-import com.xlt.exception.IdempotentException;
-import com.xlt.utils.common.RedisUtil;
+import com.alexon.authorization.utils.RedisUtil;
+import com.alexon.exception.IdempotentException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

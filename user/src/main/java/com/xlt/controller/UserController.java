@@ -1,15 +1,15 @@
 package com.xlt.controller;
 
-import com.xlt.auth.OperatePermission;
-import com.xlt.constant.OperateConstant;
-import com.xlt.logs.OperationLog;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.response.DataResponse;
-import com.xlt.model.response.PageDataResponse;
-import com.xlt.model.vo.PageVo;
-import com.xlt.model.vo.UpdatePwdUserVo;
-import com.xlt.model.vo.UserVo;
-import com.xlt.service.api.IUserService;
+import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.model.vo.UpdatePwdUserVo;
+import com.alexon.authorization.model.vo.UserVo;
+import com.alexon.authorization.service.IUserService;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.response.DataResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
+import com.alexon.operation.log.OperationLog;
+import com.alexon.operation.log.constants.OperateConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +64,9 @@ public class UserController {
     @ApiOperation("query user list")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.READ, operateDesc = "query user paged list")
     @OperatePermission(resourceName = "UserController",operateCode =OperateConstant.READ, operateDesc = "query user list")
-    public PageDataResponse<UserVo> queryUserPageList(@QueryParam("") UserVo userVo,
-                                                      @PathVariable("pageSize") int pageSize,
-                                                      @PathVariable("curPage") int curPage) {
+    public PagedResponse<List<UserVo>> queryUserPageList(@QueryParam("") UserVo userVo,
+                                                   @PathVariable("pageSize") int pageSize,
+                                                   @PathVariable("curPage") int curPage) {
         PageVo pageVo = PageVo.builder()
                 .pageSize(pageSize)
                 .currentPage(curPage)

@@ -1,13 +1,13 @@
 package com.xlt.controller;
 
-import com.xlt.auth.OperatePermission;
-import com.xlt.constant.OperateConstant;
-import com.xlt.logs.OperationLog;
-import com.xlt.model.response.DataResponse;
-import com.xlt.model.response.PageDataResponse;
-import com.xlt.model.vo.PageVo;
-import com.xlt.model.vo.RoleVo;
-import com.xlt.service.api.IRoleService;
+import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.model.vo.RoleVo;
+import com.alexon.model.response.DataResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
+import com.alexon.operation.log.OperationLog;
+import com.alexon.operation.log.constants.OperateConstant;
+import com.alexon.authorization.service.IRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 
 @RestController
@@ -45,9 +46,9 @@ public class RoleController {
     @ApiOperation("query role paged list")
     @OperationLog(operateModule = "Role", operateType = OperateConstant.READ, operateDesc = "query role paged list")
     @OperatePermission(resourceName = "RoleController",operateCode =OperateConstant.READ, operateDesc = "query role paged list")
-    public PageDataResponse<RoleVo> queryRolePageList(@QueryParam("") RoleVo roleVo,
-                                                      @PathVariable("pageSize") int pageSize,
-                                                      @PathVariable("currentPage") int currentPage) {
+    public PagedResponse<List<RoleVo>> queryRolePageList(@QueryParam("") RoleVo roleVo,
+                                                         @PathVariable("pageSize") int pageSize,
+                                                         @PathVariable("currentPage") int currentPage) {
         PageVo pageVo = PageVo.builder().pageSize(pageSize).currentPage(currentPage).build();
         return roleService.queryRolePageList(roleVo,pageVo);
     }

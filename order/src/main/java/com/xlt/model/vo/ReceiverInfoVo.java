@@ -1,12 +1,11 @@
 package com.xlt.model.vo;
 
 
+import com.alexon.model.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = true)

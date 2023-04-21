@@ -1,9 +1,7 @@
 package com.xlt.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.alibaba.nacos.shaded.com.google.common.reflect.TypeToken;
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import com.theokanning.openai.OpenAiResponse;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;

@@ -1,6 +1,7 @@
 package com.xlt.model.po;
 
 
+import com.alexon.model.po.BasePo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

@@ -1,10 +1,10 @@
 package com.xlt.schedulers;
 
-import com.xlt.service.ISyncPermissionService;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.vo.PermissionVo;
-import com.xlt.utils.common.AppContextUtil;
-import com.xlt.utils.common.PermissionSyncUtil;
+import com.alexon.authorization.model.vo.PermissionVo;
+import com.alexon.authorization.service.ISyncPermissionService;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.utils.AppContextUtil;
+import com.alexon.authorization.utils.PermissionSyncUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;

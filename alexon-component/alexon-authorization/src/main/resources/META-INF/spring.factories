@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.alexon.authorization.config.TokenInterceptorAutoConfiguration\
+  com.alexon.authorization.config.LettuceAutoConfiguration\
+  com.alexon.authorization.config.RedissonAutoConfiguration

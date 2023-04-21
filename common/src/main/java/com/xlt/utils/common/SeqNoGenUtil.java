@@ -1,14 +1,14 @@
 package com.xlt.utils.common;
 
+import com.alexon.exception.utils.AssertUtil;
+import com.alexon.model.utils.AppContextUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 @Component
 public class SeqNoGenUtil {
@@ -16,7 +16,7 @@ public class SeqNoGenUtil {
 
     @PostConstruct
     public void setStaticParam() {
-        SeqNoGenUtil.redisTemplate = (RedisTemplate<String, Object>) com.xlt.utils.common.AppContextUtil.getBean("redisTemplate");
+        SeqNoGenUtil.redisTemplate = (RedisTemplate<String, Object>) AppContextUtil.getBean("redisTemplate");
     }
 
     /**

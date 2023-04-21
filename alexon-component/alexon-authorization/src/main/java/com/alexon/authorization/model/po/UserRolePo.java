@@ -1,0 +1,32 @@
+package com.alexon.authorization.model.po;
+
+import com.alexon.model.po.BasePo;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.Date;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName("user_role_t")
+public class UserRolePo extends BasePo implements Serializable {
+
+    private static final long serialVersionUID = -3455587923768658816L;
+
+    @TableField("user_id")
+    private Long userId;
+
+    @TableField("role_id")
+    private Long roleId;
+
+    @TableField("start_time")
+    private Date startTime;
+
+    @TableField("end_time")
+    private Date endTime;
+}

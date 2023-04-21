@@ -1,7 +1,7 @@
 package com.xlt.cache;
 
 
-import com.xlt.utils.common.ObjectUtil;
+import com.alexon.authorization.utils.ObjectUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

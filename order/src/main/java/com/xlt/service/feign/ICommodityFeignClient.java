@@ -1,6 +1,6 @@
 package com.xlt.service.feign;
 
-import com.xlt.model.response.BasicResponse;
+import com.alexon.model.response.BasicResponse;
 import com.xlt.model.vo.StockVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;

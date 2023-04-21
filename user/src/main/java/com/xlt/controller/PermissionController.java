@@ -1,20 +1,18 @@
 package com.xlt.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.xlt.model.po.PermissionPo;
-import com.xlt.model.response.PageDataResponse;
-import com.xlt.service.ISyncPermissionService;
-import com.xlt.auth.OperatePermission;
-import com.xlt.constant.OperateConstant;
-import com.xlt.logs.OperationLog;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.response.DataResponse;
-import com.xlt.model.vo.PageVo;
-import com.xlt.model.vo.PermissionVo;
-import com.xlt.model.vo.RolePermissionVo;
-import com.xlt.model.vo.UserRoleVo;
-import com.xlt.service.api.IPermissionService;
-import com.xlt.utils.common.AppContextUtil;
+import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.model.vo.PermissionVo;
+import com.alexon.authorization.model.vo.UserRoleVo;
+import com.alexon.authorization.service.ISyncPermissionService;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.response.DataResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.utils.AppContextUtil;
+import com.alexon.model.vo.PageVo;
+import com.alexon.operation.log.OperationLog;
+import com.alexon.operation.log.constants.OperateConstant;
+import com.alexon.authorization.model.vo.RolePermissionVo;
+import com.alexon.authorization.service.IPermissionService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,9 +83,9 @@ public class PermissionController {
     @ApiOperation("query permission paged list")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.READ, operateDesc = "query permission paged list")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.READ, operateDesc = "query permission paged list")
-    PageDataResponse<PermissionVo> queryPermissionPageList(@QueryParam("")PermissionVo permissionVo,
-                                                     @PathVariable("pageSize") int pageSize,
-                                                     @PathVariable("curPage") int curPage) {
+    PagedResponse<List<PermissionVo>> queryPermissionPageList(@QueryParam("")PermissionVo permissionVo,
+                                                        @PathVariable("pageSize") int pageSize,
+                                                        @PathVariable("curPage") int curPage) {
         PageVo pageVo = PageVo.builder().pageSize(pageSize).currentPage(curPage).build();
         return permissionService.queryPermissionPageList(permissionVo, pageVo);
     }

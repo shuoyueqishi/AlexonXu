@@ -1,6 +1,7 @@
 package com.xlt.utils.common;
 
 
+import com.alexon.model.utils.AppContextUtil;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

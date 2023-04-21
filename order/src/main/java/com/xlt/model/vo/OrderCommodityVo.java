@@ -1,6 +1,7 @@
 package com.xlt.model.vo;
 
 
+import com.alexon.model.vo.BaseVo;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
