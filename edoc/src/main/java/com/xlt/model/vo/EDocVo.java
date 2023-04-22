@@ -1,6 +1,7 @@
 package com.xlt.model.vo;
 
 
+import com.alexon.model.vo.BaseVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

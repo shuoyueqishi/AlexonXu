@@ -1,7 +1,7 @@
 package com.xlt.mq.sender;
 
 import com.alibaba.fastjson.JSON;
-import com.xlt.utils.common.SnowflakeIdGenerator;
+import com.alexon.utils.SnowflakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;

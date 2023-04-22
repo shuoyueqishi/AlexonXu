@@ -1,6 +1,6 @@
 package com.xlt.controller;
 
-import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.authorization.model.vo.UpdatePwdUserVo;
 import com.alexon.authorization.model.vo.UserVo;
 import com.alexon.authorization.service.IUserService;

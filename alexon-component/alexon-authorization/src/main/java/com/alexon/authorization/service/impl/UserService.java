@@ -11,7 +11,9 @@ import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;
 import com.alexon.model.response.PagedResponse;
+import com.alexon.model.utils.ObjectUtil;
 import com.alexon.model.vo.PageVo;
+import com.alexon.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 
@@ -78,7 +80,7 @@ public class UserService implements IUserService {
         if(CollectionUtils.isEmpty(userPoList)) {
             return userMap;
         }
-        List<UserVo> userVoList = ObjectUtil.convertObjsList(userPoList, UserVo.class);
+        List<UserVo> userVoList = ObjectConvertUtil.convertObjsList(userPoList, UserVo.class);
         userVoList.forEach(userVo -> {
             userVo.setPassword(null);
             RedisUtil.set(CommConstant.USER_NAMES_PREFIX+userVo.getUserId(), userVo,12, TimeUnit.HOURS);
@@ -98,14 +100,14 @@ public class UserService implements IUserService {
         DataResponse<Object> response = new DataResponse<>();
         AssertUtil.isNull(userPo,"User [" + userVo.getName() + "] not exists in system.");
         UserInfoVo userInfoVo = new UserInfoVo();
-        UserVo curUser = ObjectUtil.convertObjs(userPo, UserVo.class);
+        UserVo curUser = ObjectConvertUtil.convertObjs(userPo, UserVo.class);
         userInfoVo.setCurUser(curUser);
         if (MD5Util.validPassword(userVo.getPassword()+userPo.getSalt(), userPo.getPassword())) {
             // 查询用户的当前角色
             curUser.setPassword(null);
             curUser.setSalt(null);
             RolePo curRolePo = IRoleMapper.selectById(userPo.getDefaultRole());
-            RoleVo curRoleVo = ObjectUtil.convertObjs(curRolePo, RoleVo.class);
+            RoleVo curRoleVo = ObjectConvertUtil.convertObjs(curRolePo, RoleVo.class);
             userInfoVo.setCurRole(curRoleVo);
 
             // 查询当前角色的权限列表
@@ -157,7 +159,7 @@ public class UserService implements IUserService {
     public DataResponse<List<UserVo>> queryUserList(UserVo userVo) {
         log.info("query params:{}", userVo);
         List<UserPo> userPos = queryUserPos(userVo);
-        List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
+        List<UserVo> userVos = ObjectConvertUtil.convertObjsList(userPos, UserVo.class);
         VoUtil.fillUserNames(userVos);
         return new DataResponse<>(userVos);
     }
@@ -190,7 +192,7 @@ public class UserService implements IUserService {
         pageVo.setTotalPages(pageInfo.getPages());
         pageVo.setTotal(pageInfo.getTotal());
         response.setPage(pageVo);
-        List<UserVo> userVos = ObjectUtil.convertObjsList(userPos, UserVo.class);
+        List<UserVo> userVos = ObjectConvertUtil.convertObjsList(userPos, UserVo.class);
         VoUtil.fillUserNames(userVos);
         response.setData(userVos);
         return response;
@@ -218,7 +220,7 @@ public class UserService implements IUserService {
         roleWrapper.eq("role_code","Guest");
         RolePo defaultRolePo = IRoleMapper.selectOne(roleWrapper);
         AssertUtil.isNull(defaultRolePo,"Default role Guest not exist");
-        UserPo userPo = ObjectUtil.convertObjs(userVo, UserPo.class);
+        UserPo userPo = ObjectConvertUtil.convertObjs(userVo, UserPo.class);
         String salt = RandomStringUtils.randomAlphanumeric(16);
         String encryptPassword = MD5Util.encryptPassword(userPo.getPassword()+salt);
         userPo.setPassword(encryptPassword);

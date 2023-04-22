@@ -1,6 +1,6 @@
 package com.xlt.service.impl;
 
-import com.alexon.authorization.utils.ObjectUtil;
+import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.model.response.DataResponse;
 import com.xlt.model.mapper.OrderConvertor;
 import com.xlt.model.po.OrderPo;
@@ -39,7 +39,7 @@ class OrderServiceTest {
         List<OrderVo> orderVos = response.getData();
         log.info("orderVos.size={}",orderVos.size());
         long startMs = System.currentTimeMillis();
-        List<OrderPo> orderPoList = ObjectUtil.convertObjsList(orderVos, OrderPo.class);
+        List<OrderPo> orderPoList = ObjectConvertUtil.convertObjsList(orderVos, OrderPo.class);
         long t1 = System.currentTimeMillis() - startMs;
         log.info("converted by dozer,time cost time t1={}ms,orderVos.size={}",t1,orderVos.size());
 

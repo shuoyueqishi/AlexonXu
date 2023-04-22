@@ -1,6 +1,6 @@
 package com.xlt.controller;
 
-import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.authorization.model.vo.RoleVo;
 import com.alexon.model.response.DataResponse;
 import com.alexon.model.response.PagedResponse;

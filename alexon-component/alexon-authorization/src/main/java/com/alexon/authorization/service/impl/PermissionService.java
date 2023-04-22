@@ -6,7 +6,7 @@ import com.alexon.authorization.model.vo.PermissionVo;
 import com.alexon.authorization.model.vo.RolePermissionVo;
 import com.alexon.authorization.model.vo.UserRoleVo;
 import com.alexon.authorization.service.ISyncPermissionService;
-import com.alexon.authorization.utils.ObjectUtil;
+import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PermissionSyncUtil;
 import com.alexon.authorization.utils.PoUtil;
 import com.alexon.authorization.utils.VoUtil;
@@ -160,7 +160,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         }
 
         // 授予角色
-        List<UserRolePo> userRolePoList = ObjectUtil.convertObjsList(userRoleVoList, UserRolePo.class);
+        List<UserRolePo> userRolePoList = ObjectConvertUtil.convertObjsList(userRoleVoList, UserRolePo.class);
         userRolePoList.forEach(PoUtil::buildCreateUserInfo);
         IUserRoleMapper.batchInsert(userRolePoList);
         return new BasicResponse();
@@ -251,7 +251,7 @@ public class PermissionService implements IPermissionService, ISyncPermissionSer
         pageVo.setTotalPages(pageInfo.getPages());
         pageVo.setTotal(pageInfo.getTotal());
         response.setPage(pageVo);
-        List<PermissionVo> permissionVos = ObjectUtil.convertObjsList(permissionPoList, PermissionVo.class);
+        List<PermissionVo> permissionVos = ObjectConvertUtil.convertObjsList(permissionPoList, PermissionVo.class);
         VoUtil.fillUserNames(permissionVos);
         response.setData(permissionVos);
         return response;

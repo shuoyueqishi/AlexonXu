@@ -6,13 +6,14 @@ import com.alexon.authorization.context.UserContext;
 import com.alexon.authorization.model.vo.PermissionVo;
 import com.alexon.authorization.model.vo.RoleVo;
 import com.alexon.authorization.model.vo.UserInfoVo;
-import com.alexon.authorization.utils.ObjectUtil;
+import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PoUtil;
-import com.alexon.authorization.utils.RedisUtil;
+import com.alexon.utils.RedisUtil;
 import com.alexon.authorization.utils.VoUtil;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.DataResponse;
 import com.alexon.model.response.PagedResponse;
+import com.alexon.model.utils.ObjectUtil;
 import com.alexon.model.vo.PageVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
@@ -120,7 +121,7 @@ public class RoleService implements IRoleService {
         pageVo.setTotalPages(pageInfo.getPages());
         pageVo.setTotal(pageInfo.getTotal());
         response.setPage(pageVo);
-        List<RoleVo> roleVos = ObjectUtil.convertObjsList(rolePos, RoleVo.class);
+        List<RoleVo> roleVos = ObjectConvertUtil.convertObjsList(rolePos, RoleVo.class);
         VoUtil.fillUserNames(roleVos);
         response.setData(roleVos);
         return response;
@@ -148,7 +149,7 @@ public class RoleService implements IRoleService {
     @Override
     public DataResponse<Object> queryRoleList(RoleVo roleVo) {
         List<RolePo> rolePos = queryRolePos(roleVo);
-        List<RoleVo> roleVos = ObjectUtil.convertObjsList(rolePos, RoleVo.class);
+        List<RoleVo> roleVos = ObjectConvertUtil.convertObjsList(rolePos, RoleVo.class);
         VoUtil.fillUserNames(roleVos);
         return DataResponse.builder().data(roleVos).build();
     }
@@ -180,7 +181,7 @@ public class RoleService implements IRoleService {
         Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
         AssertUtil.isNull(userInfoMap,"user info cached not exist");
         UserInfoVo userInfo = new UserInfoVo();
-        ObjectUtil.convertMap2UserInfoVo(userInfoMap, userInfo);
+        ObjectConvertUtil.convertMap2UserInfoVo(userInfoMap, userInfo);
         UserContext.setUserInfo(userInfo);
         UserPo userPo = IUserMapper.selectById(userId);
         AssertUtil.isNull(userPo,"User not exist in system, change role failed.");
@@ -194,7 +195,7 @@ public class RoleService implements IRoleService {
         QueryWrapper<RolePo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_code",roleCode);
         RolePo rolePo = IRoleMapper.selectOne(queryWrapper);
-        RoleVo changedRole = ObjectUtil.convertObjs(rolePo, RoleVo.class);
+        RoleVo changedRole = ObjectConvertUtil.convertObjs(rolePo, RoleVo.class);
         userInfo.setCurRole(changedRole);
 
         // TODO: 设置用户的默认角色

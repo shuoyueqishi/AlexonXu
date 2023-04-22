@@ -1,20 +1,20 @@
 package com.xlt.service.impl;
 
+import com.alexon.authorization.constants.RedisConstant;
+import com.alexon.authorization.utils.ObjectConvertUtil;
+import com.alexon.authorization.utils.PoUtil;
+import com.alexon.utils.RedisUtil;
+import com.alexon.exception.CommonException;
+import com.alexon.exception.utils.AssertUtil;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xlt.constant.RedisConstant;
-import com.xlt.exception.CommonException;
 import com.xlt.mapper.IStockMapper;
 import com.xlt.model.po.StockPo;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.response.PagedResponse;
-import com.xlt.model.vo.PageVo;
 import com.xlt.model.vo.StockVo;
 import com.xlt.service.IStockService;
-import com.xlt.utils.common.AssertUtil;
-import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.PoUtil;
-import com.xlt.utils.common.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -47,7 +47,7 @@ public class StockService implements IStockService {
         for (StockPo stockPo : stockPoPage.getRecords()) {
             RedisUtil.set(RedisConstant.SKI_ID + stockPo.getSkuId(), stockPo.getQuantity());
         }
-        List<StockVo> stockVos = ObjectUtil.convertObjsList(stockPoPage.getRecords(), StockVo.class);
+        List<StockVo> stockVos = ObjectConvertUtil.convertObjsList(stockPoPage.getRecords(), StockVo.class);
         pageVo.setTotalPages(page.getPages());
         pageVo.setTotal(page.getTotal());
         return new PagedResponse<>(stockVos, pageVo);
@@ -63,7 +63,7 @@ public class StockService implements IStockService {
         queryWrapper.eq("skuId", stockVo.getSkuId());
         Integer count = stockMapper.selectCount(queryWrapper);
         AssertUtil.isTrue(count > 0, "skuId:" + stockVo.getSkuId() + " not exists");
-        StockPo stockPo = ObjectUtil.convertObjs(stockVo, StockPo.class);
+        StockPo stockPo = ObjectConvertUtil.convertObjs(stockVo, StockPo.class);
         PoUtil.buildCreateUserInfo(stockPo);
         stockMapper.insert(stockPo);
         RedisUtil.set(RedisConstant.SKI_ID + stockPo.getSkuId(), stockPo.getQuantity());

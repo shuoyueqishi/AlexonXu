@@ -1,6 +1,6 @@
 package com.xlt.controller;
 
-import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.limiter.RequestLimiter;
 import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;

@@ -1,18 +1,18 @@
 package com.xlt.service.impl;
 
+import com.alexon.authorization.utils.ObjectConvertUtil;
+import com.alexon.authorization.utils.PoUtil;
+import com.alexon.exception.utils.AssertUtil;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.mapper.IBrandMapper;
 import com.xlt.model.po.BrandPo;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.response.PagedResponse;
 import com.xlt.model.vo.BrandVo;
-import com.xlt.model.vo.PageVo;
 import com.xlt.service.IBrandService;
-import com.xlt.utils.common.AssertUtil;
-import com.xlt.utils.common.ObjectUtil;
-import com.xlt.utils.common.PoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class BrandService implements IBrandService {
         }
         Page<BrandPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<BrandPo> brandPoPage = brandMapper.selectPage(page, queryWrapper);
-        List<BrandVo> brandVos = ObjectUtil.convertObjsList(brandPoPage.getRecords(), BrandVo.class);
+        List<BrandVo> brandVos = ObjectConvertUtil.convertObjsList(brandPoPage.getRecords(), BrandVo.class);
         pageVo.setTotalPages(page.getPages());
         pageVo.setTotal(page.getTotal());
         return new PagedResponse<>(brandVos, pageVo);
@@ -59,7 +59,7 @@ public class BrandService implements IBrandService {
         List<BrandPo> brandPos = brandMapper.selectList(queryWrapper);
         AssertUtil.isTrue(!CollectionUtils.isEmpty(brandPos), "Brand " + brandVo.getName() + " has exist");
         brandVo.setInitial(brandVo.getName().substring(0, 1));
-        BrandPo brandPo = ObjectUtil.convertObjs(brandVo, BrandPo.class);
+        BrandPo brandPo = ObjectConvertUtil.convertObjs(brandVo, BrandPo.class);
         PoUtil.buildCreateUserInfo(brandPo);
         brandMapper.insert(brandPo);
         return new BasicResponse();

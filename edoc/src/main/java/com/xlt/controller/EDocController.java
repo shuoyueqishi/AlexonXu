@@ -1,15 +1,15 @@
 package com.xlt.controller;
 
 
-import com.xlt.auth.OperatePermission;
-import com.xlt.constant.OperateConstant;
-import com.xlt.logs.OperationLog;
+import com.alexon.authorization.operate.OperatePermission;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.response.DataResponse;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
+import com.alexon.operation.log.OperationLog;
+import com.alexon.operation.log.constants.OperateConstant;
 import com.xlt.model.request.EDocReq;
-import com.xlt.model.response.BasicResponse;
-import com.xlt.model.response.DataResponse;
-import com.xlt.model.response.PagedResponse;
 import com.xlt.model.vo.EDocVo;
-import com.xlt.model.vo.PageVo;
 import com.xlt.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

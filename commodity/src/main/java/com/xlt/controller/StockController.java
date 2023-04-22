@@ -1,10 +1,10 @@
 package com.xlt.controller;
 
-import com.xlt.auth.OperatePermission;
-import com.xlt.constant.OperateConstant;
-import com.xlt.model.response.BasicResponse;
+import com.alexon.authorization.operate.OperatePermission;
+import com.alexon.model.response.BasicResponse;
+import com.alexon.model.vo.PageVo;
+import com.alexon.operation.log.constants.OperateConstant;
 import com.xlt.model.vo.StockVo;
-import com.xlt.model.vo.PageVo;
 import com.xlt.service.IStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

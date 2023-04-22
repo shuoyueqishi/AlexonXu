@@ -1,7 +1,7 @@
 package com.alexon.authorization.utils;
 
 
-import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.authorization.model.vo.PermissionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

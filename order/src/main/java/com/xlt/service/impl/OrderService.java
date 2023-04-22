@@ -2,12 +2,13 @@ package com.xlt.service.impl;
 
 import com.alexon.authorization.constants.CommConstant;
 import com.alexon.authorization.constants.RedisConstant;
-import com.alexon.authorization.utils.ObjectUtil;
+import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PoUtil;
-import com.alexon.authorization.utils.RedisUtil;
+import com.alexon.utils.RedisUtil;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;
+import com.alexon.utils.SeqNoGenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xlt.mapper.IOrderCommodityMapper;
 import com.xlt.mapper.IOrderMapper;
@@ -22,7 +23,6 @@ import com.xlt.model.vo.StockVo;
 import com.xlt.mq.sender.MqSender;
 import com.xlt.service.IOrderService;
 import com.xlt.service.feign.ICommodityFeignClient;
-import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +68,14 @@ public class OrderService implements IOrderService {
     }
 
     public void createRealOrder(OrderVo orderVo) {
-        OrderPo orderPo = ObjectUtil.convertObjs(orderVo, OrderPo.class);
+        OrderPo orderPo = ObjectConvertUtil.convertObjs(orderVo, OrderPo.class);
         PoUtil.buildCreateUserInfo(orderPo);
         orderMapper.insert(orderPo);
         List<OrderCommodityPo> orderCommodityPos = new ArrayList<>();
         List<StockVo> stockVoList = new ArrayList<>();
         orderVo.getCommodityList().forEach(orderComVo->{
             orderComVo.setOrderId(orderPo.getOrderId()); // 插入之后自动生成orderID
-            OrderCommodityPo orderCommodityPo = ObjectUtil.convertObjs(orderComVo, OrderCommodityPo.class);
+            OrderCommodityPo orderCommodityPo = ObjectConvertUtil.convertObjs(orderComVo, OrderCommodityPo.class);
             PoUtil.buildCreateUserInfo(orderCommodityPo);
             orderCommodityPos.add(orderCommodityPo);
             StockVo stockVo = StockVo.builder().skuId(orderComVo.getSkuId()).quantity(orderComVo.getQuantity()).build();
@@ -123,7 +123,7 @@ public class OrderService implements IOrderService {
     public DataResponse<String> asyncCreateOrder(OrderVo orderVo) {
         BasicResponse checkResult = checkOrderParams(orderVo);
         if (checkResult != null) {
-            return ObjectUtil.convertObjs(checkResult, DataResponse.class);
+            return ObjectConvertUtil.convertObjs(checkResult, DataResponse.class);
         }
         String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 8);
         orderVo.setOrderNo(orderNo);

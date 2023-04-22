@@ -1,17 +1,21 @@
 package com.xlt.service;
 
+import com.alexon.authorization.constants.CommConstant;
 import com.alexon.authorization.utils.DateUtils;
+import com.alexon.authorization.utils.ObjectConvertUtil;
+import com.alexon.authorization.utils.PoUtil;
+import com.alexon.authorization.utils.VoUtil;
+import com.alexon.exception.CommonException;
+import com.alexon.exception.utils.AssertUtil;
+import com.alexon.model.response.PagedResponse;
+import com.alexon.model.vo.PageVo;
+import com.alexon.utils.SeqNoGenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xlt.constant.CommConstant;
-import com.xlt.exception.CommonException;
 import com.xlt.mapper.IEDocMapper;
 import com.xlt.model.po.EDocPo;
 import com.xlt.model.request.EDocReq;
-import com.xlt.model.response.PagedResponse;
 import com.xlt.model.vo.EDocVo;
-import com.xlt.model.vo.PageVo;
-import com.xlt.utils.common.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +105,7 @@ public class FileService {
             log.error("save file error:", e);
             throw new CommonException("save file:" + oriFilename + " error:" + e.getMessage());
         }
-        return ObjectUtil.convertObjs(eDocPo, EDocVo.class);
+        return ObjectConvertUtil.convertObjs(eDocPo, EDocVo.class);
     }
 
     private String getPathName(String docType, String docName) {
@@ -189,7 +193,7 @@ public class FileService {
         queryWrapper.orderByDesc("creation_date");
         Page<EDocPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<EDocPo> docPoPage = eDocMapper.selectPage(page, queryWrapper);
-        List<EDocVo> eDocVoList = ObjectUtil.convertObjsList(docPoPage.getRecords(), EDocVo.class);
+        List<EDocVo> eDocVoList = ObjectConvertUtil.convertObjsList(docPoPage.getRecords(), EDocVo.class);
         VoUtil.fillUserNames(eDocVoList);
         pageVo.setTotal(docPoPage.getTotal());
         pageVo.setTotalPages(docPoPage.getPages());

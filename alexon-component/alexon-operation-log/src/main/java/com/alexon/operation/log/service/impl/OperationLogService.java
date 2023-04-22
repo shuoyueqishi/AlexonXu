@@ -1,7 +1,7 @@
 package com.alexon.operation.log.service.impl;
 
 import com.alexon.authorization.model.vo.OperationLogVo;
-import com.alexon.authorization.utils.ObjectUtil;
+import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.VoUtil;
 import com.alexon.model.response.PagedResponse;
 import com.alexon.model.vo.PageVo;
@@ -52,7 +52,7 @@ public class OperationLogService implements IOperationLogService {
         queryWrapper.orderByDesc("creation_date");
         Page<OperationLogPo> page = new Page<>(pageVo.getCurrentPage(), pageVo.getPageSize());
         Page<OperationLogPo> infoPoPage = optLogMapper.selectPage(page, queryWrapper);
-        List<OperationLogVo> operationLogVos = ObjectUtil.convertObjsList(infoPoPage.getRecords(), OperationLogVo.class);
+        List<OperationLogVo> operationLogVos = ObjectConvertUtil.convertObjsList(infoPoPage.getRecords(), OperationLogVo.class);
         VoUtil.fillUserNames(operationLogVos);
         pageVo.setTotalPages(page.getPages());
         pageVo.setTotal(page.getTotal());

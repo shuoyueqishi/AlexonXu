@@ -1,5 +1,7 @@
 package com.xlt.service.impl;
 
+import com.alexon.exception.utils.AssertUtil;
+import com.alexon.model.utils.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.shaded.com.google.common.reflect.TypeToken;
 import com.theokanning.openai.OpenAiResponse;
@@ -9,8 +11,6 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.model.Model;
 import com.xlt.service.IOpenAIService;
-import com.xlt.utils.common.AssertUtil;
-import com.xlt.utils.common.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

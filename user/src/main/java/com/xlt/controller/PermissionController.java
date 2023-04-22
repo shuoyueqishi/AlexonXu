@@ -1,6 +1,6 @@
 package com.xlt.controller;
 
-import com.alexon.authorization.OperatePermission;
+import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.authorization.model.vo.PermissionVo;
 import com.alexon.authorization.model.vo.UserRoleVo;
 import com.alexon.authorization.service.ISyncPermissionService;
