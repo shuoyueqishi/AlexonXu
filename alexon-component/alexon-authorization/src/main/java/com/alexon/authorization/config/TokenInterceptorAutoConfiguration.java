@@ -34,15 +34,15 @@ public class TokenInterceptorAutoConfiguration implements WebMvcConfigurer {
         WebMvcConfigurer.super.addCorsMappings(registry);
     }
 
-    @Bean
-    public TokenInterceptor tokenInterceptor(){
-        return new TokenInterceptor();
-    }
-
-    @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
-    }
+//    @Bean
+//    public TokenInterceptor tokenInterceptor(){
+//        return new TokenInterceptor();
+//    }
+//
+//    @Bean
+//    public JwtConfig jwtConfig() {
+//        return new JwtConfig();
+//    }
 
 
 }

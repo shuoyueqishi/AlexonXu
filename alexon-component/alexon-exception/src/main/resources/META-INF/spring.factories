@@ -1,4 +1,4 @@
 
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.alexon.exception.config.ExceptionMapperAutoConfiguration\
+com.alexon.exception.config.ExceptionMapperAutoConfiguration,\
 com.alexon.exception.async.SyncAutoConfiguration

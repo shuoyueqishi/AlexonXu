@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.alexon.authorization.config.TokenInterceptorAutoConfiguration\
+com.alexon.authorization.config.TokenInterceptorAutoConfiguration,\
+com.alexon.authorization.config.AuthorizationMapperAutoConfiguration,\
+com.alexon.authorization.config.RestTemplateAutoConfiguration

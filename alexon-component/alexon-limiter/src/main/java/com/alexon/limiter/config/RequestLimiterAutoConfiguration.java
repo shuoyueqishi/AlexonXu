@@ -22,12 +22,6 @@ import java.io.IOException;
 @Slf4j
 public class RequestLimiterAutoConfiguration implements WebMvcConfigurer {
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private String port;
-
     @Autowired
     private RequestLimiterInterceptor requestLimiterInterceptor;
 
@@ -44,18 +38,5 @@ public class RequestLimiterAutoConfiguration implements WebMvcConfigurer {
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .maxAge(3600);
         WebMvcConfigurer.super.addCorsMappings(registry);
-    }
-
-
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient redissonClient() throws IOException {
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://"+host+":"+port);
-        return Redisson.create(config);
-    }
-
-    @Bean
-    public RequestLimiterInterceptor requestLimiterInterceptor(){
-        return new RequestLimiterInterceptor();
     }
 }

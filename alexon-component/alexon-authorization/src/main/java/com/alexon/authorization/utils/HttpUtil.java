@@ -2,6 +2,7 @@ package com.alexon.authorization.utils;
 
 
 import com.alexon.model.utils.AppContextUtil;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -10,6 +11,7 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Component
+@DependsOn("appContextUtil")
 public class HttpUtil {
 
     private static RestTemplate restTemplate;

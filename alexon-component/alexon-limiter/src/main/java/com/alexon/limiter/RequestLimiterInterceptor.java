@@ -7,6 +7,7 @@ import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 @Slf4j
+@Component
 public class RequestLimiterInterceptor implements HandlerInterceptor {
 
     @Autowired
