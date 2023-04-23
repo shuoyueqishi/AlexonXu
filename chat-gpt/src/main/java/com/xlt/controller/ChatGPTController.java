@@ -1,13 +1,13 @@
 package com.xlt.controller;
 
 
+import com.alexon.model.response.DataResponse;
 import com.theokanning.openai.OpenAiResponse;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.model.Model;
-import com.xlt.model.response.DataResponse;
 import com.xlt.service.IOpenAIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

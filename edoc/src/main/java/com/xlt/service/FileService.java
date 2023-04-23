@@ -9,7 +9,7 @@ import com.alexon.exception.CommonException;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.PagedResponse;
 import com.alexon.model.vo.PageVo;
-import com.alexon.utils.SeqNoGenUtil;
+import com.alexon.limiter.utils.SeqNoGenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xlt.mapper.IEDocMapper;

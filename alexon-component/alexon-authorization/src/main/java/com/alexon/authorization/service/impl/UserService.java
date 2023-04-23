@@ -13,7 +13,7 @@ import com.alexon.model.response.DataResponse;
 import com.alexon.model.response.PagedResponse;
 import com.alexon.model.utils.ObjectUtil;
 import com.alexon.model.vo.PageVo;
-import com.alexon.utils.RedisUtil;
+import com.alexon.limiter.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 

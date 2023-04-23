@@ -3,7 +3,7 @@ package com.xlt.service.impl;
 import com.alexon.authorization.constants.RedisConstant;
 import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PoUtil;
-import com.alexon.utils.RedisUtil;
+import com.alexon.limiter.utils.RedisUtil;
 import com.alexon.exception.CommonException;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.BasicResponse;

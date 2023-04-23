@@ -1,12 +1,12 @@
 server:
-  port: 8190
+  port: 8890
   servlet:
     context-path: /user
 
 nacos:
   config:
     server-addr: localhost:8848
-    namespace: 2f019a6e-afd5-44da-b5b5-ea673dce862f
+    namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
 
 spring:
   profiles:

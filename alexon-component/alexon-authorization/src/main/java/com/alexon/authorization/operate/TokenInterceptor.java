@@ -6,7 +6,7 @@ import com.alexon.authorization.context.UserContext;
 import com.alexon.authorization.model.vo.UserInfoVo;
 import com.alexon.authorization.utils.JwtUtil;
 import com.alexon.authorization.utils.ObjectConvertUtil;
-import com.alexon.utils.RedisUtil;
+import com.alexon.limiter.utils.RedisUtil;
 import com.alexon.exception.utils.AssertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

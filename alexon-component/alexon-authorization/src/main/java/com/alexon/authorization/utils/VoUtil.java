@@ -7,7 +7,7 @@ import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.DataResponse;
 import com.alexon.model.utils.AppContextUtil;
 import com.alexon.model.vo.BaseVo;
-import com.alexon.utils.RedisUtil;
+import com.alexon.limiter.utils.RedisUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;

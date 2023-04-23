@@ -8,7 +8,7 @@ import com.alexon.authorization.model.vo.RoleVo;
 import com.alexon.authorization.model.vo.UserInfoVo;
 import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PoUtil;
-import com.alexon.utils.RedisUtil;
+import com.alexon.limiter.utils.RedisUtil;
 import com.alexon.authorization.utils.VoUtil;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.DataResponse;
