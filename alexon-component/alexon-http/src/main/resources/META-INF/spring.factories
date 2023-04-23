@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.alexon.http.RestTemplateAutoConfiguration,\
+  com.alexon.http.LoadBalancedRestTemplateAutoConfiguration,\
+  com.alexon.http.RemoteRestTemplateAutoConfiguration
