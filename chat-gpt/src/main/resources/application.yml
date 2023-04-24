@@ -93,7 +93,7 @@ http_pool:
 
 # chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
 chatgpt:
-  token: "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"
+  token: "xxxx"
   use-proxy: true
   openai-domain: https://api.openai.com
   proxy-domain: https://alexon.website
@@ -102,6 +102,6 @@ chatgpt:
 wechat:
   miniprogram:
     appid: wxbeb0d268cea2ca7a
-    secret: 859f103541f32df31410e207c4482c02
+    secret: xxxx
     base_url: https://api.weixin.qq.com
 
