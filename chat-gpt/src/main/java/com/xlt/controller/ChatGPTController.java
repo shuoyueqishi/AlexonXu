@@ -1,6 +1,5 @@
 package com.xlt.controller;
 
-
 import com.alexon.model.response.DataResponse;
 import com.theokanning.openai.OpenAiResponse;
 import com.theokanning.openai.completion.CompletionRequest;
@@ -24,8 +23,8 @@ import java.util.List;
 @Slf4j
 public class ChatGPTController {
 
-     @Autowired
-     private IOpenAIService openAIService;
+    @Autowired
+    private IOpenAIService openAIService;
 
     @RequestMapping(value = "/v1/models", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DataResponse<List<Model>> listModels() {

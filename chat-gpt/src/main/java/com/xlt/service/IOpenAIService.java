@@ -6,9 +6,6 @@ import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.model.Model;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
 
 /**
  * OpenAI 接口 ,参考 com.theokanning.openai.OpenAiApi

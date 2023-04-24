@@ -31,6 +31,12 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alexon</groupId>
+            <artifactId>alexon-http</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -2,6 +2,7 @@ package com.alexon.limiter.utils;
 
 import com.alexon.model.utils.AppContextUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
+@DependsOn("appContextUtil")
 public class RedisUtil {
     public static RedisTemplate<String, Object> redisTemplate;
 

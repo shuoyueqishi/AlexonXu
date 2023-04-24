@@ -48,13 +48,6 @@ spring:
         max-idle: 8 # 连接池中的最大空闲连接 默认8
         min-idle: 0 # 连接池中的最小空闲连接 默认0
 
-
-# chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
-chatgpt:
-  token: "sk-xxxx"
-  proxy:
-    domain: https://alexon.website
-
 #jwt
 jwt:
   expiration: 1800 # 令牌过期时间 此处单位秒
@@ -97,4 +90,18 @@ http_pool:
   socket_timeout: 65000
   validate_after_inactivity: 2000
 
+
+# chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
+chatgpt:
+  token: "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"
+  use-proxy: true
+  openai-domain: https://api.openai.com
+  proxy-domain: https://alexon.website
+
+# 微信小程序配置信息
+wechat:
+  miniprogram:
+    appid: wxbeb0d268cea2ca7a
+    secret: 859f103541f32df31410e207c4482c02
+    base_url: https://api.weixin.qq.com
 

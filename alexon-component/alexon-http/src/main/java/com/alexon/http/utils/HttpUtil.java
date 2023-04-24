@@ -1,17 +1,19 @@
-package com.alexon.authorization.utils;
-
+package com.alexon.http.utils;
 
 import com.alexon.model.utils.AppContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.util.Map;
 
 @Component
 @DependsOn("appContextUtil")
+@Slf4j
 public class HttpUtil {
 
     private static RestTemplate restTemplate;
@@ -102,6 +104,33 @@ public class HttpUtil {
      */
     public static void doPut(String url,Map<String,String> body){
         restTemplate.put(url,body);
+    }
+
+    /**
+     * 拼接GET请求的路径查询参数
+     *
+     * @param obj obj
+     * @return 参数拼接结果
+     */
+    public static String buildPathUrl(Object obj) {
+        Class cls = obj.getClass();
+        Field[] fields = cls.getDeclaredFields();
+        StringBuilder sb = new StringBuilder();
+        sb.append("?");
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            try {
+                if (field.get(obj) != null) {
+                    log.debug("属性名:" + field.getName() + " 属性值:" + field.get(obj));
+                    sb.append(field.getName()).append("=").append(field.get(obj)).append("&");
+                }
+            } catch (IllegalAccessException e) {
+                log.error("get field error:" + e);
+            }
+        }
+        sb.deleteCharAt(sb.lastIndexOf("&"));
+        return sb.toString();
     }
 }
 
