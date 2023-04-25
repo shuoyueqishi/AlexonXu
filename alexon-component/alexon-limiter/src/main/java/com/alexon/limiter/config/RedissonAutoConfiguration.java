@@ -20,10 +20,13 @@ public class RedissonAutoConfiguration {
     @Value("${spring.redis.port}")
     private String port;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClient() throws IOException {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://"+host+":"+port);
+        config.useSingleServer().setAddress("redis://"+host+":"+port).setPassword(password);
         return Redisson.create(config);
     }
 

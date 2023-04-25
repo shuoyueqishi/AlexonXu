@@ -27,9 +27,9 @@ spring:
   datasource:
     name: xlt-user
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/usermgt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: root
-    password: root
+    url: jdbc:mysql://42.194.193.74:3306/usermgt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
+    username: xlt
+    password: Xlt#2023$
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:  #druid相关配置
       filters: stat #监控统计拦截的filters
@@ -47,9 +47,9 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
   # redis
   redis: # redis配置
-    host: 127.0.0.1
+    host: 42.194.193.74
     port: 6379
-    # password: xlt
+    password: Xlt@2023!
     database: 0
     lettuce:
       pool:

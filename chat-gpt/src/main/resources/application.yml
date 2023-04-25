@@ -17,7 +17,7 @@ spring:
   datasource:
     name: oredr-ds
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
+    url: jdbc:mysql://42.194.193.74:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -93,7 +93,7 @@ http_pool:
 
 # chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
 chatgpt:
-  token: "xxxx"
+  token: "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"
   use-proxy: true
   openai-domain: https://api.openai.com
   proxy-domain: https://alexon.website
@@ -102,6 +102,6 @@ chatgpt:
 wechat:
   miniprogram:
     appid: wxbeb0d268cea2ca7a
-    secret: xxxx
+    secret: 859f103541f32df31410e207c4482c02
     base_url: https://api.weixin.qq.com
 
