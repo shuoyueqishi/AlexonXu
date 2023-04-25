@@ -22,6 +22,7 @@ http://localhost:8190/user/swagger-ui/index.html
 8、实现多种方式登录：用户名、手机号、邮箱
 9、我的待办实现
 10、我的账本模块功能
+11、nacos版本需要为2.0.4
 ```
 
 
