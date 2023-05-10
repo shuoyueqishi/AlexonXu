@@ -15,4 +15,26 @@
         <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
         <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
     </resultMap>
+
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into user_t(union_id, open_id, nick_name, `name`, `password`, salt, telephone, email, head_img,
+                           default_role, create_by, creation_date, last_update_by, last_update_date)
+        VALUES (#{unionId},
+                #{openId},
+                #{nickName},
+                #{name},
+                #{password},
+                #{salt},
+                #{telephone},
+                #{email},
+                #{headImg},
+                #{defaultRole},
+                #{createBy},
+                #{creationDate},
+                #{lastUpdateBy},
+                #{lastUpdateDate})
+    </insert>
+
+
 </mapper>

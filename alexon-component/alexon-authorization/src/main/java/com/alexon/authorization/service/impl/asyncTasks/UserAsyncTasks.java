@@ -29,12 +29,12 @@ public class UserAsyncTasks {
     @Async("asyncPoolTaskExecutor")
     public void grantRole2UserTask(UserRoleVo userRoleVo) {
         log.info("begin to do grantRole2UserTask, userRoleVo={}",userRoleVo);
-        AssertUtil.isStringEmpty(userRoleVo.getUserName(),"userName can't be empty");
+        AssertUtil.isNull(userRoleVo.getUserId(),"userId can't be empty");
         AssertUtil.isNull(userRoleVo.getRoleId(),"roleId can't be empty");
         QueryWrapper<UserPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name",userRoleVo.getUserName());
+        queryWrapper.eq("user_id",userRoleVo.getUserId());
         UserPo userPo = userMapper.selectOne(queryWrapper);
-        AssertUtil.isNull(userPo, userRoleVo.getUserName()+" not exist in system");
+        AssertUtil.isNull(userPo, userRoleVo.getUserId()+" not exist in system");
         userRoleVo.setUserId(userPo.getUserId());
         Date startDate = new Date();
         Date endDate = DateUtils.addYear(startDate, 1);

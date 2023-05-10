@@ -1,4 +1,4 @@
-package com.xlt.model.vo;
+package com.alexon.authorization.model.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @ApiModel("小程序登录VO")
-public class WechatLoginVo {
+public class WechatLoginReq {
     @ApiModelProperty("小程序 appId")
     private String appid;
 

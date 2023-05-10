@@ -21,6 +21,9 @@ CREATE TABLE `user_t`
   AUTO_INCREMENT = 10005
   DEFAULT CHARSET = utf8 COMMENT ='用户表';
 
+alter table `user_t` add column `open_id` varchar(32)  DEFAULT NULL COMMENT '微信用户的唯一标识' after `user_id`;
+alter table `user_t` add column `union_id` varchar(32)  DEFAULT NULL COMMENT '微信用户在开放平台的唯一标识符' after `user_id`;
+
 DROP TABLE IF EXISTS `role_t`;
 CREATE TABLE `role_t`
 (

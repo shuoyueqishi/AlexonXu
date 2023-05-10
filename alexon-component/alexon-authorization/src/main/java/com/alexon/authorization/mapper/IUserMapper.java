@@ -8,4 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface IUserMapper extends BaseMapper<UserPo> {
+
+    int addUser(UserPo userPo);
 }

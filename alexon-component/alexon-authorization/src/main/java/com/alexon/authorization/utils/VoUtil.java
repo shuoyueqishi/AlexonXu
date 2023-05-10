@@ -24,13 +24,13 @@ public class VoUtil {
     public static <T extends BaseVo> void fillUserNames(List<T> voList) {
         Set<Long> notCachedSet = new HashSet<>();
         voList.forEach(vo -> {
-            UserVo cachedUserVo = JSON.parseObject(JSON.toJSONString(RedisUtil.get(CommConstant.USER_NAMES_PREFIX + vo.getCreateBy())),UserVo.class);
+            UserVo cachedUserVo = JSON.parseObject(JSON.toJSONString(RedisUtil.get(CommConstant.USER_NAMES_PREFIX + vo.getCreateBy())), UserVo.class);
             if (Objects.isNull(cachedUserVo)) {
                 notCachedSet.add(vo.getCreateBy());
             } else {
                 vo.setCreateByStr(cachedUserVo.getName());
             }
-            cachedUserVo = JSON.parseObject(JSON.toJSONString(RedisUtil.get(CommConstant.USER_NAMES_PREFIX + vo.getLastUpdateBy())),UserVo.class);
+            cachedUserVo = JSON.parseObject(JSON.toJSONString(RedisUtil.get(CommConstant.USER_NAMES_PREFIX + vo.getLastUpdateBy())), UserVo.class);
             if (Objects.isNull(cachedUserVo)) {
                 notCachedSet.add(vo.getLastUpdateBy());
             } else {
@@ -53,7 +53,7 @@ public class VoUtil {
             HttpHeaders headers = new HttpHeaders();
             headers.add("internal", appName);
             HttpEntity<Set<Long>> httpEntity = new HttpEntity<>(notCachedSet, headers);
-            RestTemplate restTemplate = AppContextUtil.getBean(RestTemplate.class);
+            RestTemplate restTemplate = AppContextUtil.getBean("loadBalancedRestTemplate", RestTemplate.class);
             ResponseEntity<DataResponse> responseEntity = restTemplate.postForEntity("http://user/user/query/cache", httpEntity, DataResponse.class);
             if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
                 DataResponse<Map<Long, UserVo>> response = (DataResponse<Map<Long, UserVo>>) responseEntity.getBody();

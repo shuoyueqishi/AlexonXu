@@ -1,13 +1,19 @@
-package com.xlt.service.impl;
+package com.alexon.authorization.service.impl;
 
+import com.alexon.authorization.constants.WechatConstant;
+import com.alexon.authorization.mapper.IUserMapper;
+import com.alexon.authorization.model.po.UserPo;
+import com.alexon.authorization.model.response.WechatLoginRes;
+import com.alexon.authorization.model.vo.UserInfoVo;
+import com.alexon.authorization.model.vo.UserVo;
+import com.alexon.authorization.model.request.WechatLoginReq;
+import com.alexon.authorization.service.IWechatService;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.http.utils.HttpUtil;
+import com.alexon.model.response.DataResponse;
 import com.alexon.model.utils.ObjectUtil;
 import com.alibaba.fastjson.JSON;
-import com.xlt.model.response.WechatLoginRes;
-import com.xlt.model.vo.WechatLoginVo;
-import com.xlt.constants.WechatConstant;
-import com.xlt.service.IWechatService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,12 +46,12 @@ public class WechatService implements IWechatService {
     private RestTemplate remoteRestTemplate;
 
     @Override
-    public WechatLoginRes login(WechatLoginVo wechatLoginVo) {
-        log.info("wechatLoginVo={}", wechatLoginVo);
-        wechatLoginVo.setAppid(appid);
-        wechatLoginVo.setSecret(secret);
-        Map<String, Object> urlParamMap = ObjectUtil.getNonNullFields(wechatLoginVo);
-        String paramPathUrl = HttpUtil.buildPathUrl(wechatLoginVo);
+    public WechatLoginRes fetchWxOpenId(WechatLoginReq wechatLoginReq) {
+        log.info("wechatLoginReq={}", wechatLoginReq);
+        wechatLoginReq.setAppid(appid);
+        wechatLoginReq.setSecret(secret);
+        Map<String, Object> urlParamMap = ObjectUtil.getNonNullFields(wechatLoginReq);
+        String paramPathUrl = HttpUtil.buildPathUrl(wechatLoginReq);
         ResponseEntity<String> resEntity = remoteRestTemplate.getForEntity(baseUrl + WechatConstant.LOGIN_URL + paramPathUrl, String.class, urlParamMap);
         AssertUtil.isNotTrue(HttpStatus.OK.equals(resEntity.getStatusCode()), "login error:" + resEntity.getStatusCode());
         String bodyStr = resEntity.getBody();
@@ -55,7 +61,5 @@ public class WechatService implements IWechatService {
         AssertUtil.isNotTrue(Objects.isNull(wechatLoginRes.getErrcode())||WechatConstant.SUCCESS_CODE.equals(wechatLoginRes.getErrcode()), "login failed, because " + wechatLoginRes.getErrmsg());
         return wechatLoginRes;
     }
-
-
 
 }

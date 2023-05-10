@@ -24,7 +24,7 @@ public class HttpUtil {
     @PostConstruct
     public void init() {
         if (restTemplate == null) {
-            restTemplate = AppContextUtil.getBean("restTemplate",RestTemplate.class);
+            restTemplate = AppContextUtil.getBean("remoteRestTemplate", RestTemplate.class);
         }
     }
 

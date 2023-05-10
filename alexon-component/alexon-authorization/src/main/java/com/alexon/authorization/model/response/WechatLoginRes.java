@@ -1,4 +1,4 @@
-package com.xlt.model.response;
+package com.alexon.authorization.model.response;
 
 
 import io.swagger.annotations.ApiModel;

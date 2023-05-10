@@ -45,4 +45,9 @@ public class UserPo extends BasePo implements Serializable {
     @TableField("default_role")
     private Long defaultRole;
 
+    @TableField("open_id")
+    private String openId;
+
+    @TableField("union_id")
+    private String unionId;
 }

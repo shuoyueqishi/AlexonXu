@@ -9,11 +9,13 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import java.util.List;
 public class SyncPermissionScheduler {
 
 
-    @Autowired
+    @Resource(name="loadBalancedRestTemplate")
     private RestTemplate restTemplate;
 
     @Autowired
@@ -33,7 +35,7 @@ public class SyncPermissionScheduler {
     private ISyncPermissionService syncPermissionService;
 
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/30 * * * ?")
     public void syncPermissions() {
 
         List<String> serviceIds = discoveryClient.getServices();

@@ -1,5 +1,7 @@
 package com.xlt.controller;
 
+import com.alexon.authorization.model.request.LoginReq;
+import com.alexon.authorization.model.vo.UserInfoVo;
 import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.authorization.model.vo.UpdatePwdUserVo;
 import com.alexon.authorization.model.vo.UserVo;
@@ -17,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,8 +33,8 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("login")
     @OperationLog(operateModule = "UserController", operateType = OperateConstant.UPDATE, operateDesc = "User login")
-    public DataResponse<Object> userLogin(@RequestBody UserVo userVo)  throws NoSuchAlgorithmException {
-        return iUserService.userLogin(userVo);
+    public DataResponse<UserInfoVo> userLogin(@RequestBody LoginReq loginReq) {
+        return iUserService.userLogin(loginReq);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -58,16 +58,21 @@ public class MD5Util {
         return ret.toString();
     }
 
-    //密码验证
     /*
      * 将加密后的字节数组转换成十六进制的字符窜，形成最终的密码。
      * 当输入字符串经过MD5加密后，得到的字符串与密码一样，则认为密码验证通过。
      * */
-    public static boolean validPassword(String inputPassword, String dbPassword) throws NoSuchAlgorithmException {
-        String passwordByMD5 = toHex(encryptionStr(inputPassword));
-        if (dbPassword.equals(passwordByMD5)) {
-            return true;
+    public static boolean validPassword(String inputPassword, String dbPassword) {
+        try {
+            String passwordByMD5 = toHex(encryptionStr(inputPassword));
+            if (dbPassword.equals(passwordByMD5)) {
+                return true;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            log.error("valid password error:", e);
+            return false;
         }
+
         return false;
     }
 

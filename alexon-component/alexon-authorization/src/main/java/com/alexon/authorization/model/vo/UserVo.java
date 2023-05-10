@@ -5,20 +5,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("用户信息")
 public class UserVo extends BaseVo implements Serializable {
     private static final long serialVersionUID = -7751119896864993134L;
+
     @ApiModelProperty("用户ID")
     private Long userId;
+
+    @ApiModelProperty("微信用户的唯一标识")
+    private String openId;
+
+    @ApiModelProperty("微信用户在开放平台的唯一标识符")
+    private String unionId;
 
     @ApiModelProperty("用户别名")
     private String nickName;

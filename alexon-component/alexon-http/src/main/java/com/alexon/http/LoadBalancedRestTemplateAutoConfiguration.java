@@ -16,7 +16,7 @@ public class LoadBalancedRestTemplateAutoConfiguration {
     @Autowired
     private ClientHttpRequestFactory httpRequestFactory;
 
-    @Bean
+    @Bean("loadBalancedRestTemplate")
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate(httpRequestFactory);
