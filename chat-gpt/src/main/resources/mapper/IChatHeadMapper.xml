@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.ChatHeadMapper">
+
+    <insert id="addChatHead" useGeneratedKeys="true" keyProperty="headId">
+        insert into chat_head_t(user_id,chat_name,create_by,creation_date,last_update_by,last_update_date)
+        values (#{userId},#{chatName},#{createBy},#{creationDate},#{lastUpdateBy},#{lastUpdateDate})
+    </insert>
+
+</mapper>

@@ -2,10 +2,12 @@ DROP TABLE IF EXISTS `user_t`;
 CREATE TABLE `user_t`
 (
     `user_id`          bigint(10) NOT NULL AUTO_INCREMENT COMMENT 'user_id主键',
+    `union_id`         varchar(32)  DEFAULT NULL COMMENT '微信用户在开放平台的唯一标识符',
+    `open_id`          varchar(32)  DEFAULT NULL COMMENT '微信用户的唯一标识',
     `nick_name`        varchar(64)  DEFAULT NULL COMMENT '昵称',
     `name`             varchar(64)  DEFAULT NULL COMMENT '姓名',
     `password`         varchar(128) DEFAULT NULL COMMENT '密码',
-    `salt`             varchar(16) DEFAULT NULL COMMENT '密码盐值',
+    `salt`             varchar(16)  DEFAULT NULL COMMENT '密码盐值',
     `telephone`        varchar(32)  DEFAULT NULL COMMENT '电话',
     `email`            varchar(128) DEFAULT NULL COMMENT '邮箱',
     `head_img`         varchar(20)  DEFAULT NULL COMMENT '头像，存储图片的docNo',
@@ -21,8 +23,10 @@ CREATE TABLE `user_t`
   AUTO_INCREMENT = 10005
   DEFAULT CHARSET = utf8 COMMENT ='用户表';
 
-alter table `user_t` add column `open_id` varchar(32)  DEFAULT NULL COMMENT '微信用户的唯一标识' after `user_id`;
-alter table `user_t` add column `union_id` varchar(32)  DEFAULT NULL COMMENT '微信用户在开放平台的唯一标识符' after `user_id`;
+alter table `user_t`
+    add column `open_id` varchar(32) DEFAULT NULL COMMENT '微信用户的唯一标识' after `user_id`;
+alter table `user_t`
+    add column `union_id` varchar(32) DEFAULT NULL COMMENT '微信用户在开放平台的唯一标识符' after `user_id`;
 
 DROP TABLE IF EXISTS `role_t`;
 CREATE TABLE `role_t`
@@ -97,19 +101,19 @@ DROP TABLE IF EXISTS `permission_t`;
 CREATE TABLE `permission_t`
 (
     `permission_id`    bigint(10)   NOT NULL AUTO_INCREMENT COMMENT '权限id',
-    `resource_name`    varchar(64) NOT NULL COMMENT '资源名称',
-    `operate_code`    varchar(128) NOT NULL COMMENT '操作码',
-    `operate_desc`    varchar(256) DEFAULT NULL COMMENT '操作描述',
+    `resource_name`    varchar(64)  NOT NULL COMMENT '资源名称',
+    `operate_code`     varchar(128) NOT NULL COMMENT '操作码',
+    `operate_desc`     varchar(256) DEFAULT NULL COMMENT '操作描述',
     `path`             varchar(512) DEFAULT NULL COMMENT '接口路径',
     `http_method`      varchar(16)  DEFAULT NULL COMMENT 'HTTP请求方式',
     `method_name`      varchar(256) DEFAULT NULL COMMENT '方法全路径名',
-    `tenant`           varchar(32) DEFAULT NULL COMMENT '租户',
-    `create_by`        varchar(50) DEFAULT NULL COMMENT '创建人',
-    `creation_date`    datetime    DEFAULT NULL COMMENT '创建时间',
-    `last_update_by`   varchar(50) DEFAULT NULL COMMENT '修改人',
-    `last_update_date` datetime    DEFAULT NULL COMMENT '修改时间',
+    `tenant`           varchar(32)  DEFAULT NULL COMMENT '租户',
+    `create_by`        varchar(50)  DEFAULT NULL COMMENT '创建人',
+    `creation_date`    datetime     DEFAULT NULL COMMENT '创建时间',
+    `last_update_by`   varchar(50)  DEFAULT NULL COMMENT '修改人',
+    `last_update_date` datetime     DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`permission_id`),
-    UNIQUE KEY `uk_tenantResourceOpeCode` (`tenant`, `resource_name`,`operate_code`)
+    UNIQUE KEY `uk_tenantResourceOpeCode` (`tenant`, `resource_name`, `operate_code`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='权限表';
@@ -117,21 +121,34 @@ CREATE TABLE `permission_t`
 DROP TABLE IF EXISTS `edoc_t`;
 create table edoc_t
 (
-    id                   bigint not null AUTO_INCREMENT comment '主键ID',
-    doc_no               varchar(20) not null comment '文档编号，唯一',
-    doc_name             varchar(128) DEFAULT NULL comment 'doc名称',
-    file_name            varchar(256) DEFAULT NULL comment '文档名称',
-    doc_type             varchar(16) DEFAULT NULL comment '文档类型',
-    doc_size             bigint DEFAULT NULL comment '文档大小，KB',
-    download_url         varchar(256) DEFAULT NULL comment '下载地址',
-    local_path           varchar(256) DEFAULT NULL comment '文件本地存储路径',
-    deleted              int default 0 comment '删除标志，0：未删除，1：删除',
-    create_by           bigint DEFAULT NULL comment '创建人',
-    creation_date        datetime DEFAULT NULL comment '创建时间',
-    last_update_by       bigint DEFAULT NULL comment '更新人',
-    last_update_date     datetime DEFAULT NULL comment '更新时间',
+    id               bigint      not null AUTO_INCREMENT comment '主键ID',
+    doc_no           varchar(20) not null comment '文档编号，唯一',
+    doc_name         varchar(128) DEFAULT NULL comment 'doc名称',
+    file_name        varchar(256) DEFAULT NULL comment '文档名称',
+    doc_type         varchar(16)  DEFAULT NULL comment '文档类型',
+    doc_size         bigint       DEFAULT NULL comment '文档大小，KB',
+    download_url     varchar(256) DEFAULT NULL comment '下载地址',
+    local_path       varchar(256) DEFAULT NULL comment '文件本地存储路径',
+    deleted          int          default 0 comment '删除标志，0：未删除，1：删除',
+    create_by        bigint       DEFAULT NULL comment '创建人',
+    creation_date    datetime     DEFAULT NULL comment '创建时间',
+    last_update_by   bigint       DEFAULT NULL comment '更新人',
+    last_update_date datetime     DEFAULT NULL comment '更新时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_docNo` (`doc_no`)
-)ENGINE = InnoDB
- AUTO_INCREMENT = 1000
- DEFAULT CHARSET = utf8 COMMENT ='文档记录表';
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
+  DEFAULT CHARSET = utf8 COMMENT ='文档记录表';
+
+DROP TABLE IF EXISTS `exception_log_t`;
+CREATE TABLE `exception_log_t`
+(
+    `id`            int(10)       NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `msg`           varchar(1024) NOT NULL COMMENT '异常信息',
+    `stack_trace`   text COMMENT '异常堆栈信息',
+    `create_by`     bigint(10) DEFAULT NULL COMMENT '创建人',
+    `creation_date` datetime      NOT NULL COMMENT '异常发生时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
+  DEFAULT CHARSET = utf8 COMMENT ='异常信息日志表';

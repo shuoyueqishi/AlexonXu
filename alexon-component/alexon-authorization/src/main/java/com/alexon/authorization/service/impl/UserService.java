@@ -145,6 +145,7 @@ public class UserService implements IUserService {
             userInfoVo.setCurUser(curUser);
         }
         RolePo curRolePo = roleMapper.selectById(userPo.getDefaultRole());
+        AssertUtil.isNull(curRolePo,"default role not exist in system,roleId="+userPo.getDefaultRole());
         RoleVo curRoleVo = ObjectConvertUtil.convertObjs(curRolePo, RoleVo.class);
         userInfoVo.setCurRole(curRoleVo);
 
@@ -314,6 +315,12 @@ public class UserService implements IUserService {
         }
         if (Objects.nonNull(userVo.getDefaultRole())) {
             userPo.setDefaultRole(userVo.getDefaultRole());
+        }
+        if(StringUtils.isNotEmpty(userVo.getOpenId())) {
+            userPo.setOpenId(userVo.getOpenId());
+        }
+        if(StringUtils.isNotEmpty(userVo.getUnionId())) {
+            userPo.setUnionId(userVo.getUnionId());
         }
         userPo.setLastUpdateDate(new Date());
         userPo.setLastUpdateBy(UserContext.getUserId());

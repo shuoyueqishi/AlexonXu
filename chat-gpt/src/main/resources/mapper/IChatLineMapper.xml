@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.ChatLineMapper">
+
+    <insert id="addBatchChatLines" useGeneratedKeys="true" keyProperty="headId">
+        INSERT INTO chat_line_t
+        (head_id, chat_role, chat_content,create_by,creation_date,last_update_by,last_update_date)
+        VALUES
+        <foreach collection ="list" item="vo" separator =",">
+            (#{vo.headId}, #{vo.chatRole}, #{vo.chatContent},#{vo.createBy},#{vo.creationDate},#{vo.lastUpdateBy},#{vo.lastUpdateDate})
+        </foreach >
+    </insert>
+
+</mapper>
