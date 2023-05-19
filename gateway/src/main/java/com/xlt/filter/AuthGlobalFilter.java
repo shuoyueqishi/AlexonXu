@@ -1,6 +1,7 @@
 package com.xlt.filter;
 
 import com.alibaba.cloud.commons.lang.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class AuthGlobalFilter implements GlobalFilter {
 
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static List<String> whitePathList = new ArrayList<String>() {
         private static final long serialVersionUID = -2860067364426320457L;
@@ -67,17 +68,18 @@ public class AuthGlobalFilter implements GlobalFilter {
         } else {
             // 验证token
             try {
+                log.info("token={}", token);
                 Map<String, Claim> claimMap = JwtUtil.verifyToken(token);
-                log.info("claimMap={}",claimMap);
+                log.info("claimMap={}", JSON.toJSONString(claimMap));
                 Long userId = claimMap.get("userId").asLong();
                 Map<Object, Object> userInfoCached = redisTemplate.opsForHash().entries("UserInfo:" + userId);
-                if(CollectionUtils.isEmpty(userInfoCached)) {
+                if (CollectionUtils.isEmpty(userInfoCached)) {
                     throw new TokenExpiredException("token expired");
                 }
-                reqBuilder.header("userId",String.valueOf(userId));
+                reqBuilder.header("userId", String.valueOf(userId));
                 log.info("token is valid");
             } catch (Exception e) {
-                log.error("token error:",e);
+                log.error("token error:", e);
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
             }

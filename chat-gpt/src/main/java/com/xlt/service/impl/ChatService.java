@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -35,11 +36,19 @@ public class ChatService implements IChatService {
 
     @Override
     @Transactional
-    public void addChatContent(ChatContentRequest request) {
+    public Long addChatContent(ChatContentRequest request) {
         log.info("add chat content request:{}", request);
         AssertUtil.isNull(request, "request can't be empty");
         AssertUtil.isNull(request.getUserId(), "userId can't be empty");
         AssertUtil.isCollectionEmpty(request.getChatLineVoList(), "chatLineList can't be empty");
+
+        if(Objects.nonNull(request.getUserId())) {
+            log.info("headId:{} exited, delete it and it's detail first",request.getHeadId());
+            QueryWrapper<ChatLinePo> lineWrapper = new QueryWrapper<>();
+            lineWrapper.eq("head_id",request.getHeadId());
+            chatLineMapper.delete(lineWrapper);
+            chatHeadMapper.deleteById(request.getHeadId());
+        }
         if (StringUtils.isEmpty(request.getChatName())) {
             String firstChatContent = request.getChatLineVoList().get(0).getChatContent();
             AssertUtil.isStringEmpty(firstChatContent, "first chat line content is empty");
@@ -59,6 +68,7 @@ public class ChatService implements IChatService {
         }
         chatLineMapper.addBatchChatLines(chatLinePoList);
         log.info("success to add chat content");
+        return chatHeadPo.getHeadId();
     }
 
     @Override
@@ -67,6 +77,7 @@ public class ChatService implements IChatService {
         QueryWrapper<ChatHeadPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", UserContext.getUserId());
         queryWrapper.likeRight(StringUtils.isNotEmpty(chatHeadVo.getChatName()), "chat_name", chatHeadVo.getChatName());
+        queryWrapper.orderByDesc("last_update_date");
         List<ChatHeadPo> chatHeadPos = chatHeadMapper.selectList(queryWrapper);
         return ChatHeadConvertor.INSTANCE.toChatHeadVoList(chatHeadPos);
     }
@@ -78,7 +89,7 @@ public class ChatService implements IChatService {
         QueryWrapper<ChatLinePo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("head_id", chatLineVo.getHeadId());
         queryWrapper.eq(StringUtils.isNotEmpty(chatLineVo.getChatRole()), "chat_role", chatLineVo.getChatRole());
-        queryWrapper.orderByDesc("LastUpdateDate");
+        queryWrapper.orderByAsc("last_update_date");
         List<ChatLinePo> chatLinePoList = chatLineMapper.selectList(queryWrapper);
         return ChatLineConvertor.INSTANCE.toChatLineVoList(chatLinePoList);
     }

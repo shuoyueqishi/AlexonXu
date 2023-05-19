@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IChatService {
 
-    void addChatContent(ChatContentRequest request);
+    Long addChatContent(ChatContentRequest request);
 
     List<ChatHeadVo> queryChatHeadList(ChatHeadVo chatHeadVo);
 

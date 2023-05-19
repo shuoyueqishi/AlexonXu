@@ -54,9 +54,9 @@ public class ChatContentController {
     @OperationLog(operateModule = "ChatContentController", operateType = OperateConstant.CREATE, operateDesc = "add Chat content")
     @OperatePermission(resourceName = "ChatContentController",operateCode =OperateConstant.CREATE, operateDesc = "add Chat content")
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BasicResponse addChatContent(@RequestBody ChatContentRequest request) {
-        chatService.addChatContent(request);
-        return new BasicResponse();
+    public DataResponse<Long> addChatContent(@RequestBody ChatContentRequest request) {
+        Long headId = chatService.addChatContent(request);
+        return new DataResponse<>(headId);
     }
 
     @ApiOperation("delete Chat content")

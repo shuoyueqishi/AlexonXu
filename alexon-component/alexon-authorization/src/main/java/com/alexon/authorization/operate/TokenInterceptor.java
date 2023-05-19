@@ -8,6 +8,8 @@ import com.alexon.authorization.utils.JwtUtil;
 import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.limiter.utils.RedisUtil;
 import com.alexon.exception.utils.AssertUtil;
+import com.alibaba.fastjson.JSON;
+import com.auth0.jwt.interfaces.Claim;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,10 @@ public class TokenInterceptor implements HandlerInterceptor {
                 AssertUtil.isTrue(StringUtils.isEmpty(token) && StringUtils.isEmpty(userId),
                         "Can't invoke API as token and useId both not exist in http header");
                 UserInfoVo userInfoVo = new UserInfoVo();
-                if (StringUtils.isEmpty(userId) && StringUtils.isNotEmpty(token)) {
+                if (StringUtils.isEmpty(userId)) {
                     userId = JwtUtil.verifyToken(token).get("userId").asString();
                 }
+                log.info("userId={}", userId);
                 Map<Object, Object> userInfoMap = RedisUtil.hmget(CommConstant.USER_INFO_PREFIX + userId);
                 long expireSec = RedisUtil.getExpireSec(CommConstant.USER_INFO_PREFIX + userId);
                 log.info("current token expireSec={}", expireSec);
@@ -73,6 +76,7 @@ public class TokenInterceptor implements HandlerInterceptor {
                 }
                 RedisUtil.expire(CommConstant.USER_INFO_PREFIX + userId, newExpireSec);
                 ObjectConvertUtil.convertMap2UserInfoVo(userInfoMap, userInfoVo);
+                log.info("cached userInfoVo={}", JSON.toJSONString(userInfoVo));
                 List<String> permissionList = userInfoVo.getCurPermissionList();
                 AssertUtil.isTrue(CollectionUtils.isEmpty(permissionList) || !permissionList.contains(perPoint),
                         "lack of permission: " + perPoint);

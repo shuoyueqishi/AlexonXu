@@ -10,7 +10,7 @@ CREATE TABLE `user_t`
     `salt`             varchar(16)  DEFAULT NULL COMMENT '密码盐值',
     `telephone`        varchar(32)  DEFAULT NULL COMMENT '电话',
     `email`            varchar(128) DEFAULT NULL COMMENT '邮箱',
-    `head_img`         varchar(20)  DEFAULT NULL COMMENT '头像，存储图片的docNo',
+    `head_img`         varchar(256)  DEFAULT NULL COMMENT '头像，存储图片的docNo',
     `default_role`     bigint(10)   DEFAULT NULL COMMENT '默认角色',
     `create_by`        varchar(50)  DEFAULT NULL COMMENT '创建人',
     `creation_date`    datetime     DEFAULT NULL COMMENT '创建时间',
