@@ -1,0 +1,10 @@
+nacos:
+  config:
+    server-addr: 42.194.193.74:8848
+    namespace: 44579e9a-4d5f-488e-ac16-7c50911fac3d
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        ip: 8.217.81.86

@@ -5,12 +5,12 @@ server:
 
 nacos:
   config:
-    server-addr: 42.194.193.74:8848
+    server-addr: localhost:8848
     namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
 
 spring:
   profiles:
-    active: dev
+    active: ${env}
   application:
     name: chat-gpt
   cloud:
@@ -36,3 +36,4 @@ spring:
         server-addr: ${nacos.config.server-addr}
         # 配置中心命名空间ID，默认为public
         namespace: ${nacos.config.namespace}
+#        ip: 8.217.81.86

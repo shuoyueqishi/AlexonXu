@@ -109,3 +109,10 @@ pagehelper:
   params: count=countSql
   returnPageInfo: check
 
+
+# 微信小程序配置信息
+wechat:
+  miniprogram:
+    appid: wxbeb0d268cea2ca7a
+    secret: 859f103541f32df31410e207c4482c02
+    base_url: https://api.weixin.qq.com

@@ -16,6 +16,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <!--设置maven打包替换的符号为${}, 默认的为 @@-->
+        <resource.delimiter>${}</resource.delimiter>
     </properties>
 
     <dependencies>
@@ -70,7 +72,8 @@
             <!-- 开发环境 -->
             <id>dev</id>
             <properties>
-                <profiles.active>dev</profiles.active>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <env>dev</env>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -80,19 +83,43 @@
             <!-- 测试环境 -->
             <id>test</id>
             <properties>
-                <profiles.active>test</profiles.active>
+                <spring.profiles.active>test</spring.profiles.active>
+                <env>test</env>
             </properties>
         </profile>
         <profile>
             <!-- 生产环境 -->
-            <id>production</id>
+            <id>prod</id>
             <properties>
-                <profiles.active>production</profiles.active>
+                <spring.profiles.active>prod</spring.profiles.active>
+                <env>prod</env>
             </properties>
         </profile>
     </profiles>
 
     <build>
+        <resources>
+            <!-- springboot 默认只替换application*.[yml,yaml,properties]相关文件,我们项目中在bootstrap中需要替换配置中心等相关变量 -->
+            <resource>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/bootstrap*.yml</include>
+                    <include>**/bootstrap*.yaml</include>
+                    <include>**/bootstrap*.properties</include>
+                </includes>
+            </resource>
+            <!-- 必须成组否则文件夹下其他资源无法拷贝 -->
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>**/bootstrap*.yml</exclude>
+                    <exclude>**/bootstrap*.yaml</exclude>
+                    <exclude>**/bootstrap*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -2,6 +2,7 @@ package com.xlt.controller;
 
 import com.alexon.authorization.operate.OperatePermission;
 import com.alexon.limiter.RequestLimiter;
+import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;
 import com.alexon.operation.log.OperationLog;
 import com.alexon.operation.log.constants.OperateConstant;
@@ -11,15 +12,14 @@ import com.theokanning.openai.completion.CompletionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.model.Model;
+import com.xlt.model.request.ApiKeyRequest;
+import com.xlt.model.vo.AccessInfoVo;
 import com.xlt.service.IOpenAIService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,11 +31,29 @@ public class ChatGPTController {
     @Autowired
     private IOpenAIService openAIService;
 
+    @RequestMapping(value = "/v1/access/info/query/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("query chat GPT Access Information")
+    @OperationLog(operateModule = "ChatGPTController", operateType = "queryAccessInfo", operateDesc = "query chat GPT Access Information")
+    @OperatePermission(resourceName = "ChatGPTController", operateCode = "queryAccessInfo", operateDesc = "query chat GPT Access Information")
+    public DataResponse<AccessInfoVo> queryAccessInfo(@PathVariable("userId") Long userId) {
+        AccessInfoVo accessInfoVo = openAIService.queryAccessInfo(userId);
+        return new DataResponse<>(accessInfoVo);
+    }
+
+    @RequestMapping(value = "/v1/api/key/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("create open AI API key")
+    @OperationLog(operateModule = "ChatGPTController", operateType = "saveApiKey", operateDesc = "create open AI API key")
+    @OperatePermission(resourceName = "ChatGPTController", operateCode = "saveApiKey", operateDesc = "create open AI API key")
+    public BasicResponse saveApiKey(@RequestBody ApiKeyRequest request) {
+        openAIService.saveOpenAiApiKey(request);
+        return new BasicResponse();
+    }
+
 
     @RequestMapping(value = "/v1/models", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("query chat gpt models")
     @OperationLog(operateModule = "ChatGPTController", operateType = OperateConstant.READ, operateDesc = "query chat gpt models")
-    @OperatePermission(resourceName = "ChatGPTController",operateCode =OperateConstant.READ, operateDesc = "query chat gpt models")
+    @OperatePermission(resourceName = "ChatGPTController", operateCode = OperateConstant.READ, operateDesc = "query chat gpt models")
     public DataResponse<List<Model>> listModels() {
         OpenAiResponse<Model> openAiResponse = openAIService.listModels();
         return new DataResponse<>(openAiResponse.getData());
@@ -44,7 +62,7 @@ public class ChatGPTController {
     @RequestMapping(value = "/v1/chat/completions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("chat with chatGPT using context")
     @OperationLog(operateModule = "ChatGPTController", operateType = OperateConstant.EXECUTE, operateDesc = "chat with chatGPT using context")
-    @OperatePermission(resourceName = "ChatGPTController",operateCode =OperateConstant.EXECUTE, operateDesc = "chat with chatGPT using context")
+    @OperatePermission(resourceName = "ChatGPTController", operateCode = OperateConstant.EXECUTE, operateDesc = "chat with chatGPT using context")
     @RequestLimiter(limiterName = "chatCompletions", rate = 10)
     public DataResponse<ChatCompletionResult> chatCompletions(@RequestBody ChatCompletionRequest request) {
         ChatCompletionResult chatCompletion = openAIService.createChatCompletion(request);
@@ -54,7 +72,7 @@ public class ChatGPTController {
     @RequestMapping(value = "/v1/completions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("chat with chatGPT once")
     @OperationLog(operateModule = "ChatGPTController", operateType = OperateConstant.EXECUTE, operateDesc = "chat with chatGPT once")
-    @OperatePermission(resourceName = "ChatGPTController",operateCode =OperateConstant.EXECUTE, operateDesc = "chat with chatGPT once")
+    @OperatePermission(resourceName = "ChatGPTController", operateCode = OperateConstant.EXECUTE, operateDesc = "chat with chatGPT once")
     @RequestLimiter(limiterName = "completions", rate = 10)
     public DataResponse<CompletionResult> completions(@RequestBody CompletionRequest request) {
         CompletionResult completion = openAIService.createCompletion(request);

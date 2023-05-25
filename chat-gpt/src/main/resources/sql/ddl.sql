@@ -51,7 +51,7 @@ CREATE TABLE `operation_log_t`
   AUTO_INCREMENT = 413
   DEFAULT CHARSET = utf8 COMMENT ='用户操作日志';
 
-
+DROP TABLE IF EXISTS `exception_log_t`;
 CREATE TABLE `exception_log_t`
 (
     `id`            int(10)       NOT NULL AUTO_INCREMENT COMMENT '主键id',
@@ -63,3 +63,19 @@ CREATE TABLE `exception_log_t`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='异常信息日志表';
+
+DROP TABLE IF EXISTS `open_api_key_t`;
+CREATE TABLE `open_api_key_t`
+(
+    id             bigint(10)       NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    user_id          bigint(10)  NOT NULL COMMENT 'user_id',
+    api_key          varchar(64) not null comment 'OPEN AI API Key',
+    create_by        bigint   DEFAULT NULL comment '创建人',
+    creation_date    datetime DEFAULT NULL comment '创建时间',
+    last_update_by   bigint   DEFAULT NULL comment '更新人',
+    last_update_date datetime DEFAULT NULL comment '更新时间',
+    PRIMARY KEY (id),
+    KEY idx_userId(user_id)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
+  DEFAULT CHARSET = utf8 COMMENT ='OpenAI API Key';

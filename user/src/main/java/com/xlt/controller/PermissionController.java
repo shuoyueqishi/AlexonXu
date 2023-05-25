@@ -13,6 +13,7 @@ import com.alexon.operation.log.OperationLog;
 import com.alexon.operation.log.constants.OperateConstant;
 import com.alexon.authorization.model.vo.RolePermissionVo;
 import com.alexon.authorization.service.IPermissionService;
+import com.xlt.schedulers.SyncPermissionScheduler;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,16 @@ public class PermissionController {
     @Autowired
     private IPermissionService permissionService;
 
+    @Autowired
+    private SyncPermissionScheduler syncPermissionScheduler;
+
     @RequestMapping(value = "/synchronize", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation("fetch OperationPermission annotations")
     @OperationLog(operateModule = "PermissionController", operateType = OperateConstant.EXECUTE, operateDesc = "synchronize permission")
     @OperatePermission(resourceName = "PermissionController",operateCode =OperateConstant.EXECUTE, operateDesc = "synchronize permission")
     BasicResponse synchronizePermissions() {
-        return permissionService.synchronizePermission();
+        syncPermissionScheduler.syncPermissions();
+        return new BasicResponse();
     }
 
     @RequestMapping(value = "/synchronize/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
