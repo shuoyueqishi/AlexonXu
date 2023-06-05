@@ -11,7 +11,7 @@ nacos:
 
 spring:
   profiles:
-    active: ${dev}
+    active: ${env}
   application:
     name: gateway
   cloud:

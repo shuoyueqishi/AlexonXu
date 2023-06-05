@@ -1,6 +1,6 @@
 package com.xlt.config.redis;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,13 +14,13 @@ public class LettuceConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         // 使用fastjson作为序列化器，需要引入相关依赖
-        FastJsonRedisSerializer fastJsonRedisSerializer = new FastJsonRedisSerializer(Object.class);
+        GenericFastJsonRedisSerializer vauleSerializer = new GenericFastJsonRedisSerializer();
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // 一般redis的key为String, value为Object
         template.setKeySerializer(stringRedisSerializer);
-        template.setValueSerializer(fastJsonRedisSerializer);
+        template.setValueSerializer(vauleSerializer);
         template.setHashKeySerializer(stringRedisSerializer);
-        template.setHashValueSerializer(fastJsonRedisSerializer);
+        template.setHashValueSerializer(vauleSerializer);
         template.afterPropertiesSet();
         return template;
     }
