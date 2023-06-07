@@ -26,12 +26,14 @@
         <fileSet>
             <directory>${project.basedir}/src/bin</directory>
             <outputDirectory>bin</outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
 
         <!-- 把项目自己编译出来的jar文件，打包进tar.gz文件的根目录 -->
         <fileSet>
             <directory>${project.build.directory}</directory>
             <outputDirectory></outputDirectory>
+            <fileMode>755</fileMode>
             <includes>
                 <include>*.jar</include>
             </includes>

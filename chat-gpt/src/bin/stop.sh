@@ -12,3 +12,4 @@ else
   sleep 5
   echo "$APP_NAME has been stopped."
 fi
+

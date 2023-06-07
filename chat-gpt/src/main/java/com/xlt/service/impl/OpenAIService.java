@@ -1,6 +1,7 @@
 package com.xlt.service.impl;
 
 import com.alexon.authorization.context.UserContext;
+import com.alexon.authorization.utils.PoUtil;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.utils.ObjectUtil;
 import com.alibaba.fastjson.JSON;
@@ -115,6 +116,7 @@ public class OpenAIService implements IOpenAIService {
         }
         log.info("userId={}", userId);
         OpenAiApiKeyPo po = OpenAiApiKeyPo.builder().userId(userId).apiKey(request.getApiKey()).build();
+        PoUtil.buildCreateUserInfo(po);
         apiKeyMapper.insert(po);
         redisTemplate.opsForValue().set(API_KEY_PREFIX + userId, request.getApiKey());
         log.info("save api key successfully.");
