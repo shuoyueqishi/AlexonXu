@@ -15,6 +15,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <lombok.version>1.18.22</lombok.version>
+        <spring-boot.version>2.6.11</spring-boot.version>
     </properties>
 
     <modules>
@@ -24,6 +25,7 @@
         <module>alexon-authorization</module>
         <module>alexon-operation-log</module>
         <module>alexon-http</module>
+        <module>alexon-cache</module>
     </modules>
 
     <dependencyManagement>
@@ -32,7 +34,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>2.4.3</version>
+                <version>${spring-boot.version}</version>
             </dependency>
 
             <!-- redisson start-->
@@ -115,7 +117,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.6.11</version>
+                <version>${spring-boot.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>

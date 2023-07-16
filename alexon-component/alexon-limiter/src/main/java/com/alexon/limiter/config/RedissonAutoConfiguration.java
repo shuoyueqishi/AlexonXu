@@ -5,6 +5,7 @@ import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +25,7 @@ public class RedissonAutoConfiguration {
     private String password;
 
     @Bean(destroyMethod = "shutdown")
+    @ConditionalOnMissingBean(name = {"redissonClient"})
     public RedissonClient redissonClient() throws IOException {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://"+host+":"+port).setPassword(password);
