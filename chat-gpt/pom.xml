@@ -27,6 +27,12 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alexon</groupId>
+            <artifactId>alexon-cache</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--chatGPT，参考：https://github.com/TheoKanning/openai-java-->
         <dependency>
             <groupId>com.theokanning.openai-gpt3-java</groupId>

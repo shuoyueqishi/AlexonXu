@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.xlt.mapper.SystemConfigMapper">
+
+    <update id="updateSysParamById">
+        update system_config_t
+        <set>
+            <if test="po.configCode!=null and po.configCode!=''">
+                config_code = #{po.configCode}
+            </if>
+            <if test="po.value!=null and po.value!=''">
+                value = #{po.value}
+            </if>
+            <if test="po.description!=null and po.description!=''">
+                description = #{po.description}
+            </if>
+            <if test="po.status!=null">
+                status = #{po.status}
+            </if>
+            <if test="po.deleted!=null">
+                deleted = #{po.deleted}
+            </if>
+            <if test="po.lastUpdateDate!=null">
+                last_update_date = #{po.lastUpdateDate}
+            </if>
+            <if test="po.lastUpdateBy!=null">
+                last_update_by = #{po.lastUpdateBy}
+            </if>
+        </set>
+        where config_id = #{po.configId}
+    </update>
+</mapper>
