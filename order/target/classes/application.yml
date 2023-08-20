@@ -22,28 +22,30 @@ spring:
   #项目名字
   application:
     name: order
+  profiles:
+    active: dev
   # 数据源
-  datasource:
-    name: oredr-ds
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    druid:  #druid相关配置
-      filters: stat #监控统计拦截的filters
-      initial-size: 1  #配置初始化大小/最小/最大
-      min-idle: 1
-      max-active: 20
-      max-wait: 60000 #获取连接等待超时时间
-      time-between-eviction-runs-millis: 60000  #间隔多久进行一次检测，检测需要关闭的空闲连接
-      min-evictable-idle-time-millis: 300000  #一个连接在池中最小生存的时间
-      validation-query: SELECT 'x'
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      pool-prepared-statements: false #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
-      max-pool-prepared-statement-per-connection-size: 20
+#  datasource:
+#    name: oredr-ds
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:mysql://localhost:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    druid:  #druid相关配置
+#      filters: stat #监控统计拦截的filters
+#      initial-size: 1  #配置初始化大小/最小/最大
+#      min-idle: 1
+#      max-active: 20
+#      max-wait: 60000 #获取连接等待超时时间
+#      time-between-eviction-runs-millis: 60000  #间隔多久进行一次检测，检测需要关闭的空闲连接
+#      min-evictable-idle-time-millis: 300000  #一个连接在池中最小生存的时间
+#      validation-query: SELECT 'x'
+#      test-while-idle: true
+#      test-on-borrow: false
+#      test-on-return: false
+#      pool-prepared-statements: false #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+#      max-pool-prepared-statement-per-connection-size: 20
   # redis
   redis: # redis配置
     host: 127.0.0.1
@@ -80,19 +82,6 @@ spring:
           #acknowledge-mode: manual
 
 
-# eureka client配置
-eureka:
-  client:
-    registryFetchIntervalSeconds: 5
-    serviceUrl:
-      defaultZone: http://localhost:8098/eureka/  #eureka服务端提供的注册地址 参考服务端配置的这个路径
-  instance:
-    hostname: order #此实例注册到eureka服务端的唯一的实例ID
-    prefer-ip-address: true #是否显示IP地址
-    leaseRenewalIntervalInSeconds: 10 #eureka客户需要多长时间发送心跳给eureka服务器，表明它仍然活着,默认为30 秒 (与下面配置的单位都是秒)
-    leaseExpirationDurationInSeconds: 30 #Eureka服务器在接收到实例的最后一次发出的心跳后，需要等待多久才可以将此实例删除，默认为90秒
-    health-check-url-path: /actuator/health
-
 # Springboot Admin监控暴露信息
 management:
   endpoints:
@@ -108,6 +97,11 @@ mybatis:
   config-location: classpath:config/mybatis-config.xml
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.xlt.model
+
+
+mybatis-plus:
+  configuration: ### 开启打印sql配置
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 权限扫描基础路径
 base:

@@ -110,15 +110,21 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
+                    <include>**/application*.yml</include>
+                    <include>**/application*.yaml</include>
+                    <include>**/application*.properties</include>
                     <include>**/bootstrap*.yml</include>
                     <include>**/bootstrap*.yaml</include>
                     <include>**/bootstrap*.properties</include>
                 </includes>
             </resource>
-            <!-- 必须成组否则文件夹下其他资源无法拷贝 -->
+            <!-- 必须成组,否则文件夹下其他资源无法拷贝 -->
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <excludes>
+                    <exclude>**/application*.yml</exclude>
+                    <exclude>**/application*.yaml</exclude>
+                    <exclude>**/application*.properties</exclude>
                     <exclude>**/bootstrap*.yml</exclude>
                     <exclude>**/bootstrap*.yaml</exclude>
                     <exclude>**/bootstrap*.properties</exclude>

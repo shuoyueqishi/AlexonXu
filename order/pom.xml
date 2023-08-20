@@ -14,6 +14,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <!--设置maven打包替换的符号为${}, 默认的为 @@-->
+        <resource.delimiter>${}</resource.delimiter>
     </properties>
 
     <dependencies>
@@ -21,6 +23,24 @@
             <groupId>com.xlt</groupId>
             <artifactId>common-dependency</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jsonzou</groupId>
+            <artifactId>jmockdata</artifactId>
+            <version>4.3.0</version>
         </dependency>
 
         <!--        chatGPT，参考：https://github.com/TheoKanning/openai-java-->
@@ -86,7 +106,67 @@
 
     </dependencies>
 
+    <!-- 定义打包环境变量，本地环境，生产环境；测试环境；开发环境 -->
+    <profiles>
+        <profile>
+            <!-- 开发环境 -->
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <env>dev</env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+                <env>test</env>
+            </properties>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+                <env>prod</env>
+            </properties>
+        </profile>
+    </profiles>
+
+
     <build>
+        <resources>
+            <!-- springboot 默认只替换application*.[yml,yaml,properties]相关文件,我们项目中在bootstrap中需要替换配置中心等相关变量 -->
+            <resource>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/application*.yml</include>
+                    <include>**/application*.yaml</include>
+                    <include>**/application*.properties</include>
+                    <include>**/bootstrap*.yml</include>
+                    <include>**/bootstrap*.yaml</include>
+                    <include>**/bootstrap*.properties</include>
+                </includes>
+            </resource>
+            <!-- 必须成组,否则文件夹下其他资源无法拷贝 -->
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>**/application*.yml</exclude>
+                    <exclude>**/application*.yaml</exclude>
+                    <exclude>**/application*.properties</exclude>
+                    <exclude>**/bootstrap*.yml</exclude>
+                    <exclude>**/bootstrap*.yaml</exclude>
+                    <exclude>**/bootstrap*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -173,7 +253,6 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
 
 

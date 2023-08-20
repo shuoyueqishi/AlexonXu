@@ -31,13 +31,13 @@ import java.util.Objects;
 @Slf4j
 public class WechatService implements IWechatService {
 
-    @Value("${wechat.miniprogram.appid}")
+    @Value("${wechat.miniprogram.appid:1234}")
     private String appid;
 
-    @Value("${wechat.miniprogram.secret}")
+    @Value("${wechat.miniprogram.secret:xxx}")
     private String secret;
 
-    @Value("${wechat.miniprogram.base_url}")
+    @Value("${wechat.miniprogram.base_url:xxx}")
     private String baseUrl;
 
 

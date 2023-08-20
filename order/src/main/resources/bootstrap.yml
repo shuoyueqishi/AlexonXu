@@ -5,12 +5,12 @@ server:
 
 nacos:
   config:
-    server-addr: 42.194.193.74:8848
+    server-addr: localhost:8848
     namespace: 573d8b59-3c98-4a70-b06c-4e86f0450e98
 
 spring:
   profiles:
-    active: dev
+    include: dev # ${env}
   application:
     name: order
   cloud:
@@ -22,14 +22,12 @@ spring:
         file-extension: yml
         # 配置中心地址
         server-addr: ${nacos.config.server-addr}
-
         # 配置中心命名空间ID，默认为public
         namespace: ${nacos.config.namespace}
-        # 配置中心配置文件Data Id 的格式是 ${prefix}-${spring.profile.active}.${file-extension}，
-        # prefix默认为spring.application.name, spring.profile.active可以是dev、test、prod等；file-extension支持yaml、yml和 properties类型文件
-        # 以user为例，配置prefix默认、spring.profile.active=dev,file-extension=yml,
-        #   则会同时加载配置文件user.yml、user-dev.yml的属性，若有相同属性，则以user-dev.yml的属性为准
-        #   如果配置了共享配置，则配置优先级：user-dev.yml>user.yml>Alexon.yml
+        # 配置中心配置文件Data Id 的格式是 ${prefix}-${spring.profile.active}.${file-extension}，会同时加载配置文件
+        # ${prefix}-${spring.profile.active}.${file-extension} 和 ${prefix}.${file-extension}的属性，若有相同属性
+        # 则以${prefix}-${spring.profile.active}.${file-extension}的属性为准
+        # 以user为例，配置优先级：user-dev.yml>user.yml>Alexon.yml
         shared-configs:
           - data-id: Alexon.yml
             refresh: true #是否支持自动刷新

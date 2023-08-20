@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,6 +25,9 @@ public class OrderPo extends BasePo implements Serializable {
 
     @TableField("order_no")
     private String orderNo;
+
+    @TableField("order_date")
+    private Date orderDate;
 
     @TableField("user_id")
     private Long userId;
