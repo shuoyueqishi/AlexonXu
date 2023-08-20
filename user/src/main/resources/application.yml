@@ -27,9 +27,9 @@ spring:
   datasource:
     name: xlt-user
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://42.194.193.74:3306/usermgt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: xlt
-    password: Xlt#2023$
+    url: jdbc:mysql://42.195.193.74:3306/usermgt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
+    username: 
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:  #druid相关配置
       filters: stat #监控统计拦截的filters
@@ -113,6 +113,6 @@ pagehelper:
 # 微信小程序配置信息
 wechat:
   miniprogram:
-    appid: wxbeb0d268cea2ca7a
-    secret: 859f103541f32df31410e207c4482c02
+    appid: wx
+    secret: 
     base_url: https://api.weixin.qq.com
