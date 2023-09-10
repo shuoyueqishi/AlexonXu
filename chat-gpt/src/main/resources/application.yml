@@ -17,9 +17,9 @@ spring:
   datasource:
     name: oredr-ds
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://42.194.193.74:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: root
-    password: root
+    url: jdbc:mysql://42.195.193.74:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
+    username: 
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:  #druid相关配置
       filters: stat #监控统计拦截的filters
@@ -93,7 +93,7 @@ http_pool:
 
 # chat GPT API Token,获取地址：https://platform.openai.com/account/api-keys
 chatgpt:
-  token: "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"
+  token: "sk-bEPS.......sSGK"
   use-proxy: true
   openai-domain: https://api.openai.com
   proxy-domain: https://alexon.website
@@ -101,7 +101,7 @@ chatgpt:
 # 微信小程序配置信息
 wechat:
   miniprogram:
-    appid: wxbeb0d268cea2ca7a
-    secret: 859f103541f32df31410e207c4482c02
+    appid: wx.......c7a
+    secret: 85......82c02
     base_url: https://api.weixin.qq.com
 
