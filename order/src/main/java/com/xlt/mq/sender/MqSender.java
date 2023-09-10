@@ -1,7 +1,7 @@
 package com.xlt.mq.sender;
 
+import com.alexon.distributed.id.SnowflakeIdGenerator;
 import com.alibaba.fastjson.JSON;
-import com.alexon.limiter.utils.SnowflakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -29,7 +29,7 @@ public class MqSender implements RabbitTemplate.ConfirmCallback, RabbitTemplate.
 
     private Message preHandleMsg(Object msg) {
         MessageProperties properties = new MessageProperties();
-        properties.setMessageId(SnowflakeIdGenerator.generateId().toString());
+        properties.setMessageId(SnowflakeIdGenerator.getInstance().nextId()+"");
         byte[] msgBytes = JSON.toJSONBytes(msg);
         Message message = new Message(msgBytes, properties);
         rabbitTemplate.setConfirmCallback(this);

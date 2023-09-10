@@ -4,11 +4,11 @@ import com.alexon.authorization.constants.CommConstant;
 import com.alexon.authorization.constants.RedisConstant;
 import com.alexon.authorization.utils.ObjectConvertUtil;
 import com.alexon.authorization.utils.PoUtil;
+import com.alexon.distributed.id.SeqNoGenUtil;
 import com.alexon.limiter.utils.RedisUtil;
 import com.alexon.exception.utils.AssertUtil;
 import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;
-import com.alexon.limiter.utils.SeqNoGenUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xlt.mapper.IOrderCommodityMapper;
 import com.xlt.mapper.IOrderMapper;
@@ -32,6 +32,7 @@ import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,7 +62,7 @@ public class OrderService implements IOrderService {
         BasicResponse checkResult = checkOrderParams(orderVo);
         if (checkResult != null) return checkResult;
         // 先创建订单头，再创建明细
-        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX, 8);
+        String orderNo = SeqNoGenUtil.getSeqNoWithTime(CommConstant.ORDER_PREFIX,"yyyyMMdd", 8, Duration.ofDays(7));
         orderVo.setOrderNo(orderNo);
         createRealOrder(orderVo);
         return new BasicResponse("Submit order success, orderNo is:"+orderNo);

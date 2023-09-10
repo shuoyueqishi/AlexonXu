@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = {"com.xlt","com.alexon"},exclude = {DruidDataSourceAutoConfigure.class})
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("com.xlt.mapper")
+@MapperScan(basePackages={"com.xlt.mapper","com.alexon"})
 public class OrderApplication {
     public static void main(String[] args) {
         SpringApplication.run(OrderApplication.class, args);

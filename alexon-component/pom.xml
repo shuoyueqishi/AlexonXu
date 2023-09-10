@@ -26,6 +26,7 @@
         <module>alexon-operation-log</module>
         <module>alexon-http</module>
         <module>alexon-cache</module>
+        <module>alexon-distributed-id</module>
     </modules>
 
     <dependencyManagement>

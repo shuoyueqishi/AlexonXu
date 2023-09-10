@@ -23,12 +23,62 @@
             <groupId>com.xlt</groupId>
             <artifactId>common-dependency</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>druid-spring-boot-starter</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
+            <groupId>com.alexon</groupId>
+            <artifactId>alexon-distributed-id</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.shardingsphere</groupId>-->
+<!--            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>-->
+<!--            <version>4.1.1</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.shardingsphere/shardingsphere-jdbc-core-spring-boot-starter -->
+        <dependency>
             <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-            <version>4.1.1</version>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.shardingsphere</groupId>-->
+<!--            <artifactId>shardingsphere-jdbc-core</artifactId>-->
+<!--            <version>5.4.0</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>logback-classic</artifactId>-->
+<!--                    <groupId>ch.qos.logback</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>logback-core</artifactId>-->
+<!--                    <groupId>ch.qos.logback</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+
+
+        <!--解决yaml读取问题：https://github.com/apache/shardingsphere/issues/21476-->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.33</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.9</version>
         </dependency>
 
         <dependency>
