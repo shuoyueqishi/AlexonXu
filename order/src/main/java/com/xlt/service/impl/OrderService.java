@@ -25,6 +25,8 @@ import com.xlt.service.IOrderService;
 import com.xlt.service.feign.ICommodityFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shardingsphere.transaction.annotation.ShardingSphereTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -58,6 +60,7 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
+    @ShardingSphereTransactionType(value = TransactionType.XA)
     public BasicResponse createOrder(OrderVo orderVo) {
         BasicResponse checkResult = checkOrderParams(orderVo);
         if (checkResult != null) return checkResult;

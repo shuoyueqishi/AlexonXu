@@ -7,6 +7,7 @@ spring:
       type: Standalone  # 可选：Standalone、Cluster
     props:
       sql-show: true # 日志打印SQL
+      xa-transaction-manager-type: Atomikos
     datasource:  #定义数据源
       names: ds0,ds1,ds2 # 数据库名称列表
       ds0:

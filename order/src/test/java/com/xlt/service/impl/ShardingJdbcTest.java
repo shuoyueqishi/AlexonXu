@@ -9,9 +9,12 @@ import com.xlt.mapper.IOrderMapper;
 import com.xlt.model.po.OrderPo;
 import com.xlt.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.transaction.annotation.ShardingSphereTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
@@ -38,6 +41,29 @@ public class ShardingJdbcTest {
             fromDate.set(2023, Calendar.JANUARY, 1);
             Calendar toDate = Calendar.getInstance();
             toDate.set(2023, Calendar.DECEMBER, 31);
+            orderPo.setOrderDate(faker.date().between(fromDate.getTime(), toDate.getTime()));
+            log.info("add new order:{}", orderPo);
+            mapper.insert(orderPo);
+        }
+    }
+
+    /**
+     * 新增订单
+     */
+    @Test
+    @Transactional
+    @ShardingSphereTransactionType(TransactionType.XA)
+    public void addOrderWithError() {
+        for (int i = 0; i < 20; i++) {
+            OrderPo orderPo = JMockData.mock(OrderPo.class);
+            orderPo.setOrderId((long) i);
+            orderPo.setStatus(1);
+            orderPo.setDeleted(0);
+            Faker faker = new Faker();
+            Calendar fromDate = Calendar.getInstance();
+            fromDate.set(2023, Calendar.JANUARY, 1);
+            Calendar toDate = Calendar.getInstance();
+            toDate.set(2024, Calendar.DECEMBER, 31); // 故意超出时间范围，使其报错
             orderPo.setOrderDate(faker.date().between(fromDate.getTime(), toDate.getTime()));
             log.info("add new order:{}", orderPo);
             mapper.insert(orderPo);
