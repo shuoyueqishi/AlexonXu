@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -166,6 +168,45 @@ public class SnowflakeIdGenerator {
                 | (dataCenterId << dataCenterIdShift)
                 | (workerId << workerIdShift)
                 | sequence;
+    }
+
+    /**
+     * 从雪花id中计算出规定起始时间戳的时间戳
+     * 起始时间戳见EPOCH字段
+     *
+     * @param snowId 雪花算法生成的id
+     * @return 雪花算法ID对应的时间
+     */
+    public long getTimestamp(long snowId) {
+        String bid = Long.toBinaryString(snowId);
+        int timestamp = bid.length() - (int)(workerIdBits + dataCenterIdBits + sequenceBits);
+        String substring = bid.substring(0, timestamp);
+        return Long.parseUnsignedLong(substring, 2)+twepoch;
+    }
+
+    /**
+     * 根据雪花id中计算出生成ID时的时间
+     *
+     * @param snowId 雪花算法生成的id
+     * @return 时间
+     */
+    public Date getDate(long snowId) {
+        long timestamp = getTimestamp(snowId);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
+        return calendar.getTime();
+    }
+
+    /**
+     * 根据雪花id中计算出生成ID时的时间字符串
+     *
+     * @param snowId 雪花算法生成的id
+     * @return 时间字符串
+     */
+    public String getDateStr(long snowId) {
+        Date date = getDate(snowId);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(date);
     }
 
     /**
