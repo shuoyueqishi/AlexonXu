@@ -25,6 +25,7 @@ http://localhost:8190/user/swagger-ui/index.html
 11、nacos版本需要为2.0.4
 12、登录服务独立、提供SDK接入
 13、Alexon增加系统配置、角色数据维度等
+14、chatGpt接入讯飞星火
 ```
 
 

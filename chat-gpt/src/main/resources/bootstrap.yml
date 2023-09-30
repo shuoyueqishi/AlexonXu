@@ -10,7 +10,7 @@ nacos:
 
 spring:
   profiles:
-    active: ${env}
+    include: ${env}
   application:
     name: chat-gpt
   cloud:

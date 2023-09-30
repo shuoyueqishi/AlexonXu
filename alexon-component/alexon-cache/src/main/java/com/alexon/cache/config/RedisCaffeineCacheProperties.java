@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import java.io.Serializable;
 import java.util.Map;
 
-@Configuration
-@ConfigurationProperties(value="l2cache")
+
 @Data
+@ConfigurationProperties(value="l2cache")
 public class RedisCaffeineCacheProperties implements Serializable {
 
     private static final long serialVersionUID = -601660420596264376L;

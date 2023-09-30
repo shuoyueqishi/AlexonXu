@@ -39,12 +39,14 @@ public class RedisCaffeineCacheManager extends AbstractCacheManager {
             cacheList.add(rcCache);
             log.info("success to initializes RedisCaffeineCache:" + name);
         });
-        return null;
+        return cacheList;
     }
 
     @Override
     protected Cache getMissingCache(String name) {
-        return super.getMissingCache(name);
+        RedisCaffeineCacheConfig defaultConfig = rcCacheProps.getDefaultConfig();
+        defaultConfig.setName(name);
+        return new RedisCaffeineCache(redissonClient, defaultConfig);
     }
 
     private void applyDefaultConfig(String name, RedisCaffeineCacheConfig config) {
@@ -84,7 +86,7 @@ public class RedisCaffeineCacheManager extends AbstractCacheManager {
         if (Objects.isNull(defaultConfig.getAllowValueNull())) {
             errMsg.append("defaultConfig.allowValueNull can't be null\n");
         }
-        if (Objects.isNull(defaultConfig.getType()) || CacheTypeEnum.check(defaultConfig.getType().getType())) {
+        if (Objects.isNull(defaultConfig.getType()) || !CacheTypeEnum.check(defaultConfig.getType().getType())) {
             errMsg.append("defaultConfig.type can't be null or illegal value.");
             errMsg.append("legal types are: ").append(Arrays.toString(CacheTypeEnum.values())).append("\n");
         }

@@ -78,6 +78,7 @@
             <!-- 开发环境 -->
             <id>dev</id>
             <properties>
+                <spring.profiles.include>dev</spring.profiles.include>
                 <spring.profiles.active>dev</spring.profiles.active>
                 <env>dev</env>
             </properties>

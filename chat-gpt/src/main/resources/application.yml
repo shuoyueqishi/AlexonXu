@@ -10,6 +10,8 @@ info:
   author: Alexon
 
 spring:
+  profiles:
+    include: ${env}
   #项目名字
   application:
     name: chat-gpt
@@ -18,8 +20,8 @@ spring:
     name: oredr-ds
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://42.195.193.74:3306/order?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: 
-    password: 
+    username:
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:  #druid相关配置
       filters: stat #监控统计拦截的filters
