@@ -1,4 +1,4 @@
-package com.xlt.model.conventors;
+package com.xlt.model.convertor;
 
 import com.xlt.model.po.SystemConfigPo;
 import com.xlt.model.vo.SystemConfigVo;

@@ -2,7 +2,6 @@ package com.xlt.controller;
 
 import com.alexon.model.response.BasicResponse;
 import com.alexon.model.response.DataResponse;
-import com.xlt.model.po.SystemConfigPo;
 import com.xlt.model.vo.SystemConfigVo;
 import com.xlt.service.ISystemConfigService;
 import lombok.extern.slf4j.Slf4j;

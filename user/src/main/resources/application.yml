@@ -28,8 +28,8 @@ spring:
     name: xlt-user
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://42.195.193.74:3306/usermgt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false
-    username: 
-    password: 
+    username:
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:  #druid相关配置
       filters: stat #监控统计拦截的filters
@@ -114,5 +114,26 @@ pagehelper:
 wechat:
   miniprogram:
     appid: wx
-    secret: 
+    secret:
     base_url: https://api.weixin.qq.com
+
+# 二级缓存
+l2cache:
+  enable: true
+  defaultConfig:
+    name: defaultCache
+    type: Mixed
+    l1MaxSize: 1000
+    l1Ttl: 3600
+    l2Ttl: 3600
+    l2IdleTime: 1800
+    allowValueNull: true
+  cacheMap:
+    SystemParams:
+      name: SystemParams
+      type: Mixed
+      l1MaxSize: 1000
+      l1Ttl: 86400
+      l2Ttl: 86400
+      l2IdleTime: 86400
+      allowValueNull: true
