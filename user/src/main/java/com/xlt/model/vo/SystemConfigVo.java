@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
@@ -26,16 +28,24 @@ public class SystemConfigVo extends BaseVo implements Serializable {
     @ApiModelProperty("配置编码")
     private String configCode;
 
+    @ApiModelProperty("配置类型，1：字符串、2：json")
+    @Max(2)
+    @Min(1)
+    private Integer configType;
+
+    @ApiModelProperty("配置类型，1：字符串、2：json")
+    private String configTypeDesc;
+
     @ApiModelProperty("值")
     private Object value;
 
     @ApiModelProperty("描述")
     private String description;
 
-    @ApiModelProperty("状态，1：有效，2：无效")
-    private Integer status;
-
     @ApiModelProperty("删除标识，0：未删除，1：已删除")
     private Integer deleted;
+
+    @ApiModelProperty("删除标识，0：未删除，1：已删除")
+    private String deletedDesc;
 
 }

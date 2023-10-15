@@ -28,6 +28,16 @@
                 last_update_by = #{po.lastUpdateBy}
             </if>
         </set>
-        where config_id = #{po.configId}
+        where config_code = #{po.configCode}
+    </update>
+    <update id="deleteSystemConfig">
+        update system_config_t
+        set deleted = 1,
+            last_update_date = #{po.lastUpdateDate},
+            last_update_by = #{po.lastUpdateBy}
+        where config_code = #{po.configCode}
+        <if test="po.configId!=null">
+           and config_id = #{po.configId}
+        </if>
     </update>
 </mapper>

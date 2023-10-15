@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface SystemConfigMapper extends BaseMapper<SystemConfigPo> {
 
-    int updateSysParamById(@Param("po") SystemConfigPo po);
+    int updateSysParamByCode(@Param("po") SystemConfigPo po);
+
+    int deleteSystemConfig(@Param("po") SystemConfigPo po);
 
 }

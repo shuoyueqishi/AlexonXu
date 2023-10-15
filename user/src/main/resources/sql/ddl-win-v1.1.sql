@@ -152,3 +152,22 @@ CREATE TABLE `exception_log_t`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1000
   DEFAULT CHARSET = utf8 COMMENT ='异常信息日志表';
+
+DROP TABLE IF EXISTS `system_config_t`;
+CREATE TABLE `system_config_t`
+(
+    `config_id`        BIGINT(20)     NOT NULL AUTO_INCREMENT COMMENT '主键配置id',
+    `config_code`      VARCHAR(128)   NOT NULL COMMENT '配置编码',
+    `config_type`      TINYINT(1)     NOT NULL DEFAULT 1 COMMENT '配置类型，1：字符串、2：json',
+    `value`            VARCHAR(10240) NOT NULL COMMENT '配置值',
+    `description`      VARCHAR(1024)           DEFAULT NULL COMMENT '配置描述',
+    `deleted`          TINYINT(1)     NOT NULL DEFAULT 0 COMMENT '软删除标志，0：未删除、1：已删除',
+    `create_by`        BIGINT(20)              DEFAULT NULL COMMENT '创建人',
+    `creation_date`    datetime                DEFAULT NULL COMMENT '创建时间',
+    `last_update_by`   BIGINT(20)              DEFAULT NULL COMMENT '更新人',
+    `last_update_date` datetime                DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`config_id`) USING BTREE,
+    KEY `idx_code` (`config_code`) USING BTREE
+) ENGINE = INNODB
+  AUTO_INCREMENT = 1001
+  DEFAULT CHARSET = utf8 COMMENT = '系统配置表';

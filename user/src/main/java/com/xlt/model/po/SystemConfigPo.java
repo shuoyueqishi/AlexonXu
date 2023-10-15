@@ -25,14 +25,14 @@ public class SystemConfigPo extends BasePo implements Serializable {
     @TableField("config_code")
     private String configCode;
 
+    @TableField("config_type")
+    private String configType;
+
     @TableField("value")
     private Object value;
 
     @TableField("description")
     private String description;
-
-    @TableField("status")
-    private Integer status;
 
     @TableField("deleted")
     private Integer deleted;
