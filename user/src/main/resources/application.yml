@@ -20,6 +20,8 @@ jwt:
 spring:
   application:
     name: user
+  profiles:
+    include: ${env}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

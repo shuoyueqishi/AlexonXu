@@ -41,6 +41,7 @@ public class RedisCaffeineCacheAutoConfiguration {
     public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password);
+        config.setCodec(new JsonJacksonCodec());
         return Redisson.create(config);
     }
 

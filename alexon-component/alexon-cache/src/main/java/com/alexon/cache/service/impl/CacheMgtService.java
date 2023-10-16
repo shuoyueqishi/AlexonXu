@@ -45,7 +45,7 @@ public class CacheMgtService implements ICacheMgtService {
             log.error("cacheName:{} not exists",request.getCacheName());
             return;
         }
-        cache.clear(); // TODO： 本地缓存没有清理干净
+        cache.clear();
         log.info("success to clear cache for name:{}",request.getCacheName());
     }
 }

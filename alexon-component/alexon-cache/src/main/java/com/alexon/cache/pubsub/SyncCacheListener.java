@@ -32,7 +32,7 @@ public class SyncCacheListener implements MessageListener<SyncCacheMessage> {
             log.info("success to update cache for cacheName:{},key={}", msg.getCacheName(), msg.getKey());
         }
         if (SyncCacheActionEnum.EVICT.getAction().equals(msg.getAction())) {
-            caffeineCache.evictIfPresent(msg.getKey());
+            caffeineCache.evict(msg.getKey());
             log.info("success to evict cache for cacheName:{},key={}", msg.getCacheName(), msg.getKey());
         }
         if (SyncCacheActionEnum.CLEAR.getAction().equals(msg.getAction())) {
