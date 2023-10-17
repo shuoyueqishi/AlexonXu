@@ -3,29 +3,26 @@
 
 <mapper namespace="com.xlt.mapper.SystemConfigMapper">
 
-    <update id="updateSysParamById">
+    <update id="updateSysParamByCode">
         update system_config_t
         <set>
-            <if test="po.configCode!=null and po.configCode!=''">
-                config_code = #{po.configCode}
+            <if test="po.configType!=null and po.configType!=''">
+                config_type = #{po.configType},
             </if>
             <if test="po.value!=null and po.value!=''">
-                value = #{po.value}
+                value = #{po.value},
             </if>
             <if test="po.description!=null and po.description!=''">
-                description = #{po.description}
-            </if>
-            <if test="po.status!=null">
-                status = #{po.status}
+                description = #{po.description},
             </if>
             <if test="po.deleted!=null">
-                deleted = #{po.deleted}
+                deleted = #{po.deleted},
             </if>
             <if test="po.lastUpdateDate!=null">
-                last_update_date = #{po.lastUpdateDate}
+                last_update_date = #{po.lastUpdateDate},
             </if>
             <if test="po.lastUpdateBy!=null">
-                last_update_by = #{po.lastUpdateBy}
+                last_update_by = #{po.lastUpdateBy},
             </if>
         </set>
         where config_code = #{po.configCode}

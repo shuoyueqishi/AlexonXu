@@ -139,7 +139,7 @@ public class SystemConfigService implements ISystemConfigService {
         AssertUtil.isNull(existed, "configCode:" + systemConfigVo.getConfigCode() + " not exists in system");
         SystemConfigPo configPo = SystemConfigConvertor.INSTANCE.toSystemConfigPo(systemConfigVo);
         systemConfigMapper.updateSysParamByCode(configPo);
-        SystemConfigPo updPo = systemConfigMapper.selectById(systemConfigVo.getConfigId());
+        SystemConfigPo updPo = systemConfigMapper.selectOne(queryWrapper);
         SystemConfigVo updatedVo = SystemConfigConvertor.INSTANCE.toSystemConfigVo(updPo);
         updatedVo.setConfigTypeDesc(SystemConfigTypeEnum.getDescByCode(updatedVo.getConfigType()));
         updatedVo.setDeletedDesc(DeleteEnum.getDescByCode(updatedVo.getDeleted()));

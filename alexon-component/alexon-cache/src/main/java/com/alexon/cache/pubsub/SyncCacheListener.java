@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.listener.MessageListener;
 import org.springframework.cache.caffeine.CaffeineCache;
 
+import java.util.Objects;
+
 @Slf4j
 public class SyncCacheListener implements MessageListener<SyncCacheMessage> {
 
@@ -26,16 +28,20 @@ public class SyncCacheListener implements MessageListener<SyncCacheMessage> {
     public void onMessage(CharSequence channel, SyncCacheMessage msg) {
         log.info("received message, channel={},msg ={}", channel, msg);
         RedisCaffeineCache cache = (RedisCaffeineCache) manager.getCache(msg.getCacheName());
+        if(Objects.isNull(cache)) {
+            log.error("cache doesn't exist for:{}",msg.getCacheName());
+            return;
+        }
         CaffeineCache caffeineCache = cache.getCaffeineCache();
-        if (SyncCacheActionEnum.UPDATE.getAction().equals(msg.getAction())) {
+        if (SyncCacheActionEnum.UPDATE.equals(msg.getAction())) {
             caffeineCache.put(msg.getKey(), msg.getValue());
             log.info("success to update cache for cacheName:{},key={}", msg.getCacheName(), msg.getKey());
         }
-        if (SyncCacheActionEnum.EVICT.getAction().equals(msg.getAction())) {
+        if (SyncCacheActionEnum.EVICT.equals(msg.getAction())) {
             caffeineCache.evict(msg.getKey());
             log.info("success to evict cache for cacheName:{},key={}", msg.getCacheName(), msg.getKey());
         }
-        if (SyncCacheActionEnum.CLEAR.getAction().equals(msg.getAction())) {
+        if (SyncCacheActionEnum.CLEAR.equals(msg.getAction())) {
             caffeineCache.clear();
             log.info("success to clear cache for cacheName:{},key={}", msg.getCacheName(), msg.getKey());
         }
